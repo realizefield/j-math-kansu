@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：⑧正比例の式(1)</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        
+                .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.index-btn:hover { background: #154360; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+
+        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .speaker-btn-large.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; font-style: italic; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        /* ポイントボックス */
+        .point-box { background: #eaf4fb; border: 2px solid #aed6f1; border-left: 5px solid #2980b9; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; font-size: 14px; line-height: 2; }
+        .point-box .ph { font-weight: 900; color: #1a5276; font-size: 15px; }
+
+        /* 例題ボックス */
+        .example-box { background: #fafcff; border: 2px solid #aed6f1; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .example-title { font-weight: 900; font-size: 1.05em; color: #2980b9; margin-bottom: 14px; border-left: 5px solid #2980b9; padding-left: 10px; }
+        .example-question { font-size: 14.5px; margin-bottom: 16px; line-height: 1.9; background: #f0f6ff; border-radius: 6px; padding: 10px 14px; }
+
+        /* 解説ステップ */
+        .step-area { font-size: 14.5px; line-height: 2.2; }
+        .step-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .step-label { color: #888; min-width: 60px; font-size: 13px; }
+        .step-eq { font-style: italic; color: #1a5276; font-size: 15px; }
+        .step-arrow { color: #e67e22; font-weight: bold; font-size: 16px; }
+        .step-note { color: #555; font-size: 13px; }
+
+        /* 練習問題 */
+        .practice-box { background: #fffdf5; border: 2px solid #f9e4b0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .practice-title { font-weight: 900; font-size: 1.05em; color: #e67e22; margin-bottom: 16px; border-left: 5px solid #e67e22; padding-left: 10px; }
+        .q-item { margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px dashed #e0d0a0; }
+        .q-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .q-num { font-weight: 900; color: #e67e22; font-size: 1em; }
+        .q-text { font-size: 14.5px; line-height: 1.9; margin: 8px 0 12px; background: #fef9ec; border-radius: 6px; padding: 8px 12px; }
+        .q-pref { font-size: 12px; color: #888; float: right; }
+
+        /* 空欄 */
+        .drop-zone-inline {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 70px; min-height: 1.9em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #c0392b; padding: 2px 8px;
+            border-radius: 3px; font-size: 14px; font-style: italic;
+            transition: background 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.wide { min-width: 90px; }
+
+        /* 数式スタイル */
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+        .math-red { font-style: italic; color: #c0392b; font-weight: bold; }
+        .ans-box { display: inline-block; border: 2px solid #aaa; border-radius: 4px; padding: 2px 12px; background: #f9f9f9; font-style: italic; font-weight: bold; color: #1a5276; min-width: 80px; text-align: center; }
+
+        /* 答え欄行 */
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 15px; flex-wrap: wrap; }
+        .ans-label-final { font-weight: 900; color: #1a5276; }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        /* 分数表示 */
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.82em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 2px; font-weight: bold; }
+        .frac .den { padding: 0 2px; font-weight: bold; }
+        .frac-x { font-style: italic; font-weight: bold; font-size: 1em; }
+
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <nav class="page-nav"><a href="hirei7.html" class="nav-btn">◀ ⑧ 確認（グラフ）</a><a href="index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei9.html" class="nav-btn">⑩ 正比例の式(2) ▶</a></nav>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="audio-summary-area">
+        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
+            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+        </button>
+        <div class="volume-control">
+            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        </div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ポイント -->
+    <div class="point-box">
+        <div class="ph">📌 正比例の式の求め方</div>
+        y が x に比例するとき，<span class="math">y = ax</span> とおける。<br>
+        与えられた x と y の値を代入して <span class="math-red">a（比例定数）</span> を求める。
+    </div>
+
+    <!-- ===== 例題 ===== -->
+    <div class="example-box">
+        <div class="example-title">📖 例題</div>
+        <div class="example-question">
+            y は x に比例しています。x = 3 のとき，y = 9 という。y を x の式で表しなさい。
+        </div>
+
+        <div class="step-area">
+            <div class="step-row">
+                <span class="step-label">解説）</span>
+                <span>y は x に比例しているので　<span class="math">y = ax</span> とおく。</span>
+            </div>
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span><span class="math">y = ax</span> として，x = 3，y = 9 を代入すると</span>
+            </div>
+
+            <!-- 穴埋めステップ -->
+            <div style="margin-left: 60px;">
+                <div class="step-row">
+                    <span class="math">9 = </span>
+                    <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">× a</span>
+                </div>
+                <div class="step-row">
+                    <span style="color:#e67e22; font-size:12px; margin-right:4px;">↓ 左右を入れ替える</span>
+                </div>
+                <div class="step-row">
+                    <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">× a = 9</span>
+                </div>
+                <div class="step-row">
+                    <span style="color:#e67e22; font-size:12px; margin-right:4px;">↓ 両辺を 3 でわる</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">a = 9 ÷</span>
+                    <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span class="math">a = </span>
+                    <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span class="math">y = </span>
+                    <span class="drop-zone-inline wide" data-ans="3x" onclick="zCl(this)"></span>
+                </div>
+            </div>
+
+            <div class="ans-row" style="margin-top:14px;">
+                <span class="ans-label-final">答）</span>
+                <span style="border:2px solid #aaa; border-radius:4px; padding:3px 18px; font-style:italic; font-weight:bold; color:#1a5276; font-size:15px;">
+                    y = <span class="drop-zone-inline wide" data-ans="3x" onclick="zCl(this)"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 練習問題 ===== -->
+    <div class="practice-box">
+        <div class="practice-title">✏️ 練習問題</div>
+
+        <!-- (1) -->
+        <div class="q-item">
+            <span class="q-num">（1）</span>
+            <span class="q-pref">〈三重県〉</span>
+            <div class="q-text">
+                y は x に比例し，x = 3 のとき，y = 6 である。y を x の式で表せ。
+            </div>
+            <div class="step-area">
+                <div class="step-row">
+                    <span class="step-label">解）</span>
+                    <span><span class="math">y = ax</span> として，x = 3，y = 6 を代入</span>
+                </div>
+                <div style="margin-left: 60px;">
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                        <span class="math"> = </span>
+                        <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                        <span class="math">× a</span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 左右を入れ替える</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                        <span class="math">× a = </span>
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 両辺を 3 でわる</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                        <span class="math"> ÷ </span>
+                        <span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="2" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">y = </span>
+                        <span class="drop-zone-inline wide" data-ans="2x" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span style="border:2px solid #aaa; border-radius:4px; padding:3px 18px; font-style:italic; font-weight:bold; color:#1a5276; font-size:15px;">
+                        y = <span class="drop-zone-inline wide" data-ans="2x" onclick="zCl(this)"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- (2) -->
+        <div class="q-item">
+            <span class="q-num">（2）</span>
+            <span class="q-pref">〈茨城県〉</span>
+            <div class="q-text">
+                y は x に比例し，x = 5 のとき，y = 30 である。y を x の式で表せ。
+            </div>
+            <div class="step-area">
+                <div class="step-row">
+                    <span class="step-label">解）</span>
+                    <span><span class="math">y = ax</span> として，x = 5，y = 30 を代入</span>
+                </div>
+                <div style="margin-left: 60px;">
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="30" onclick="zCl(this)"></span>
+                        <span class="math"> = </span>
+                        <span class="drop-zone-inline" data-ans="5" onclick="zCl(this)"></span>
+                        <span class="math">× a</span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 左右を入れ替える</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="5" onclick="zCl(this)"></span>
+                        <span class="math">× a = </span>
+                        <span class="drop-zone-inline" data-ans="30" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 両辺を 5 でわる</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="30" onclick="zCl(this)"></span>
+                        <span class="math"> ÷ </span>
+                        <span class="drop-zone-inline" data-ans="5" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">y = </span>
+                        <span class="drop-zone-inline wide" data-ans="6x" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span style="border:2px solid #aaa; border-radius:4px; padding:3px 18px; font-style:italic; font-weight:bold; color:#1a5276; font-size:15px;">
+                        y = <span class="drop-zone-inline wide" data-ans="6x" onclick="zCl(this)"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- (3) -->
+        <div class="q-item">
+            <span class="q-num">（3）</span>
+            <span class="q-pref">〈神奈川県〉</span>
+            <div class="q-text">
+                y は x に比例し，x = 4 のとき，y = −8 である。y を x の式で表せ。
+            </div>
+            <div class="step-area">
+                <div class="step-row">
+                    <span class="step-label">解）</span>
+                    <span><span class="math">y = ax</span> として，x = 4，y = −8 を代入</span>
+                </div>
+                <div style="margin-left: 60px;">
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="-8" onclick="zCl(this)"></span>
+                        <span class="math"> = </span>
+                        <span class="drop-zone-inline" data-ans="4" onclick="zCl(this)"></span>
+                        <span class="math">× a</span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 左右を入れ替える</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="4" onclick="zCl(this)"></span>
+                        <span class="math">× a = </span>
+                        <span class="drop-zone-inline" data-ans="-8" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 両辺を 4 でわる</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="-8" onclick="zCl(this)"></span>
+                        <span class="math"> ÷ </span>
+                        <span class="drop-zone-inline" data-ans="4" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="-2" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">y = </span>
+                        <span class="drop-zone-inline wide" data-ans="-2x" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span style="border:2px solid #aaa; border-radius:4px; padding:3px 18px; font-style:italic; font-weight:bold; color:#1a5276; font-size:15px;">
+                        y = <span class="drop-zone-inline wide" data-ans="-2x" onclick="zCl(this)"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- (4) -->
+        <div class="q-item">
+            <span class="q-num">（4）</span>
+            <span class="q-pref">〈大阪府〉</span>
+            <div class="q-text">
+                y は x に比例し，x = 6 のとき，y = 9 である。y を x の式で表せ。
+            </div>
+            <div class="step-area">
+                <div class="step-row">
+                    <span class="step-label">解）</span>
+                    <span><span class="math">y = ax</span> として，x = 6，y = 9 を代入</span>
+                </div>
+                <div style="margin-left: 60px;">
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="9" onclick="zCl(this)"></span>
+                        <span class="math"> = </span>
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                        <span class="math">× a</span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 左右を入れ替える</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                        <span class="math">× a = </span>
+                        <span class="drop-zone-inline" data-ans="9" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span style="color:#e67e22; font-size:12px;">↓ 両辺を 6 でわる</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="9" onclick="zCl(this)"></span>
+                        <span class="math"> ÷ </span>
+                        <span class="drop-zone-inline" data-ans="6" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">a = </span>
+                        <span class="drop-zone-inline" data-ans="3/2" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">y = </span>
+                        <span class="drop-zone-inline wide" data-ans="3/2 x" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span style="border:2px solid #aaa; border-radius:4px; padding:3px 18px; font-style:italic; font-weight:bold; color:#1a5276; font-size:15px;">
+                        y = <span class="drop-zone-inline wide" data-ans="3/2 x" onclick="zCl(this)"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /practice-box -->
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei8.wav"></audio>
+
+<script>
+    // 分数が必要な答えの定義
+    var FRAC_ANS = {
+        '3/2':   ['', '3', '2', ''],
+        '3/2 x': ['', '3', '2', 'x']
+    };
+
+    function makeFracEl(val) {
+        var f = FRAC_ANS[val];
+        if (!f) return null;
+        var wrap = document.createElement('span');
+        wrap.className = 'frac-wrap';
+        wrap.style.pointerEvents = 'none';
+        if (f[0]) {
+            var sg = document.createElement('span');
+            sg.style.fontWeight = 'bold';
+            sg.innerText = f[0];
+            wrap.appendChild(sg);
+        }
+        var frac = document.createElement('span');
+        frac.className = 'frac';
+        frac.style.color = '#1a5276';
+        var num = document.createElement('span');
+        num.className = 'num';
+        num.innerText = f[1];
+        var den = document.createElement('span');
+        den.className = 'den';
+        den.style.color = '#27ae60';
+        den.innerText = f[2];
+        frac.appendChild(num);
+        frac.appendChild(den);
+        wrap.appendChild(frac);
+        if (f[3]) {
+            var xsp = document.createElement('span');
+            xsp.className = 'frac-x';
+            xsp.style.color = '#1a5276';
+            xsp.innerText = f[3];
+            wrap.appendChild(xsp);
+        }
+        return wrap;
+    }
+
+    function setZone(z, val) {
+        z.innerHTML = '';
+        var el = makeFracEl(val);
+        if (el) {
+            z.appendChild(el);
+        } else {
+            z.innerText = val;
+        }
+        z.setAttribute('data-filled', val);
+    }
+
+    function getZoneVal(z) {
+        return z.getAttribute('data-filled') || z.innerText.trim();
+    }
+
+    function clearZoneEl(z) {
+        z.innerHTML = '';
+        z.removeAttribute('data-filled');
+        z.classList.remove('correct', 'wrong');
+    }
+
+    var sT, tI, isR = false, sW = null, bestTime = null;
+    var audio = document.getElementById('mainAudio');
+    var volSlider = document.getElementById('volSlider');
+    var volNum = document.getElementById('volNum');
+    var playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = function() { updatePlayUI(false); };
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', function(e) {
+        audio.volume = e.target.value;
+        volNum.innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    function fmtTime(ms) {
+        var total = ms / 1000;
+        var m = Math.floor(total / 60).toString().padStart(2, '0');
+        var s = (total % 60).toFixed(1).padStart(4, '0');
+        return m + ':' + s;
+    }
+
+    function addToBank(word) {
+        var b = document.getElementById('wordBank');
+        var d = document.createElement('div');
+        d.className = 'drag-item';
+        d.setAttribute('data-val', word);
+        var el = makeFracEl(word);
+        if (el) {
+            d.appendChild(el);
+            d.style.padding = '4px 10px';
+            d.style.lineHeight = '1';
+            d.style.minHeight = '2.2em';
+            d.style.display = 'inline-flex';
+            d.style.alignItems = 'center';
+        } else {
+            d.innerText = word;
+        }
+        d.onclick = function() {
+            if (sW) sW.classList.remove('selected');
+            if (sW === this) { sW = null; return; }
+            sW = this;
+            this.classList.add('selected');
+        };
+        b.appendChild(d);
+    }
+
+    function zCl(z) {
+        if (!isR) return;
+        var cur = getZoneVal(z);
+        if (cur !== '') {
+            addToBank(cur);
+            clearZoneEl(z);
+            return;
+        }
+        if (sW) {
+            var val = sW.getAttribute('data-val') || sW.innerText;
+            setZone(z, val);
+            sW.remove();
+            sW = null;
+        }
+    }
+
+    function stCh() {
+        isR = true; sW = null;
+        sT = Date.now(); clearInterval(tI);
+        tI = setInterval(function() {
+            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+        }, 100);
+        var zones = document.querySelectorAll('.drop-zone-inline');
+        var allAns = [];
+        zones.forEach(function(z) {
+            allAns.push(z.getAttribute('data-ans'));
+            clearZoneEl(z);
+        });
+        var b = document.getElementById('wordBank');
+        b.innerHTML = '';
+        allAns.sort(function() { return Math.random() - 0.5; });
+        allAns.forEach(function(w) { addToBank(w); });
+    }
+
+    function chAn() {
+        if (!isR) return;
+        var allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            var cur = getZoneVal(z);
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+            } else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                if (cur !== '') { addToBank(cur); clearZoneEl(z); }
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI); isR = false;
+            var elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+                document.getElementById('recordDisplay').innerText = '🏆 ベスト: ' + fmtTime(bestTime);
+            }
+            startCnf();
+        } else {
+            var wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake');
+            void wbc.offsetWidth;
+            wbc.classList.add('shake');
+            setTimeout(function() { wbc.classList.remove('shake'); }, 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI); isR = false; sW = null;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            setZone(z, z.getAttribute('data-ans'));
+            z.classList.remove('correct', 'wrong');
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    var cvs = document.getElementById("confetti-canvas");
+    var ctx2 = cvs.getContext("2d");
+    var pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (var i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height - cvs.height,
+            s: Math.random()*9+4, c: 'hsl('+Math.floor(Math.random()*360)+',75%,65%)', sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(function() { cnfRunning = false; ctx2.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p) { p.y+=p.sp; ctx2.fillStyle=p.c; ctx2.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    shMo();
+</script>
+
+    <!-- 学習記録スクリプト -->
+    <script>
+    (function() {
+        var key = 'hirei8';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.count = (data.count || 0) + 1;
+            data.lastDate = new Date().toLocaleDateString('ja-JP');
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+        } catch(e) {}
+    })();
+    </script>
+    <!-- 復習ボタン -->
+    <div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+        <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+            <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+        </button>
+    </div>
+    <script>
+    function toggleReview() {
+        var key = 'hirei8';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.review = !data.review;
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+            updateReviewBtn(data.review);
+        } catch(e) {}
+    }
+    function updateReviewBtn(isReview) {
+        document.getElementById('reviewIcon').innerText = isReview ? '★' : '☆';
+        document.getElementById('reviewText').innerText = isReview ? '復習リストに追加済み' : '復習リストに追加';
+        document.getElementById('reviewBtn').style.background = isReview ? '#e74c3c' : '#f39c12';
+    }
+    (function() {
+        var key = 'hirei8';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            updateReviewBtn(data.review || false);
+        } catch(e) {}
+    })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：⑱反比例　変域</title>
+    <style>
+        :root { --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+        .lv-banner { max-width: 900px; margin: 0 auto 12px; background: #fdebd0; border-left: 6px solid #d35400; border-radius: 0 8px 8px 0; padding: 10px 16px; font-size: 13px; color: #d35400; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; }
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.82em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 3px; font-weight: bold; }
+        .frac .den { padding: 0 3px; font-weight: bold; }
+        .sec-title { font-weight: 900; font-size: 1.1em; color: #2980b9; border-left: 6px solid #2980b9; padding-left: 10px; margin-bottom: 14px; }
+        .exp-box { background: #f4f6f8; border-radius: 9px; padding: 12px 16px; margin-bottom: 10px; border-left: 4px solid #27ae60; animation: fadeIn .25s ease; font-size: 14px; line-height: 2; }
+        .exp-box h4 { font-size: 12px; color: #27ae60; font-weight: 900; margin-bottom: 5px; }
+        .exp-box.blue { border-left-color: #2980b9; } .exp-box.blue h4 { color: #2980b9; }
+        .exp-box.orange { border-left-color: #e67e22; } .exp-box.orange h4 { color: #e67e22; }
+        .exp-box.red { border-left-color: #e74c3c; } .exp-box.red h4 { color: #e74c3c; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+        .reveal-btn { background: #2980b9; color: white; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 8px; transition: background .15s; font-family: sans-serif; }
+        .reveal-btn:hover { background: #1a5276; }
+        .reidai-box { background: #fafcff; border: 2px solid #aed6f1; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .ruidai-box { background: #fffdf5; border: 2px solid #f9e4b0; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; }
+        .ruidai-title { font-weight: 900; font-size: 1em; color: #e67e22; margin-bottom: 14px; border-left: 6px solid #e67e22; padding-left: 10px; }
+        .q-text { font-size: 14.5px; line-height: 1.9; margin-bottom: 14px; background: #f0f6ff; border-radius: 6px; padding: 10px 14px; }
+        .step-area { font-size: 14.5px; line-height: 2.4; }
+        .step-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+        .step-label { color: #888; min-width: 50px; font-size: 13px; flex-shrink: 0; }
+        .step-hint { color: #e67e22; font-size: 12px; }
+        .phase-bar { background: #eaf0fb; border-left: 4px solid #2980b9; padding: 4px 10px; border-radius: 0 4px 4px 0; font-size: 12px; font-weight: bold; color: #2980b9; margin: 8px 0 6px; }
+        .phase-bar.green { background: #eafaf1; border-left-color: #27ae60; color: #27ae60; }
+        .phase-bar.orange { background: #fef5ec; border-left-color: #e67e22; color: #e67e22; }
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+        .math-red { font-style: italic; color: #c0392b; font-weight: bold; }
+        .drop-zone-inline { display: inline-flex; align-items: center; justify-content: center; min-width: 60px; min-height: 2em; background: var(--drop-zone-bg); border: 1.5px solid #aaa; vertical-align: middle; cursor: pointer; text-align: center; font-weight: bold; color: #c0392b; padding: 2px 8px; border-radius: 3px; font-size: 14px; transition: background .15s; }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.wide { min-width: 90px; }
+        .drop-zone-inline.sm { min-width: 52px; }
+        .drop-zone-inline.xw { min-width: 130px; }
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .ans-label-final { font-weight: 900; color: #1a5276; font-size: 15px; }
+        .ans-frame { border: 2px solid #aaa; border-radius: 4px; padding: 4px 14px; font-weight: bold; color: #1a5276; font-size: 15px; display: inline-flex; align-items: center; gap: 4px; }
+        .ineq-box { background: #fff3cd; border: 1.5px solid #f39c12; border-radius: 6px; padding: 6px 16px; font-size: 15px; font-weight: bold; color: #1a5276; display: inline-block; margin: 4px 0; }
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="sticky-header">
+    <nav class="page-nav">
+        <a href="hirei16.html" class="nav-btn">◀ ⑰ 反比例　応用①</a>
+        <a href="index.html" class="nav-btn index-btn">📋 目次</a>
+        <a href="hirei18.html" class="nav-btn">⑱ 動点 ▶</a>
+    </nav>
+    <div class="lv-banner">📙 応用レベル　— 変域の考え方をしっかり確認してから取り組もう！</div>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ══ 変域とは ══ -->
+<div style="background:#e8f8f5; border:2px solid #1abc9c; border-radius:10px; padding:18px 22px; margin-bottom:24px;">
+    <div class="sec-title" style="color:#1abc9c; border-left-color:#1abc9c;">📌 変域とは</div>
+    <p style="font-size:14.5px; line-height:2;">
+        変数がとることのできる値の<strong>範囲</strong>を <strong>変域</strong> といいます。<br>
+        不等号を使って表します。<br><br>
+        例）x が 2 以上 5 未満　→　<span class="ineq-box">2 ≦ x &lt; 5</span><br>
+        例）x が −3 より大きく 4 以下　→　<span class="ineq-box">−3 &lt; x ≦ 4</span>
+    </p>
+    <table style="border-collapse:collapse; font-size:13px; margin-top:8px;">
+        <tr style="background:#d1f2eb;">
+            <th style="border:1px solid #aaa; padding:6px 14px;">言葉</th>
+            <th style="border:1px solid #aaa; padding:6px 14px;">記号</th>
+            <th style="border:1px solid #aaa; padding:6px 14px;">境界を含む？</th>
+        </tr>
+        <tr><td style="border:1px solid #aaa; padding:6px 14px;">以上</td><td style="border:1px solid #aaa; padding:6px 14px; font-weight:bold;">≦</td><td style="border:1px solid #aaa; padding:6px 14px;">✅ 含む</td></tr>
+        <tr><td style="border:1px solid #aaa; padding:6px 14px;">以下</td><td style="border:1px solid #aaa; padding:6px 14px; font-weight:bold;">≦</td><td style="border:1px solid #aaa; padding:6px 14px;">✅ 含む</td></tr>
+        <tr><td style="border:1px solid #aaa; padding:6px 14px;">より大きい</td><td style="border:1px solid #aaa; padding:6px 14px; font-weight:bold;">&lt;</td><td style="border:1px solid #aaa; padding:6px 14px;">❌ 含まない</td></tr>
+        <tr><td style="border:1px solid #aaa; padding:6px 14px;">未満</td><td style="border:1px solid #aaa; padding:6px 14px; font-weight:bold;">&lt;</td><td style="border:1px solid #aaa; padding:6px 14px;">❌ 含まない</td></tr>
+    </table>
+</div>
+
+<!-- ══ 例題1 ══ -->
+<div class="reidai-box">
+    <div class="sec-title">📖 例題 1</div>
+    <div class="q-text">
+        y は x に反比例し，x = −3 のとき y = −12 である。<br>
+        （1）y を x の式で表せ。<br>
+        （2）x = −1 のときの y の値を求めよ。<br>
+        （3）y = −2 となる x の値を求めよ。<br>
+        （4）x の変域が −3 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
+    </div>
+
+    <div id="e1-s0" class="exp-box" style="display:none">
+        <h4>STEP 1　y を x の式で求める</h4>
+        xy = a に x = −3，y = −12 を代入：<br>
+        a = (−3) × (−12) = <strong>36</strong><br>
+        よって <strong>y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">36</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span></strong>
+    </div>
+    <div id="e1-s1" class="exp-box blue" style="display:none">
+        <h4>STEP 2　x = −1 のとき</h4>
+        y = 36 ÷ (−1) = <strong>−36</strong>
+    </div>
+    <div id="e1-s2" class="exp-box orange" style="display:none">
+        <h4>STEP 3　y = −2 のとき</h4>
+        xy = 36 に y = −2 を代入：<br>
+        x × (−2) = 36　→　x = 36 ÷ (−2) = <strong>−18</strong>
+    </div>
+    <div id="e1-s3" class="exp-box red" style="display:none">
+        <h4>STEP 4　変域を求める</h4>
+        y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">36</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> に x の両端を代入：<br>
+        x = −3 → y = 36÷(−3) = <strong>−12</strong>（変域の端）<br>
+        x = −1 → y = 36÷(−1) = <strong>−36</strong>（変域の端）<br><br>
+        x が増えると y は <strong>減る</strong>（反比例はy=a/xでa>0なら単調減少）<br>
+        x: −3 ≦ x ≦ −1　→　y: <strong>−36 ≦ y ≦ −12</strong>
+    </div>
+    <button class="reveal-btn" id="rb-e1" onclick="revealStep('e1',4)">▶ STEP 1 を見る</button>
+</div>
+
+<!-- ══ 類題1 ══ -->
+<div class="ruidai-box">
+    <div class="ruidai-title">✏️ 類題 1</div>
+    <div class="q-text">
+        y は x に反比例し，x = −3 のとき y = −12 である。次の各問いに答えよ。<br>
+        （1）y を x の式で表せ。<br>
+        （2）x = −1 のときの y の値を求めよ。<br>
+        （3）y = −2 となる x の値を求めよ。<br>
+        （4）x の変域が −3 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
+    </div>
+    <div class="step-area">
+        <div class="phase-bar">（1）y を x の式で表す</div>
+        <div class="step-row">
+            <span class="step-label">解）</span>
+            <span class="math">xy = a</span>
+            <span>より，a =（</span>
+            <span class="drop-zone-inline sm" data-ans="-3" onclick="zCl(this)"></span>
+            <span>）×（</span>
+            <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+            <span>）=</span>
+            <span class="drop-zone-inline sm" data-ans="36" onclick="zCl(this)"></span>
+        </div>
+        <div class="ans-row" style="margin-bottom:12px;">
+            <span class="ans-label-final">答）</span>
+            <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="36/x" onclick="zCl(this)"></span></div>
+        </div>
+
+        <div class="phase-bar green">（2）x = −1 のとき</div>
+        <div style="margin-left:50px;">
+            <div class="step-row">
+                <span class="math">y =</span>
+                <span class="drop-zone-inline sm" data-ans="36" onclick="zCl(this)"></span>
+                <span class="math">÷（−1）=</span>
+                <span class="drop-zone-inline sm" data-ans="-36" onclick="zCl(this)"></span>
+            </div>
+        </div>
+        <div class="ans-row" style="margin-bottom:12px;">
+            <span class="ans-label-final">答）</span>
+            <div class="ans-frame">y = <span class="drop-zone-inline sm" data-ans="-36" onclick="zCl(this)"></span></div>
+        </div>
+
+        <div class="phase-bar orange">（3）y = −2 のとき</div>
+        <div style="margin-left:50px;">
+            <div class="step-row">
+                <span class="math">xy = 36</span><span>に y = −2 を代入：</span>
+                <span class="math">x × (−2) = 36</span>
+            </div>
+            <div class="step-row">
+                <span class="math">x = 36 ÷（−2）=</span>
+                <span class="drop-zone-inline sm" data-ans="-18" onclick="zCl(this)"></span>
+            </div>
+        </div>
+        <div class="ans-row" style="margin-bottom:12px;">
+            <span class="ans-label-final">答）</span>
+            <div class="ans-frame">x = <span class="drop-zone-inline sm" data-ans="-18" onclick="zCl(this)"></span></div>
+        </div>
+
+        <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">（4）変域を求める</div>
+        <div style="margin-left:50px;">
+            <div class="step-row">
+                <span>x =</span>
+                <span class="drop-zone-inline sm" data-ans="-3" onclick="zCl(this)"></span>
+                <span>のとき y =</span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+                <span>　　x =</span>
+                <span class="drop-zone-inline sm" data-ans="-1" onclick="zCl(this)"></span>
+                <span>のとき y =</span>
+                <span class="drop-zone-inline sm" data-ans="-36" onclick="zCl(this)"></span>
+            </div>
+            <div class="step-row">
+                <span>x が増えると y は</span>
+                <span class="drop-zone-inline wide" data-ans="減る" onclick="zCl(this)"></span>
+            </div>
+        </div>
+        <div class="ans-row">
+            <span class="ans-label-final">答）</span>
+            <div class="ans-frame">
+                <span class="drop-zone-inline sm" data-ans="-36" onclick="zCl(this)"></span>
+                <span class="math"> ≦ y ≦ </span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ 例題2 ══ -->
+<div class="reidai-box" style="margin-top:8px;">
+    <div class="sec-title">📖 例題 2　〈入試問題〉</div>
+    <div class="q-text">
+        y は x に反比例し，x = 2 のとき y = 4 である。<br>
+        x の変域が −2 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
+    </div>
+    <div id="e2-s0" class="exp-box" style="display:none">
+        <h4>STEP 1　式を求める</h4>
+        a = 2 × 4 = <strong>8</strong>　　よって y = <strong><span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">8</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span></strong>
+    </div>
+    <div id="e2-s1" class="exp-box blue" style="display:none">
+        <h4>STEP 2　x の両端を代入</h4>
+        x = −2 → y = 8÷(−2) = <strong>−4</strong><br>
+        x = −1 → y = 8÷(−1) = <strong>−8</strong>
+    </div>
+    <div id="e2-s2" class="exp-box red" style="display:none">
+        <h4>STEP 3　変域を不等号で表す</h4>
+        −2 ≦ x ≦ −1 の範囲では，x が増えると y は減る。<br>
+        x = −2 のとき y = −4（大きい方）<br>
+        x = −1 のとき y = −8（小さい方）<br>
+        よって　<strong>−8 ≦ y ≦ −4</strong>
+    </div>
+    <button class="reveal-btn" id="rb-e2" onclick="revealStep('e2',3)">▶ STEP 1 を見る</button>
+</div>
+
+<!-- ══ 類題2 ══ -->
+<div class="ruidai-box">
+    <div class="ruidai-title">✏️ 類題 2</div>
+    <div class="q-text">
+        y は x に反比例し，x = 2 のとき y = 4 である。<br>
+        x の変域が −2 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
+    </div>
+    <div class="step-area">
+        <div class="phase-bar">STEP 1　式を求める</div>
+        <div class="step-row">
+            <span class="step-label">解）</span>
+            <span class="math">a =</span>
+            <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+            <span class="math">×</span>
+            <span class="drop-zone-inline sm" data-ans="4" onclick="zCl(this)"></span>
+            <span class="math">=</span>
+            <span class="drop-zone-inline sm" data-ans="8" onclick="zCl(this)"></span>
+            <span>　よって y =</span>
+            <span class="drop-zone-inline wide" data-ans="8/x" onclick="zCl(this)"></span>
+        </div>
+        <div class="phase-bar green">STEP 2　x の両端を代入</div>
+        <div style="margin-left:50px;">
+            <div class="step-row">
+                <span>x =</span>
+                <span class="drop-zone-inline sm" data-ans="-2" onclick="zCl(this)"></span>
+                <span>のとき y = 8÷(−2) =</span>
+                <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+            </div>
+            <div class="step-row">
+                <span>x =</span>
+                <span class="drop-zone-inline sm" data-ans="-1" onclick="zCl(this)"></span>
+                <span>のとき y = 8÷(−1) =</span>
+                <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span>
+            </div>
+        </div>
+        <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">STEP 3　変域を不等号で表す</div>
+        <div style="margin-left:50px;">
+            <div class="step-row">
+                <span>x が増えると y は</span>
+                <span class="drop-zone-inline wide" data-ans="減る" onclick="zCl(this)"></span>
+                <span>ので，小さい方から並べる</span>
+            </div>
+        </div>
+        <div class="ans-row">
+            <span class="ans-label-final">答）</span>
+            <div class="ans-frame">
+                <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span>
+                <span class="math"> ≦ y ≦ </span>
+                <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+</div>
+
+<script>
+    var FRAC_ANS = {
+        '36/x': ['36', 'x', '#1a5276'],
+        '8/x':  ['8',  'x', '#1a5276'],
+    };
+    function makeFracEl(val) {
+        var f = FRAC_ANS[val];
+        if (!f) return null;
+        var wrap = document.createElement('span');
+        wrap.className = 'frac-wrap';
+        wrap.style.pointerEvents = 'none';
+        if (f[2] === '#e74c3c') {
+            var m = document.createElement('span');
+            m.style.fontWeight='bold'; m.style.color=f[2]; m.style.marginRight='1px';
+            m.innerText='-'; wrap.appendChild(m);
+        }
+        var frac = document.createElement('span');
+        frac.className='frac'; frac.style.color=f[2];
+        var num = document.createElement('span'); num.className='num'; num.innerText=f[0];
+        var den = document.createElement('span'); den.className='den'; den.style.color=f[2]; den.innerText=f[1];
+        frac.appendChild(num); frac.appendChild(den);
+        wrap.appendChild(frac);
+        return wrap;
+    }
+    function setZone(z, val) {
+        z.innerHTML='';
+        var el = makeFracEl(val);
+        if (el) { z.appendChild(el); } else { z.innerText=val; }
+        z.setAttribute('data-filled', val);
+    }
+    function getZoneVal(z) { return z.getAttribute('data-filled')||z.innerText.trim(); }
+    function clearZoneEl(z) { z.innerHTML=''; z.removeAttribute('data-filled'); z.classList.remove('correct','wrong'); }
+
+    var stepRevState = { e1:0, e2:0 };
+    var stepLabels = { e1:['STEP 1','STEP 2','STEP 3','STEP 4'], e2:['STEP 1','STEP 2','STEP 3'] };
+    function revealStep(qid, total) {
+        var r = stepRevState[qid];
+        var el = document.getElementById(qid+'-s'+r);
+        if (el) { el.style.display='block'; stepRevState[qid]++; setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'nearest'}); },60); }
+        var btn = document.getElementById('rb-'+qid);
+        if (stepRevState[qid]>=total) { btn.style.display='none'; }
+        else { btn.innerText='▶ '+stepLabels[qid][stepRevState[qid]]+' を見る'; }
+    }
+
+    var sT, tI, isR=false, sW=null, bestTime=null;
+    function fmtTime(ms) { var t=ms/1000; return Math.floor(t/60).toString().padStart(2,'0')+':'+((t%60).toFixed(1)).padStart(4,'0'); }
+    function addToBank(word) {
+        var b=document.getElementById('wordBank');
+        var d=document.createElement('div'); d.className='drag-item'; d.setAttribute('data-val',word);
+        var el=makeFracEl(word);
+        if (el) { d.appendChild(el); d.style.padding='4px 10px'; d.style.minHeight='2.2em'; d.style.display='inline-flex'; d.style.alignItems='center'; }
+        else { d.innerText=word; }
+        d.onclick=function(){ if(sW) sW.classList.remove('selected'); if(sW===this){sW=null;return;} sW=this; this.classList.add('selected'); };
+        b.appendChild(d);
+    }
+    function zCl(z) {
+        if (!isR) return;
+        var cur=getZoneVal(z);
+        if (cur!=='') { addToBank(cur); clearZoneEl(z); return; }
+        if (sW) { var val=sW.getAttribute('data-val')||sW.innerText; setZone(z,val); sW.remove(); sW=null; }
+    }
+    function stCh() {
+        isR=true; sW=null; sT=Date.now(); clearInterval(tI);
+        tI=setInterval(function(){ document.getElementById('timerDisplay').innerText=fmtTime(Date.now()-sT); },100);
+        var zones=document.querySelectorAll('.drop-zone-inline');
+        var allAns=[]; zones.forEach(function(z){ allAns.push(z.getAttribute('data-ans')); clearZoneEl(z); });
+        var b=document.getElementById('wordBank'); b.innerHTML='';
+        allAns.sort(function(){ return Math.random()-0.5; });
+        allAns.forEach(function(w){ addToBank(w); });
+    }
+    function chAn() {
+        if (!isR) return;
+        var ok=true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z){
+            var ans=z.getAttribute('data-ans'), cur=getZoneVal(z);
+            if (cur===ans) { z.classList.add('correct'); z.classList.remove('wrong'); }
+            else { z.classList.add('wrong'); z.classList.remove('correct'); ok=false; if(cur!==''){addToBank(cur);clearZoneEl(z);} }
+        });
+        if (ok) {
+            clearInterval(tI); isR=false;
+            var el=Date.now()-sT;
+            if (bestTime===null||el<bestTime) { bestTime=el; document.getElementById('recordDisplay').innerText='🏆 ベスト: '+fmtTime(bestTime); }
+            startCnf();
+        } else {
+            var wbc=document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth; wbc.classList.add('shake');
+            setTimeout(function(){ wbc.classList.remove('shake'); },500);
+        }
+    }
+    function shMo() {
+        clearInterval(tI); isR=false; sW=null;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z){ setZone(z,z.getAttribute('data-ans')); z.classList.remove('correct','wrong'); });
+        document.getElementById('wordBank').innerHTML='<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText='00:00.0';
+    }
+    var cvs=document.getElementById("confetti-canvas"), ctx2=cvs.getContext("2d"), pts=[], cnfRunning=false;
+    function startCnf() {
+        cvs.width=window.innerWidth; cvs.height=window.innerHeight; pts=[];
+        for (var i=0;i<180;i++) pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height-cvs.height,s:Math.random()*9+4,c:'hsl('+Math.floor(Math.random()*360)+',75%,65%)',sp:Math.random()*3+2});
+        cnfRunning=true; updateCnf();
+        setTimeout(function(){ cnfRunning=false; ctx2.clearRect(0,0,cvs.width,cvs.height); pts=[]; },4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p){ p.y+=p.sp; ctx2.fillStyle=p.c; ctx2.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+    (function(){
+        var key='hirei17';
+        try { var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.count=(d.count||0)+1; d.lastDate=new Date().toLocaleDateString('ja-JP'); localStorage.setItem('study_'+key,JSON.stringify(d)); } catch(e){}
+    })();
+    shMo();
+</script>
+
+<div style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+    <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+        <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+    </button>
+</div>
+<script>
+function toggleReview() {
+    var key='hirei17';
+    try { var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.review=!d.review; localStorage.setItem('study_'+key,JSON.stringify(d)); updateReviewBtn(d.review); } catch(e){}
+}
+function updateReviewBtn(r) {
+    document.getElementById('reviewIcon').innerText=r?'★':'☆';
+    document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加';
+    document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12';
+}
+(function(){ var key='hirei17'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
+</script>
+</body>
+</html>

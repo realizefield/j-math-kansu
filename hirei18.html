@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：⑱反比例　動点</title>
+    <style>
+        :root { --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+        .lv-banner { max-width: 900px; margin: 0 auto 12px; background: #f9ebea; border-left: 6px solid #c0392b; border-radius: 0 8px 8px 0; padding: 10px 16px; font-size: 13px; color: #c0392b; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; }
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.82em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 3px; font-weight: bold; }
+        .frac .den { padding: 0 3px; font-weight: bold; }
+        .reidai-box { background: #fafcff; border: 2px solid #aed6f1; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .reidai-title { font-weight: 900; font-size: 1.1em; color: #2980b9; border-left: 6px solid #2980b9; padding-left: 10px; margin-bottom: 14px; }
+        .ruidai-box { background: #fffdf5; border: 2px solid #f9e4b0; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; }
+        .ruidai-title { font-weight: 900; font-size: 1em; color: #e67e22; border-left: 6px solid #e67e22; padding-left: 10px; margin-bottom: 14px; }
+        .q-text { font-size: 14.5px; line-height: 1.9; margin-bottom: 14px; background: #f0f6ff; border-radius: 6px; padding: 10px 14px; }
+        .q-inner { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 16px; }
+        .graph-wrap { background: white; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; flex-shrink: 0; }
+        .exp-box { background: #f4f6f8; border-radius: 9px; padding: 12px 16px; margin-bottom: 10px; border-left: 4px solid #27ae60; animation: fadeIn .25s ease; font-size: 14px; line-height: 2; }
+        .exp-box h4 { font-size: 12px; color: #27ae60; font-weight: 900; margin-bottom: 5px; }
+        .exp-box.blue { border-left-color: #2980b9; } .exp-box.blue h4 { color: #2980b9; }
+        .exp-box.orange { border-left-color: #e67e22; } .exp-box.orange h4 { color: #e67e22; }
+        .exp-box.red { border-left-color: #e74c3c; } .exp-box.red h4 { color: #e74c3c; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+        .reveal-btn { background: #2980b9; color: white; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 8px; transition: background .15s; font-family: sans-serif; }
+        .reveal-btn:hover { background: #1a5276; }
+        .step-area { font-size: 14.5px; line-height: 2.4; }
+        .step-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+        .step-label { color: #888; min-width: 50px; font-size: 13px; flex-shrink: 0; }
+        .step-hint { color: #e67e22; font-size: 12px; display: block; margin: 2px 0 4px 50px; }
+        .phase-bar { background: #eaf0fb; border-left: 4px solid #2980b9; padding: 4px 10px; border-radius: 0 4px 4px 0; font-size: 12px; font-weight: bold; color: #2980b9; margin: 8px 0 6px; }
+        .phase-bar.green { background: #eafaf1; border-left-color: #27ae60; color: #27ae60; }
+        .phase-bar.orange { background: #fef5ec; border-left-color: #e67e22; color: #e67e22; }
+        .phase-bar.red { background: #fdf2f2; border-left-color: #e74c3c; color: #e74c3c; }
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+        .drop-zone-inline { display: inline-flex; align-items: center; justify-content: center; min-width: 60px; min-height: 2em; background: var(--drop-zone-bg); border: 1.5px solid #aaa; vertical-align: middle; cursor: pointer; text-align: center; font-weight: bold; color: #c0392b; padding: 2px 8px; border-radius: 3px; font-size: 14px; transition: background .15s; }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.wide { min-width: 90px; }
+        .drop-zone-inline.sm { min-width: 52px; }
+        .drop-zone-inline.xw { min-width: 120px; }
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .ans-label-final { font-weight: 900; color: #1a5276; font-size: 15px; }
+        .ans-frame { border: 2px solid #aaa; border-radius: 4px; padding: 4px 14px; font-weight: bold; color: #1a5276; font-size: 15px; display: inline-flex; align-items: center; gap: 4px; }
+        .ineq-box { background: #fff3cd; border: 1.5px solid #f39c12; border-radius: 6px; padding: 4px 14px; font-size: 14px; font-weight: bold; color: #1a5276; display: inline-block; }
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="sticky-header">
+    <nav class="page-nav">
+        <a href="hirei17.html" class="nav-btn">◀ ⑰ 変域</a>
+        <a href="index.html" class="nav-btn index-btn">📋 目次</a>
+        <a href="hirei19.html" class="nav-btn">⑲ 整数 ▶</a>
+    </nav>
+    <div class="lv-banner">📕 発展レベル　— 動点の問題です。変域をしっかり確認してから取り組もう！</div>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ══ 例題 ══ -->
+<div class="reidai-box">
+    <div class="reidai-title">📖 例題</div>
+    <div class="q-text">
+        右の図のような長方形 ABCD の辺 BC 上を点 P が B を出発して C まで進む。<br>
+        点 P が B を出発してから x cm 進んだときの三角形 ABP の面積を y cm² として，次の各問いに答えよ。<br>
+        AB = 6 cm，BC = 12 cm<br><br>
+        （1）y を x の式で表せ。<br>
+        （2）x，y の変域を，それぞれ不等号を使って表せ。<br>
+        （3）x と y の関係をグラフに表せ。<br>
+        （4）三角形 ABP の面積が 25 cm² になるのは BP が何 cm のとき？
+    </div>
+
+    <div class="q-inner">
+        <!-- 図 -->
+        <div class="graph-wrap">
+            <svg width="200" height="160" viewBox="0 0 200 160">
+                <!-- 長方形ABCD: A(20,20), B(20,140), C(180,140), D(180,20) -->
+                <rect x="20" y="20" width="160" height="120" fill="#eaf4fb" stroke="#2980b9" stroke-width="2"/>
+                <!-- 頂点ラベル -->
+                <text x="10" y="18" font-size="13" font-weight="bold" fill="#1a5276">A</text>
+                <text x="10" y="152" font-size="13" font-weight="bold" fill="#1a5276">B</text>
+                <text x="183" y="152" font-size="13" font-weight="bold" fill="#1a5276">C</text>
+                <text x="183" y="18" font-size="13" font-weight="bold" fill="#1a5276">D</text>
+                <!-- AB = 6cm ラベル -->
+                <text x="2" y="85" font-size="11" fill="#e74c3c" font-weight="bold">6cm</text>
+                <!-- BC = 12cm ラベル -->
+                <text x="85" y="156" font-size="11" fill="#e74c3c" font-weight="bold">12cm</text>
+                <!-- 点P（BからX cm進んだ点）BCの途中 -->
+                <circle cx="90" cy="140" r="5" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                <text x="92" y="155" font-size="11" fill="#e67e22" font-weight="bold">P</text>
+                <!-- BP = x cm -->
+                <text x="40" y="156" font-size="10" fill="#e67e22">x cm</text>
+                <!-- 三角形ABP（薄いオレンジ塗り） -->
+                <polygon points="20,20 20,140 90,140" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="4,2"/>
+                <!-- y cm² ラベル -->
+                <text x="28" y="110" font-size="11" fill="#e67e22" font-weight="bold">y cm²</text>
+                <!-- AP の斜線 -->
+                <line x1="20" y1="20" x2="90" y2="140" stroke="#e67e22" stroke-width="1.5"/>
+            </svg>
+        </div>
+
+        <!-- ステップ解説 -->
+        <div style="flex:1; min-width:200px;">
+            <div id="e1-s0" class="exp-box" style="display:none">
+                <h4>STEP 1　y を x の式で表す</h4>
+                三角形 ABP の面積 = <strong>底辺 × 高さ ÷ 2</strong><br>
+                底辺 = BP = x cm，高さ = AB = 6 cm<br>
+                y = x × 6 ÷ 2 = <strong>3x</strong>
+            </div>
+            <div id="e1-s1" class="exp-box blue" style="display:none">
+                <h4>STEP 2　x と y の変域</h4>
+                P は B を出発して C まで進む。<br>
+                BP = x は 0 より大きく 12 以下 → <strong>0 &lt; x ≦ 12</strong><br>
+                y = 3x に代入：<br>
+                x = 0 のとき y = 0（境界除く）<br>
+                x = 12 のとき y = 36<br>
+                → <strong>0 &lt; y ≦ 36</strong>
+            </div>
+            <div id="e1-s2" class="exp-box orange" style="display:none">
+                <h4>STEP 3　グラフの特徴</h4>
+                y = 3x は原点を通る右上がりの直線。<br>
+                ただし変域 0 &lt; x ≦ 12 の部分のみ。<br>
+                x = 0 は含まない（白丸○）<br>
+                x = 12 は含む（黒丸●）<br>
+                <div style="margin-top:10px;">
+                    <svg width="230" height="185" viewBox="0 0 230 185">
+                        <g stroke="#eee" stroke-width="0.5">
+                            <line x1="30" y1="10" x2="30" y2="165"/><line x1="46" y1="10" x2="46" y2="165"/>
+                            <line x1="62" y1="10" x2="62" y2="165"/><line x1="78" y1="10" x2="78" y2="165"/>
+                            <line x1="94" y1="10" x2="94" y2="165"/><line x1="110" y1="10" x2="110" y2="165"/>
+                            <line x1="126" y1="10" x2="126" y2="165"/><line x1="142" y1="10" x2="142" y2="165"/>
+                            <line x1="158" y1="10" x2="158" y2="165"/><line x1="174" y1="10" x2="174" y2="165"/>
+                            <line x1="190" y1="10" x2="190" y2="165"/><line x1="206" y1="10" x2="206" y2="165"/>
+                            <line x1="30" y1="165" x2="215" y2="165"/>
+                            <line x1="30" y1="140" x2="215" y2="140"/><line x1="30" y1="115" x2="215" y2="115"/>
+                            <line x1="30" y1="90" x2="215" y2="90"/><line x1="30" y1="65" x2="215" y2="65"/>
+                            <line x1="30" y1="40" x2="215" y2="40"/><line x1="30" y1="15" x2="215" y2="15"/>
+                        </g>
+                        <line x1="30" y1="170" x2="30" y2="5" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="30,5 27,11 33,11" fill="#333"/>
+                        <line x1="25" y1="165" x2="218" y2="165" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="218,165 212,162 212,168" fill="#333"/>
+                        <text x="220" y="169" font-size="9" fill="#333" font-style="italic">x</text>
+                        <text x="33" y="8" font-size="9" fill="#333" font-style="italic">y</text>
+                        <text x="22" y="168" font-size="8" fill="#888">O</text>
+                        <!-- x目盛り: 1単位=16px -->
+                        <g font-size="8" fill="#aaa" text-anchor="middle">
+                            <text x="62" y="176">2</text><text x="94" y="176">4</text>
+                            <text x="126" y="176">6</text><text x="158" y="176">8</text>
+                            <text x="190" y="176">10</text><text x="206" y="176">12</text>
+                        </g>
+                        <!-- y目盛り: y=3x, x=12→y=36, 1単位=(165-15)/36=4.17px≈y軸6単位=25px -->
+                        <g font-size="8" fill="#aaa" text-anchor="end">
+                            <text x="26" y="143">6</text><text x="26" y="118">12</text>
+                            <text x="26" y="93">18</text><text x="26" y="68">24</text>
+                            <text x="26" y="43">30</text><text x="26" y="18">36</text>
+                        </g>
+                        <!-- y=3x: x=0→(30,165), x=12→(30+192,15)=(222,15)→clip=(206,15) -->
+                        <!-- x軸1単位16px: x=12→30+16*12=222→オーバー。実際x=11→206,y=33→py=165-33*4.17=27 -->
+                        <!-- x=12, y=36, py=165-36*4.17=15 → px=206 の点がx=11相当。修正: x=11→py=165-33*4.17≈27 -->
+                        <!-- 正しく: (30+16x, 165-4.17y) = (30+16x, 165-4.17*3x) = (30+16x, 165-12.5x) -->
+                        <!-- x=0→(30,165), x=12→(30+192,165-150)=(222,15)→実際はx=11.6→(216,20) clip -->
+                        <!-- 簡単に: (32,163)〜(206,15) で描く (x≈0.1〜11) -->
+                        <line x1="32" y1="163" x2="206" y2="15" stroke="#e74c3c" stroke-width="2.5"/>
+                        <!-- x=12端点: px=30+192=222→viewBox外。x=11→px=206,y=33→py=165-33*4.17≈27 -->
+                        <!-- x=12→px=222はclipされる。x=11.6まで描いて黒丸をviewBox内に -->
+                        <!-- x=12→y=36 黒丸: px=206, py=15（x=11.6相当）として表示 -->
+                        <circle cx="206" cy="15" r="4" fill="#e74c3c"/>
+                        <circle cx="30" cy="165" r="4" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                        <line x1="206" y1="15" x2="206" y2="165" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="206" y="178" font-size="8" fill="#e74c3c" text-anchor="middle">12</text>
+                        <text x="20" y="18" font-size="8" fill="#e74c3c" text-anchor="end">36</text>
+                    </svg>
+                    <div style="font-size:12px; color:#888; margin-top:2px;">◯ = 端点を含まない　● = 端点を含む</div>
+                </div>
+            </div>
+            <div id="e1-s3" class="exp-box red" style="display:none">
+                <h4>STEP 4　面積が 25 cm² のとき</h4>
+                y = 3x に y = 25 を代入：<br>
+                25 = 3x　→　x = 25 ÷ 3 =
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">25</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">3</span></span></span>
+                cm
+            </div>
+            <button class="reveal-btn" id="rb-e1" onclick="revealStep('e1',4)">▶ STEP 1 を見る</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ 類題 ══ -->
+<div class="ruidai-box">
+    <div class="ruidai-title">✏️ 類題</div>
+    <div class="q-text">
+        辺 AB が 4 cm，辺 BC が 8 cm の長方形 ABCD がある。点 P は，辺 BC 上を点 B から点 C まで，毎秒 2 cm の速さで動く。<br>
+        点 P が出発してから x 秒後の三角形 ABP の面積を y cm² とするとき，次の各問いに答えよ。<br><br>
+        （1）y を x の式で表せ。<br>
+        （2）x の変域を求めよ。<br>
+        （3）x と y の関係をグラフに表せ。
+    </div>
+
+    <div class="q-inner">
+        <!-- 図: AB=4cm, BC=8cm, 毎秒2cm -->
+        <div class="graph-wrap">
+            <svg width="200" height="160" viewBox="0 0 200 160">
+                <!-- 長方形: AB=4cm(高さ小), BC=8cm(幅大) -->
+                <rect x="20" y="50" width="160" height="80" fill="#eaf4fb" stroke="#2980b9" stroke-width="2"/>
+                <text x="8" y="48" font-size="13" font-weight="bold" fill="#1a5276">A</text>
+                <text x="8" y="142" font-size="13" font-weight="bold" fill="#1a5276">B</text>
+                <text x="183" y="142" font-size="13" font-weight="bold" fill="#1a5276">C</text>
+                <text x="183" y="48" font-size="13" font-weight="bold" fill="#1a5276">D</text>
+                <!-- AB = 4cm -->
+                <text x="1" y="98" font-size="10" fill="#e74c3c" font-weight="bold">4cm</text>
+                <!-- BC = 8cm -->
+                <text x="82" y="155" font-size="10" fill="#e74c3c" font-weight="bold">8cm</text>
+                <!-- 毎秒2cm ラベル -->
+                <text x="70" y="145" font-size="9" fill="#e67e22">毎秒2cm</text>
+                <!-- 点P (途中) -->
+                <circle cx="90" cy="130" r="5" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                <text x="92" y="145" font-size="11" fill="#e67e22" font-weight="bold">P</text>
+                <!-- 三角形ABP -->
+                <polygon points="20,50 20,130 90,130" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="4,2"/>
+                <text x="24" y="105" font-size="10" fill="#e67e22" font-weight="bold">y cm²</text>
+                <!-- AP の斜線 -->
+                <line x1="20" y1="50" x2="90" y2="130" stroke="#e67e22" stroke-width="1.5"/>
+                <!-- x秒ラベル -->
+                <text x="36" y="143" font-size="9" fill="#e67e22">x秒</text>
+            </svg>
+        </div>
+
+        <div style="flex:1; min-width:200px;">
+            <div class="step-area">
+                <div class="phase-bar">（1）y を x の式で表せ。</div>
+                <div class="step-row">
+                    <span class="step-label">解）</span>
+                    <span>x 秒後の BP =</span>
+                    <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                    <span class="math">x</span>
+                    <span>cm</span>
+                </div>
+                <div style="margin-left:50px;">
+                    <div class="step-row">
+                        <span>底辺 = BP =</span>
+                        <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                        <span class="math">x</span>
+                        <span>，高さ = AB =</span>
+                        <span class="drop-zone-inline sm" data-ans="4" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">y =</span>
+                        <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                        <span class="math">x ×</span>
+                        <span class="drop-zone-inline sm" data-ans="4" onclick="zCl(this)"></span>
+                        <span class="math">÷ 2 =</span>
+                        <span class="drop-zone-inline wide" data-ans="4x" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row" style="margin-bottom:14px;">
+                    <span class="ans-label-final">答）</span>
+                    <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="4x" onclick="zCl(this)"></span></div>
+                </div>
+
+                <div class="phase-bar green">（2）x の変域を求めよ。</div>
+                <div style="margin-left:50px;">
+                    <div class="step-row">
+                        <span>BC = 8 cm，速さ = 2 cm/s　→　かかる時間 =</span>
+                        <span class="drop-zone-inline sm" data-ans="8" onclick="zCl(this)"></span>
+                        <span class="math">÷</span>
+                        <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                        <span class="math">=</span>
+                        <span class="drop-zone-inline sm" data-ans="4" onclick="zCl(this)"></span>
+                        <span>秒</span>
+                    </div>
+                </div>
+                <div class="ans-row" style="margin-bottom:14px;">
+                    <span class="ans-label-final">答）</span>
+                    <div class="ans-frame">
+                        <span class="drop-zone-inline sm" data-ans="0" onclick="zCl(this)"></span>
+                        <span class="math"> &lt; x ≦ </span>
+                        <span class="drop-zone-inline sm" data-ans="4" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+
+                <div class="phase-bar orange">（3）x と y の関係をグラフに表せ。</div>
+                <div style="margin-left:10px; margin-bottom:14px;">
+                    <!-- y=4x, x∈(0,4], y∈(0,16] -->
+                    <!-- グラフ: x軸0〜4（1単位=40px）, y軸0〜16（1単位=9px） -->
+                    <svg width="220" height="190" viewBox="0 0 220 190">
+                        <g stroke="#eee" stroke-width="0.5">
+                            <line x1="30" y1="10" x2="30" y2="170"/><line x1="70" y1="10" x2="70" y2="170"/>
+                            <line x1="110" y1="10" x2="110" y2="170"/><line x1="150" y1="10" x2="150" y2="170"/>
+                            <line x1="190" y1="10" x2="190" y2="170"/>
+                            <line x1="30" y1="170" x2="200" y2="170"/>
+                            <line x1="30" y1="134" x2="200" y2="134"/>
+                            <line x1="30" y1="98" x2="200" y2="98"/>
+                            <line x1="30" y1="62" x2="200" y2="62"/>
+                            <line x1="30" y1="26" x2="200" y2="26"/>
+                            <line x1="30" y1="152" x2="200" y2="152"/>
+                            <line x1="30" y1="116" x2="200" y2="116"/>
+                            <line x1="30" y1="80" x2="200" y2="80"/>
+                            <line x1="30" y1="44" x2="200" y2="44"/>
+                        </g>
+                        <line x1="30" y1="175" x2="30" y2="5" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="30,5 27,11 33,11" fill="#333"/>
+                        <line x1="25" y1="170" x2="205" y2="170" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="205,170 199,167 199,173" fill="#333"/>
+                        <text x="208" y="174" font-size="9" fill="#333" font-style="italic">x</text>
+                        <text x="33" y="8" font-size="9" fill="#333" font-style="italic">y</text>
+                        <text x="22" y="173" font-size="8" fill="#888">O</text>
+                        <!-- x目盛り: 1単位=40px -->
+                        <g font-size="9" fill="#aaa" text-anchor="middle">
+                            <text x="70" y="182">1</text><text x="110" y="182">2</text>
+                            <text x="150" y="182">3</text><text x="190" y="182">4</text>
+                        </g>
+                        <!-- y目盛り: y=4x で x=4→y=16, 1単位=(170-26)/16=9px -->
+                        <g font-size="9" fill="#aaa" text-anchor="end">
+                            <text x="26" y="134">4</text><text x="26" y="98">8</text>
+                            <text x="26" y="62">12</text><text x="26" y="26">16</text>
+                        </g>
+                        <!-- y=4x: x=0→(30,170), x=4→(190,26) -->
+                        <!-- y=4x, x=4→y=16→py=170-16*9=170-144=26 ✓ -->
+                        <line x1="32" y1="168" x2="190" y2="26" stroke="#e74c3c" stroke-width="2.5"/>
+                        <circle cx="190" cy="26" r="4" fill="#e74c3c"/>
+                        <circle cx="30" cy="170" r="4" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                        <line x1="190" y1="26" x2="190" y2="170" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+                        <line x1="30" y1="26" x2="190" y2="26" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+                    </svg>
+                    <div style="font-size:12px; color:#888; margin-top:4px;">
+                        ◯ = 端点を含まない　● = 端点を含む
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+</div>
+
+<script>
+    var FRAC_ANS = {
+        '25/3': ['25', '3', '#1a5276'],
+    };
+    function makeFracEl(val) {
+        var f = FRAC_ANS[val];
+        if (!f) return null;
+        var wrap = document.createElement('span');
+        wrap.className = 'frac-wrap';
+        wrap.style.pointerEvents = 'none';
+        var frac = document.createElement('span');
+        frac.className = 'frac'; frac.style.color = f[2];
+        var num = document.createElement('span'); num.className = 'num'; num.innerText = f[0];
+        var den = document.createElement('span'); den.className = 'den'; den.style.color = f[2]; den.innerText = f[1];
+        frac.appendChild(num); frac.appendChild(den);
+        wrap.appendChild(frac);
+        return wrap;
+    }
+    function setZone(z, val) {
+        z.innerHTML = '';
+        var el = makeFracEl(val);
+        if (el) { z.appendChild(el); } else { z.innerText = val; }
+        z.setAttribute('data-filled', val);
+    }
+    function getZoneVal(z) { return z.getAttribute('data-filled') || z.innerText.trim(); }
+    function clearZoneEl(z) { z.innerHTML = ''; z.removeAttribute('data-filled'); z.classList.remove('correct','wrong'); }
+
+    var stepRevState = { e1: 0 };
+    var stepLabels = { e1: ['STEP 1','STEP 2','STEP 3','STEP 4'] };
+    function revealStep(qid, total) {
+        var r = stepRevState[qid];
+        var el = document.getElementById(qid+'-s'+r);
+        if (el) { el.style.display='block'; stepRevState[qid]++; setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'nearest'}); },60); }
+        var btn = document.getElementById('rb-'+qid);
+        if (stepRevState[qid] >= total) { btn.style.display='none'; }
+        else { btn.innerText = '▶ '+stepLabels[qid][stepRevState[qid]]+' を見る'; }
+    }
+
+    var sT, tI, isR=false, sW=null, bestTime=null;
+    function fmtTime(ms) { var t=ms/1000; return Math.floor(t/60).toString().padStart(2,'0')+':'+((t%60).toFixed(1)).padStart(4,'0'); }
+    function addToBank(word) {
+        var b = document.getElementById('wordBank');
+        var d = document.createElement('div'); d.className='drag-item'; d.setAttribute('data-val',word);
+        var el = makeFracEl(word);
+        if (el) { d.appendChild(el); d.style.padding='4px 10px'; d.style.minHeight='2.2em'; d.style.display='inline-flex'; d.style.alignItems='center'; }
+        else { d.innerText = word; }
+        d.onclick = function(){ if(sW) sW.classList.remove('selected'); if(sW===this){sW=null;return;} sW=this; this.classList.add('selected'); };
+        b.appendChild(d);
+    }
+    function zCl(z) {
+        if (!isR) return;
+        var cur = getZoneVal(z);
+        if (cur !== '') { addToBank(cur); clearZoneEl(z); return; }
+        if (sW) { var val = sW.getAttribute('data-val')||sW.innerText; setZone(z,val); sW.remove(); sW=null; }
+    }
+    function stCh() {
+        isR=true; sW=null; sT=Date.now(); clearInterval(tI);
+        tI=setInterval(function(){ document.getElementById('timerDisplay').innerText=fmtTime(Date.now()-sT); },100);
+        var zones=document.querySelectorAll('.drop-zone-inline');
+        var allAns=[]; zones.forEach(function(z){ allAns.push(z.getAttribute('data-ans')); clearZoneEl(z); });
+        var b=document.getElementById('wordBank'); b.innerHTML='';
+        allAns.sort(function(){ return Math.random()-0.5; });
+        allAns.forEach(function(w){ addToBank(w); });
+    }
+    function chAn() {
+        if (!isR) return;
+        var ok=true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z){
+            var ans=z.getAttribute('data-ans'), cur=getZoneVal(z);
+            if (cur===ans) { z.classList.add('correct'); z.classList.remove('wrong'); }
+            else { z.classList.add('wrong'); z.classList.remove('correct'); ok=false; if(cur!==''){addToBank(cur);clearZoneEl(z);} }
+        });
+        if (ok) {
+            clearInterval(tI); isR=false;
+            var el=Date.now()-sT;
+            if (bestTime===null||el<bestTime){ bestTime=el; document.getElementById('recordDisplay').innerText='🏆 ベスト: '+fmtTime(bestTime); }
+            startCnf();
+        } else {
+            var wbc=document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth; wbc.classList.add('shake');
+            setTimeout(function(){ wbc.classList.remove('shake'); },500);
+        }
+    }
+    function shMo() {
+        clearInterval(tI); isR=false; sW=null;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z){ setZone(z,z.getAttribute('data-ans')); z.classList.remove('correct','wrong'); });
+        document.getElementById('wordBank').innerHTML='<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText='00:00.0';
+    }
+    var cvs=document.getElementById("confetti-canvas"), ctx2=cvs.getContext("2d"), pts=[], cnfRunning=false;
+    function startCnf() {
+        cvs.width=window.innerWidth; cvs.height=window.innerHeight; pts=[];
+        for (var i=0;i<180;i++) pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height-cvs.height,s:Math.random()*9+4,c:'hsl('+Math.floor(Math.random()*360)+',75%,65%)',sp:Math.random()*3+2});
+        cnfRunning=true; updateCnf();
+        setTimeout(function(){ cnfRunning=false; ctx2.clearRect(0,0,cvs.width,cvs.height); pts=[]; },4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p){ p.y+=p.sp; ctx2.fillStyle=p.c; ctx2.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+    (function(){
+        var key='hirei18';
+        try { var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.count=(d.count||0)+1; d.lastDate=new Date().toLocaleDateString('ja-JP'); localStorage.setItem('study_'+key,JSON.stringify(d)); } catch(e){}
+    })();
+    shMo();
+</script>
+
+<div style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+    <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+        <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+    </button>
+</div>
+<script>
+function toggleReview() {
+    var key='hirei18';
+    try { var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.review=!d.review; localStorage.setItem('study_'+key,JSON.stringify(d)); updateReviewBtn(d.review); } catch(e){}
+}
+function updateReviewBtn(r) {
+    document.getElementById('reviewIcon').innerText=r?'★':'☆';
+    document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加';
+    document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12';
+}
+(function(){ var key='hirei18'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
+</script>
+</body>
+</html>

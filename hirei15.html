@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：⑮反比例の式②</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.index-btn:hover { background: #154360; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+
+        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .speaker-btn-large.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        /* 分数表示 */
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.82em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 3px; font-weight: bold; }
+        .frac .den { padding: 0 3px; font-weight: bold; }
+
+        /* 問題カード */
+        .q-card { border: 1.5px solid #dde; border-radius: 10px; padding: 20px 22px; background: #fafafa; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 20px; }
+        .q-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+        .badge { background: #1a5276; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; flex-shrink: 0; }
+        .q-num { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1em; color: #1a5276; }
+        .q-pref { font-size: 12px; color: #888; }
+        .q-text { font-size: 14.5px; line-height: 1.9; margin-bottom: 14px; background: #f0f6ff; border-radius: 6px; padding: 10px 14px; }
+        .sub-q { font-weight: bold; color: #1a5276; margin: 12px 0 6px; font-size: 14px; }
+
+        /* 表 */
+        .tbl-wrap { overflow-x: auto; margin: 8px 0 12px; }
+        .prop-table { border-collapse: collapse; font-size: 14px; }
+        .prop-table th { background: #eaf0fb; color: #1a5276; font-weight: bold; border: 2px solid #aaa; padding: 7px 14px; text-align: center; min-width: 42px; }
+        .prop-table td { border: 2px solid #aaa; padding: 7px 14px; text-align: center; min-width: 42px; background: white; }
+        .prop-table td.hi { background: #fff9c4; font-weight: bold; color: #c0392b; }
+        .prop-table td.slash { background: #eee; }
+
+        /* ステップ */
+        .step-area { font-size: 14.5px; line-height: 2.4; }
+        .step-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+        .step-label { color: #888; min-width: 50px; font-size: 13px; flex-shrink: 0; }
+        .step-hint { color: #e67e22; font-size: 12px; }
+        .phase-bar { background: #eaf0fb; border-left: 4px solid #2980b9; padding: 4px 10px; border-radius: 0 4px 4px 0; font-size: 12px; font-weight: bold; color: #2980b9; margin: 8px 0 6px; }
+        .phase-bar.green { background: #eafaf1; border-left-color: #27ae60; color: #27ae60; }
+        .phase-bar.orange { background: #fef5ec; border-left-color: #e67e22; color: #e67e22; }
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+
+        /* 空欄 */
+        .drop-zone-inline {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 60px; min-height: 2em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #c0392b; padding: 2px 8px;
+            border-radius: 3px; font-size: 14px; transition: background 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.wide { min-width: 90px; }
+        .drop-zone-inline.sm { min-width: 52px; }
+        .drop-zone-inline.xw { min-width: 110px; }
+
+        /* 答え欄 */
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .ans-label-final { font-weight: 900; color: #1a5276; font-size: 15px; }
+        .ans-frame { border: 2px solid #aaa; border-radius: 4px; padding: 4px 14px; font-style: italic; font-weight: bold; color: #1a5276; font-size: 15px; display: inline-flex; align-items: center; gap: 4px; }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <nav class="page-nav">
+        <a href="hirei14.html" class="nav-btn">◀ ⑮ 反比例の式　演習①</a>
+        <a href="index.html" class="nav-btn index-btn">📋 目次</a>
+        <span class="nav-btn disabled">次へ ▶</span>
+    </nav>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="audio-summary-area">
+        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
+            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+        </button>
+        <div class="volume-control">
+            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        </div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- (1) 長野県：表から式＋アを求める -->
+    <div class="q-card">
+        <div class="q-header">
+            <div class="q-num"><span class="badge">1</span>（1）y を x の式で表せ。また，アの値を求めよ。</div>
+            <span class="q-pref">〈長野県〉</span>
+        </div>
+        <div class="q-text">下の表は y が x に反比例する関係を示している。y を x の式で表せ。また，アの値を求めよ。
+            <div style="overflow-x:auto; margin-top:10px;">
+                <table class="prop-table">
+                    <tr>
+                        <th>x</th>
+                        <td>…</td><td>−3</td><td>…</td><td>2</td><td>…</td><td class="hi">ア</td>
+                    </tr>
+                    <tr>
+                        <th>y</th>
+                        <td>…</td><td>4</td><td>…</td><td>−6</td><td>…</td><td>3</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="step-area">
+            <div class="phase-bar">STEP 1　y を x の式で表す（x = 2，y = −6 を使う）</div>
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = a</span><span>より，a =</span>
+                <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                <span class="math">×（</span>
+                <span class="drop-zone-inline sm" data-ans="-6" onclick="zCl(this)"></span>
+                <span class="math">）=</span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+                <span>　よって，<span class="math">y =</span></span>
+                <span class="drop-zone-inline wide" data-ans="-12/x" onclick="zCl(this)"></span>
+            </div>
+            <div class="phase-bar green">STEP 2　ア（y = 3 のとき x を求める）</div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">xy = −12</span><span>に y =</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span>を代入</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">ア ×</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">= −12</span>
+                </div>
+                <div class="step-row">
+                    <span class="step-hint">↓ 左右を入れ替える</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">ア = （−12）÷</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">=</span>
+                    <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="-12/x" onclick="zCl(this)"></span></div>
+                <div class="ans-frame">ア = <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- (2) 表から式を求める（長野県） -->
+    <div class="q-card">
+        <div class="q-header">
+            <div class="q-num"><span class="badge">2</span>（2）y を x の式で表せ。</div>
+            <span class="q-pref">〈長野県〉</span>
+        </div>
+        <div class="q-text">下の表は y が x に反比例する関係を示している。y を x の式で表せ。</div>
+        <div class="tbl-wrap">
+            <table class="prop-table">
+                <tr>
+                    <th>x</th>
+                    <td>…</td><td>−3</td><td>…</td><td>2</td><td>…</td><td class="hi">ア</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td>…</td><td>4</td><td>…</td><td>−6</td><td>…</td><td>3</td>
+                </tr>
+            </table>
+        </div>
+        <div class="step-area">
+            <div class="phase-bar">STEP 1　式を求める（x = 2，y = −6 を使う）</div>
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = a</span><span>より，a =</span>
+                <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                <span class="math">×（</span>
+                <span class="drop-zone-inline sm" data-ans="-6" onclick="zCl(this)"></span>
+                <span class="math">）=</span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+            </div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span>よって，<span class="math">y =</span></span>
+                    <span class="drop-zone-inline wide" data-ans="-12/x" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="phase-bar green">STEP 2　ア（y = 3 のとき x を求める）</div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">xy = −12</span><span>に y =</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span>を代入</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">ア ×</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">= −12</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">ア = （−12）÷</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">=</span>
+                    <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="-12/x" onclick="zCl(this)"></span></div>
+                <div class="ans-frame">ア = <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- (2) x=6, y=-2 → 3問 -->
+    <div class="q-card">
+        <div class="q-header">
+            <div class="q-num"><span class="badge">3</span>（3）次の問いに答えよ。</div>
+            <span class="q-pref">〈福岡県〉</span>
+        </div>
+        <div class="q-text">y は x に反比例し，x = 6 のとき y = −2 という。</div>
+
+        <div class="sub-q">1) y を x の式で表せ。</div>
+        <div class="step-area">
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = a</span><span>より，a =</span>
+                <span class="drop-zone-inline sm" data-ans="6" onclick="zCl(this)"></span>
+                <span class="math">×（</span>
+                <span class="drop-zone-inline sm" data-ans="-2" onclick="zCl(this)"></span>
+                <span class="math">）=</span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="-12/x" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+
+        <div class="sub-q">2) x = 3 のときの y の値を求めよ。</div>
+        <div class="step-area">
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = −12</span><span>に x =</span>
+                <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                <span>を代入</span>
+            </div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">× y = −12</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">y = −12 ÷</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">=</span>
+                    <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">y = <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+
+        <div class="sub-q">3) y = −8 のときの x の値を求めよ。</div>
+        <div class="step-area">
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = −12</span><span>に y =</span>
+                <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span>
+                <span>を代入</span>
+            </div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">x ×（</span>
+                    <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span>
+                    <span class="math">）= −12</span>
+                </div>
+                <div class="step-row">
+                    <span class="step-hint">↓ 左右を入れ替える</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">−8 × x = −12</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">x = （−12）÷（−8）=</span>
+                    <span class="drop-zone-inline wide" data-ans="3/2" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">x = <span class="drop-zone-inline wide" data-ans="3/2" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- (2) 表問題：x=-4,y=6 → ア・イ（高知県） -->
+    <div class="q-card">
+        <div class="q-header">
+            <div class="q-num"><span class="badge">4</span>（4）表の ア・イ の値を求めよ。</div>
+            <span class="q-pref">〈高知県〉</span>
+        </div>
+        <div class="q-text">y が x に反比例し，x と y の値が下の表のように対応しているとき，表中の k の値を求めなさい。</div>
+        <div class="tbl-wrap">
+            <table class="prop-table">
+                <tr>
+                    <th>x</th>
+                    <td>…</td><td>−2</td><td>…</td><td class="slash" style="font-style:italic;color:#aaa;">×</td><td>…</td><td>3</td><td>…</td><td>12</td><td>…</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td>…</td><td>6</td><td>…</td><td class="slash"></td><td>…</td><td class="hi">k</td><td>…</td><td>−1</td><td>…</td>
+                </tr>
+            </table>
+        </div>
+        <div class="step-area">
+            <div class="phase-bar">STEP 1　式を求める（x = −2，y = 6 を使う）</div>
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = a</span><span>より，a =（</span>
+                <span class="drop-zone-inline sm" data-ans="-2" onclick="zCl(this)"></span>
+                <span class="math">）×</span>
+                <span class="drop-zone-inline sm" data-ans="6" onclick="zCl(this)"></span>
+                <span class="math">=</span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+            </div>
+            <div class="phase-bar green">STEP 2　k（x = 3 のとき y を求める）</div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">xy = −12</span><span>に x =</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span>を代入</span>
+                </div>
+                <div class="step-row">
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">× k = −12</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">k = −12 ÷</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">=</span>
+                    <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">k = <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- (3) 表から x=3のときy（福岡県） -->
+    <div class="q-card">
+        <div class="q-header">
+            <div class="q-num"><span class="badge">5</span>（5）x = 3 のときの y の値を求めよ。</div>
+            <span class="q-pref">〈福岡県〉</span>
+        </div>
+        <div class="q-text">次の表は y が x に反比例する関係を表したものである。x = 3 のときの y の値を求めよ。</div>
+        <div class="tbl-wrap">
+            <table class="prop-table">
+                <tr>
+                    <th>x</th>
+                    <td>…</td><td>−2</td><td>−1</td><td class="slash" style="font-style:italic;color:#aaa;">×</td><td>1</td><td>2</td><td>…</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td>…</td><td>6</td><td>12</td><td class="slash"></td><td>−12</td><td>−6</td><td>…</td>
+                </tr>
+            </table>
+        </div>
+        <div class="step-area">
+            <div class="phase-bar">STEP 1　式を求める（x = −2，y = 6 を使う）</div>
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = a</span><span>より，a =（</span>
+                <span class="drop-zone-inline sm" data-ans="-2" onclick="zCl(this)"></span>
+                <span class="math">）×</span>
+                <span class="drop-zone-inline sm" data-ans="6" onclick="zCl(this)"></span>
+                <span class="math">=</span>
+                <span class="drop-zone-inline sm" data-ans="-12" onclick="zCl(this)"></span>
+                <span>　よって，</span>
+                <span class="math">y =</span>
+                <span class="drop-zone-inline wide" data-ans="-12/x" onclick="zCl(this)"></span>
+            </div>
+            <div class="phase-bar green">STEP 2　x = 3 を代入</div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">y = −12 ÷</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">=</span>
+                    <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">y = <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- (4) 表問題：x=-4,y=6 ア・イ求める -->
+    <div class="q-card">
+        <div class="q-header">
+            <div class="q-num"><span class="badge">6</span>（6）ア・イの値をそれぞれ求めよ。</div>
+        </div>
+        <div class="q-text">y は x に反比例している。次の表について答えよ。</div>
+        <div class="tbl-wrap">
+            <table class="prop-table">
+                <tr>
+                    <th>x</th>
+                    <td>…</td><td>−4</td><td>…</td><td>3</td><td>…</td><td class="hi">イ</td><td>…</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td>…</td><td>6</td><td>…</td><td class="hi">ア</td><td>…</td>
+                    <td style="border:2px solid #aaa;padding:7px 14px;text-align:center;">
+                        <span style="display:inline-flex;align-items:center;vertical-align:middle;gap:1px;">
+                        −<span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #333;padding:0 3px;font-weight:bold;">3</span><span style="padding:0 3px;font-weight:bold;">2</span></span>
+                        </span>
+                    </td>
+                    <td>…</td>
+                </tr>
+            </table>
+        </div>
+        <div class="step-area">
+            <div class="phase-bar">STEP 1　式を求める（x = −4，y = 6 を使う）</div>
+            <div class="step-row">
+                <span class="step-label">解）</span>
+                <span class="math">xy = a</span><span>より，a =（</span>
+                <span class="drop-zone-inline sm" data-ans="-4" onclick="zCl(this)"></span>
+                <span class="math">）×</span>
+                <span class="drop-zone-inline sm" data-ans="6" onclick="zCl(this)"></span>
+                <span class="math">=</span>
+                <span class="drop-zone-inline sm" data-ans="-24" onclick="zCl(this)"></span>
+            </div>
+            <div class="phase-bar green">ア　x = 3 のとき y を求める</div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">xy = −24</span><span>に x =</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span>を代入</span>
+                </div>
+                <div class="step-row">
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">× y = −24</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">y = −24 ÷</span>
+                    <span class="drop-zone-inline sm" data-ans="3" onclick="zCl(this)"></span>
+                    <span class="math">=</span>
+                    <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="phase-bar orange">イ　y = −3/2 のとき x を求める</div>
+            <div style="margin-left:50px;">
+                <div class="step-row">
+                    <span class="math">xy = −24</span><span>に y = −3/2 を代入</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">x ×（−</span>
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;gap:1px;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #333;padding:0 3px;font-weight:bold;">3</span><span style="padding:0 3px;font-weight:bold;">2</span></span></span>
+                    <span class="math">）= −24</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">x = （−24）÷（−</span>
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;gap:1px;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #333;padding:0 3px;font-weight:bold;">3</span><span style="padding:0 3px;font-weight:bold;">2</span></span></span>
+                    <span class="math">）=</span>
+                    <span class="drop-zone-inline sm" data-ans="16" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <div class="ans-frame">ア = <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span></div>
+                <div class="ans-frame">イ = <span class="drop-zone-inline sm" data-ans="16" onclick="zCl(this)"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+</div>
+
+<audio id="mainAudio" src="hirei15.wav"></audio>
+
+<script>
+    var FRAC_ANS = {
+        '-12/x': ['12', 'x', '#e74c3c'],
+        '-24/x': ['24', 'x', '#e74c3c'],
+        '3/2':   ['3',  '2', '#1a5276'],
+    };
+
+    function makeFracEl(val) {
+        var f = FRAC_ANS[val];
+        if (!f) return null;
+        var wrap = document.createElement('span');
+        wrap.className = 'frac-wrap';
+        wrap.style.pointerEvents = 'none';
+        var isNeg = (f[2] === '#e74c3c');
+        if (isNeg) {
+            var minus = document.createElement('span');
+            minus.style.fontWeight = 'bold';
+            minus.style.color = f[2];
+            minus.style.marginRight = '1px';
+            minus.innerText = '-';
+            wrap.appendChild(minus);
+        }
+        var frac = document.createElement('span');
+        frac.className = 'frac';
+        frac.style.color = f[2];
+        var num = document.createElement('span');
+        num.className = 'num'; num.innerText = f[0];
+        var den = document.createElement('span');
+        den.className = 'den'; den.style.color = f[2]; den.innerText = f[1];
+        frac.appendChild(num); frac.appendChild(den);
+        wrap.appendChild(frac);
+        return wrap;
+    }
+
+    function setZone(z, val) {
+        z.innerHTML = '';
+        var el = makeFracEl(val);
+        if (el) { z.appendChild(el); } else { z.innerText = val; }
+        z.setAttribute('data-filled', val);
+    }
+    function getZoneVal(z) { return z.getAttribute('data-filled') || z.innerText.trim(); }
+    function clearZoneEl(z) { z.innerHTML = ''; z.removeAttribute('data-filled'); z.classList.remove('correct','wrong'); }
+
+    var sT, tI, isR = false, sW = null, bestTime = null;
+    var audio = document.getElementById('mainAudio');
+    var volSlider = document.getElementById('volSlider');
+    var volNum = document.getElementById('volNum');
+    var playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = function() { updatePlayUI(false); };
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', function(e) {
+        audio.volume = e.target.value;
+        volNum.innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    function fmtTime(ms) {
+        var total = ms / 1000;
+        var m = Math.floor(total / 60).toString().padStart(2,'0');
+        var s = (total % 60).toFixed(1).padStart(4,'0');
+        return m + ':' + s;
+    }
+
+    function addToBank(word) {
+        var b = document.getElementById('wordBank');
+        var d = document.createElement('div');
+        d.className = 'drag-item';
+        d.setAttribute('data-val', word);
+        var el = makeFracEl(word);
+        if (el) {
+            d.appendChild(el);
+            d.style.padding = '4px 10px';
+            d.style.minHeight = '2.2em';
+            d.style.display = 'inline-flex';
+            d.style.alignItems = 'center';
+        } else { d.innerText = word; }
+        d.onclick = function() {
+            if (sW) sW.classList.remove('selected');
+            if (sW === this) { sW = null; return; }
+            sW = this; this.classList.add('selected');
+        };
+        b.appendChild(d);
+    }
+
+    function zCl(z) {
+        if (!isR) return;
+        var cur = getZoneVal(z);
+        if (cur !== '') { addToBank(cur); clearZoneEl(z); return; }
+        if (sW) { var val = sW.getAttribute('data-val')||sW.innerText; setZone(z,val); sW.remove(); sW=null; }
+    }
+
+    function stCh() {
+        isR = true; sW = null;
+        sT = Date.now(); clearInterval(tI);
+        tI = setInterval(function() {
+            document.getElementById('timerDisplay').innerText = fmtTime(Date.now()-sT);
+        }, 100);
+        var zones = document.querySelectorAll('.drop-zone-inline');
+        var allAns = [];
+        zones.forEach(function(z) { allAns.push(z.getAttribute('data-ans')); clearZoneEl(z); });
+        var b = document.getElementById('wordBank');
+        b.innerHTML = '';
+        allAns.sort(function() { return Math.random()-0.5; });
+        allAns.forEach(function(w) { addToBank(w); });
+    }
+
+    function chAn() {
+        if (!isR) return;
+        var allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            var cur = getZoneVal(z);
+            if (cur === ans) { z.classList.add('correct'); z.classList.remove('wrong'); }
+            else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                if (cur !== '') { addToBank(cur); clearZoneEl(z); }
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI); isR = false;
+            var elapsed = Date.now()-sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+                document.getElementById('recordDisplay').innerText = '🏆 ベスト: '+fmtTime(bestTime);
+            }
+            startCnf();
+        } else {
+            var wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth;
+            wbc.classList.add('shake');
+            setTimeout(function() { wbc.classList.remove('shake'); }, 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI); isR = false; sW = null;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            setZone(z, z.getAttribute('data-ans'));
+            z.classList.remove('correct','wrong');
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    var cvs = document.getElementById("confetti-canvas");
+    var ctx2 = cvs.getContext("2d");
+    var pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (var i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height-cvs.height,
+            s: Math.random()*9+4, c: 'hsl('+Math.floor(Math.random()*360)+',75%,65%)', sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(function() { cnfRunning = false; ctx2.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p) { p.y+=p.sp; ctx2.fillStyle=p.c; ctx2.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    (function() {
+        var key = 'hirei15';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');
+            data.count = (data.count||0)+1;
+            data.lastDate = new Date().toLocaleDateString('ja-JP');
+            localStorage.setItem('study_'+key, JSON.stringify(data));
+        } catch(e) {}
+    })();
+
+    shMo();
+</script>
+
+<div style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+    <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+        <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+    </button>
+</div>
+<script>
+function toggleReview() {
+    var key = 'hirei15';
+    try {
+        var data = JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');
+        data.review = !data.review;
+        localStorage.setItem('study_'+key, JSON.stringify(data));
+        updateReviewBtn(data.review);
+    } catch(e) {}
+}
+function updateReviewBtn(isReview) {
+    document.getElementById('reviewIcon').innerText = isReview ? '★' : '☆';
+    document.getElementById('reviewText').innerText = isReview ? '復習リストに追加済み' : '復習リストに追加';
+    document.getElementById('reviewBtn').style.background = isReview ? '#e74c3c' : '#f39c12';
+}
+(function() {
+    var key = 'hirei15';
+    try {
+        var data = JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');
+        updateReviewBtn(data.review||false);
+    } catch(e) {}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：⑦確認　グラフの式を求めよ</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        
+                .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.index-btn:hover { background: #154360; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+
+        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .speaker-btn-large.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; font-style: italic; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        .instruction { font-size: 15px; font-weight: bold; color: #1a5276; margin-bottom: 20px; padding: 12px 16px; background: #eaf0fb; border-left: 5px solid #2980b9; border-radius: 6px; }
+
+        /* 問題カード */
+        .q-card { border: 1.5px solid #dde; border-radius: 10px; padding: 20px; background: #fafafa; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 24px; }
+        .q-card-title { font-weight: bold; font-size: 1.05em; color: #1a5276; margin-bottom: 14px; border-left: 5px solid #1a5276; padding-left: 10px; }
+
+        /* グラフ＋解答欄の横並び */
+        .q-inner { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+        .graph-wrap { background: white; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; flex-shrink: 0; text-align: center; }
+
+        /* 解答リスト */
+        .ans-list { flex: 1; min-width: 200px; padding-top: 8px; }
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 15px; flex-wrap: wrap; }
+        .ans-num { font-weight: 900; color: #1a5276; min-width: 22px; font-size: 16px; }
+        .ans-label { font-style: italic; color: #333; }
+
+        /* 空欄 */
+        .drop-zone-inline {
+            display: inline-flex; align-items: center; justify-content: center; min-width: 90px; min-height: 2.2em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #c0392b; padding: 2px 8px;
+            border-radius: 3px; font-size: 14px; font-style: italic;
+            transition: background 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+
+        /* ヒントボタン */
+        .hint-btn {
+            background: #f39c12; color: white; border: none; cursor: pointer;
+            padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;
+            margin-left: 6px; transition: 0.2s;
+        }
+        .hint-btn:hover { background: #e67e22; transform: scale(1.05); }
+
+        /* ヒントポップアップ */
+        .hint-popup {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; border: 3px solid #f39c12; border-radius: 12px;
+            padding: 20px 24px; z-index: 5000; max-width: 320px; width: 90%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .hint-popup.show { display: block; }
+        .hint-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); z-index: 4999;
+        }
+        .hint-overlay.show { display: block; }
+        .hint-popup-title { font-weight: 900; color: #e67e22; font-size: 15px; margin-bottom: 10px; }
+        .hint-popup-body { font-size: 14px; line-height: 2.2; color: #333; }
+        .hint-popup-body .kw { color: #e74c3c; font-weight: bold; }
+        .hint-popup-body .frac-wrap { vertical-align: middle; }
+        .hint-popup-body .frac { font-size: 0.85em; }
+        .hint-close {
+            background: #e74c3c; color: white; border: none; cursor: pointer;
+            padding: 6px 20px; border-radius: 20px; font-weight: bold;
+            margin-top: 14px; display: block; width: 100%; font-size: 14px;
+        }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+
+        /* 分数表示 */
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.82em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 2px; font-weight: bold; }
+        .frac .den { padding: 0 2px; font-weight: bold; }
+        .frac-x { font-style: italic; font-weight: bold; font-size: 1em; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ヒントオーバーレイ＆ポップアップ -->
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">閉じる</button>
+</div>
+
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <nav class="page-nav"><a href="hirei6.html" class="nav-btn">◀ ⑦ 演習１</a><a href="index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei8.html" class="nav-btn">⑨ 正比例の式(1) ▶</a></nav>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="audio-summary-area">
+        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
+            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+        </button>
+        <div class="volume-control">
+            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        </div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="instruction">次のグラフの式を求めよ。</div>
+
+    <!-- ===== (1) ===== -->
+    <div class="q-card">
+        <div class="q-card-title">（1）</div>
+        <div class="q-inner">
+            <!-- グラフ: ① y=3/2 x (右上がり急)  ② y=-2x (右下がり) -->
+            <div class="graph-wrap">
+                <svg width="240" height="240" viewBox="-80 -80 160 160">
+                    <g stroke="#e8e8e8" stroke-width="0.6">
+                        <line x1="-70" y1="-70" x2="-70" y2="70"/><line x1="-56" y1="-70" x2="-56" y2="70"/>
+                        <line x1="-42" y1="-70" x2="-42" y2="70"/><line x1="-28" y1="-70" x2="-28" y2="70"/>
+                        <line x1="-14" y1="-70" x2="-14" y2="70"/><line x1="14" y1="-70" x2="14" y2="70"/>
+                        <line x1="28" y1="-70" x2="28" y2="70"/><line x1="42" y1="-70" x2="42" y2="70"/>
+                        <line x1="56" y1="-70" x2="56" y2="70"/><line x1="70" y1="-70" x2="70" y2="70"/>
+                        <line x1="-70" y1="-70" x2="70" y2="-70"/><line x1="-70" y1="-56" x2="70" y2="-56"/>
+                        <line x1="-70" y1="-42" x2="70" y2="-42"/><line x1="-70" y1="-28" x2="70" y2="-28"/>
+                        <line x1="-70" y1="-14" x2="70" y2="-14"/><line x1="-70" y1="14" x2="70" y2="14"/>
+                        <line x1="-70" y1="28" x2="70" y2="28"/><line x1="-70" y1="42" x2="70" y2="42"/>
+                        <line x1="-70" y1="56" x2="70" y2="56"/><line x1="-70" y1="70" x2="70" y2="70"/>
+                    </g>
+                    <line x1="-76" y1="0" x2="76" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="76,0 70,-3 70,3" fill="#333"/>
+                    <line x1="0" y1="76" x2="0" y2="-76" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-76 -3,-70 3,-70" fill="#333"/>
+                    <text x="71" y="12" font-size="10" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-68" font-size="10" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#888">O</text>
+                    <g font-size="8" fill="#aaa" text-anchor="middle">
+                        <text x="-56" y="10">-4</text><text x="-42" y="10">-3</text><text x="-28" y="10">-2</text><text x="-14" y="10">-1</text>
+                        <text x="14" y="10">1</text><text x="28" y="10">2</text><text x="42" y="10">3</text><text x="56" y="10">4</text>
+                    </g>
+                    <g font-size="8" fill="#aaa" text-anchor="end">
+                        <text x="-3" y="-52">4</text><text x="-3" y="-38">3</text><text x="-3" y="-24">2</text><text x="-3" y="-10">1</text>
+                        <text x="-3" y="18">-1</text><text x="-3" y="32">-2</text><text x="-3" y="46">-3</text><text x="-3" y="60">-4</text>
+                    </g>
+                    <!-- ① y=3/2 x: 右上がり, x=2→y=3, x=-2→y=-3  px: x1単位=14px, x=4→56px, y=6→84px -->
+                    <!-- x=-56(=-4) y=84(=-6のclip) → x=56(=4) y=-84(=6のclip) -->
+                    <line x1="-56" y1="84" x2="56" y2="-84" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- ② y=-2x: 右下がり, x=1→y=-2  px: x=14→y=28 -->
+                    <line x1="-42" y1="-84" x2="42" y2="84" stroke="#2980b9" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- ①ラベル -->
+                    <text x="44" y="-56" font-size="11" fill="#e74c3c" font-weight="bold">①</text>
+                    <!-- ②ラベル -->
+                    <text x="-62" y="-56" font-size="11" fill="#2980b9" font-weight="bold">②</text>
+                </svg>
+            </div>
+
+            <div class="ans-list">
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#e74c3c">①</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="3/2 x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h1a')">ヒント</button>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#2980b9">②</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="-2x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h1b')">ヒント</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== (2) ===== -->
+    <div class="q-card">
+        <div class="q-card-title">（2）</div>
+        <div class="q-inner">
+            <!-- ① y=x (傾き1)  ② y=-2/5 x (緩い右下がり) -->
+            <div class="graph-wrap">
+                <svg width="240" height="240" viewBox="-80 -80 160 160">
+                    <g stroke="#e8e8e8" stroke-width="0.6">
+                        <line x1="-70" y1="-70" x2="-70" y2="70"/><line x1="-56" y1="-70" x2="-56" y2="70"/>
+                        <line x1="-42" y1="-70" x2="-42" y2="70"/><line x1="-28" y1="-70" x2="-28" y2="70"/>
+                        <line x1="-14" y1="-70" x2="-14" y2="70"/><line x1="14" y1="-70" x2="14" y2="70"/>
+                        <line x1="28" y1="-70" x2="28" y2="70"/><line x1="42" y1="-70" x2="42" y2="70"/>
+                        <line x1="56" y1="-70" x2="56" y2="70"/><line x1="70" y1="-70" x2="70" y2="70"/>
+                        <line x1="-70" y1="-70" x2="70" y2="-70"/><line x1="-70" y1="-56" x2="70" y2="-56"/>
+                        <line x1="-70" y1="-42" x2="70" y2="-42"/><line x1="-70" y1="-28" x2="70" y2="-28"/>
+                        <line x1="-70" y1="-14" x2="70" y2="-14"/><line x1="-70" y1="14" x2="70" y2="14"/>
+                        <line x1="-70" y1="28" x2="70" y2="28"/><line x1="-70" y1="42" x2="70" y2="42"/>
+                        <line x1="-70" y1="56" x2="70" y2="56"/><line x1="-70" y1="70" x2="70" y2="70"/>
+                    </g>
+                    <line x1="-76" y1="0" x2="76" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="76,0 70,-3 70,3" fill="#333"/>
+                    <line x1="0" y1="76" x2="0" y2="-76" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-76 -3,-70 3,-70" fill="#333"/>
+                    <text x="71" y="12" font-size="10" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-68" font-size="10" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#888">O</text>
+                    <g font-size="8" fill="#aaa" text-anchor="middle">
+                        <text x="-56" y="10">-4</text><text x="-42" y="10">-3</text><text x="-28" y="10">-2</text><text x="-14" y="10">-1</text>
+                        <text x="14" y="10">1</text><text x="28" y="10">2</text><text x="42" y="10">3</text><text x="56" y="10">4</text>
+                    </g>
+                    <g font-size="8" fill="#aaa" text-anchor="end">
+                        <text x="-3" y="-52">4</text><text x="-3" y="-38">3</text><text x="-3" y="-24">2</text><text x="-3" y="-10">1</text>
+                        <text x="-3" y="18">-1</text><text x="-3" y="32">-2</text><text x="-3" y="46">-3</text><text x="-3" y="60">-4</text>
+                    </g>
+                    <!-- ① y=x: 右上がり45度, x=1→y=1, 単位14px -->
+                    <line x1="-70" y1="70" x2="70" y2="-70" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- ② y=-2/5 x: 右下がり緩い, x=5→y=-2, px: x=70→y=28 -->
+                    <line x1="-70" y1="-28" x2="70" y2="28" stroke="#e67e22" stroke-width="2.5" stroke-linecap="round"/>
+                    <text x="62" y="-62" font-size="11" fill="#27ae60" font-weight="bold">①</text>
+                    <text x="62" y="38" font-size="11" fill="#e67e22" font-weight="bold">②</text>
+                </svg>
+            </div>
+
+            <div class="ans-list">
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#27ae60">①</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h2a')">ヒント</button>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#e67e22">②</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="-2/5 x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h2b')">ヒント</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== (3) ===== -->
+    <div class="q-card">
+        <div class="q-card-title">（3）</div>
+        <div class="q-inner">
+            <!-- ① y=3/4 x  ② y=4x  ③ y=-5x  ④ y=-2/3 x -->
+            <div class="graph-wrap">
+                <svg width="240" height="240" viewBox="-80 -80 160 160">
+                    <g stroke="#e8e8e8" stroke-width="0.6">
+                        <line x1="-70" y1="-70" x2="-70" y2="70"/><line x1="-56" y1="-70" x2="-56" y2="70"/>
+                        <line x1="-42" y1="-70" x2="-42" y2="70"/><line x1="-28" y1="-70" x2="-28" y2="70"/>
+                        <line x1="-14" y1="-70" x2="-14" y2="70"/><line x1="14" y1="-70" x2="14" y2="70"/>
+                        <line x1="28" y1="-70" x2="28" y2="70"/><line x1="42" y1="-70" x2="42" y2="70"/>
+                        <line x1="56" y1="-70" x2="56" y2="70"/><line x1="70" y1="-70" x2="70" y2="70"/>
+                        <line x1="-70" y1="-70" x2="70" y2="-70"/><line x1="-70" y1="-56" x2="70" y2="-56"/>
+                        <line x1="-70" y1="-42" x2="70" y2="-42"/><line x1="-70" y1="-28" x2="70" y2="-28"/>
+                        <line x1="-70" y1="-14" x2="70" y2="-14"/><line x1="-70" y1="14" x2="70" y2="14"/>
+                        <line x1="-70" y1="28" x2="70" y2="28"/><line x1="-70" y1="42" x2="70" y2="42"/>
+                        <line x1="-70" y1="56" x2="70" y2="56"/><line x1="-70" y1="70" x2="70" y2="70"/>
+                    </g>
+                    <line x1="-76" y1="0" x2="76" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="76,0 70,-3 70,3" fill="#333"/>
+                    <line x1="0" y1="76" x2="0" y2="-76" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-76 -3,-70 3,-70" fill="#333"/>
+                    <text x="71" y="12" font-size="10" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-68" font-size="10" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#888">O</text>
+                    <g font-size="8" fill="#aaa" text-anchor="middle">
+                        <text x="-56" y="10">-4</text><text x="-42" y="10">-3</text><text x="-28" y="10">-2</text><text x="-14" y="10">-1</text>
+                        <text x="14" y="10">1</text><text x="28" y="10">2</text><text x="42" y="10">3</text><text x="56" y="10">4</text>
+                    </g>
+                    <g font-size="8" fill="#aaa" text-anchor="end">
+                        <text x="-3" y="-52">4</text><text x="-3" y="-38">3</text><text x="-3" y="-24">2</text><text x="-3" y="-10">1</text>
+                        <text x="-3" y="18">-1</text><text x="-3" y="32">-2</text><text x="-3" y="46">-3</text><text x="-3" y="60">-4</text>
+                    </g>
+                    <!-- ① y=3/4 x: x=4→y=3, px: x=56→y=-42 右上がり緩め -->
+                    <line x1="-70" y1="52" x2="70" y2="-52" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/>
+                    <!-- ② y=4x: x=1→y=4, px: x=14→y=-56 急な右上がり -->
+                    <line x1="-14" y1="56" x2="14" y2="-56" stroke="#8e44ad" stroke-width="2" stroke-linecap="round"/>
+                    <!-- ③ y=-5x: x=1→y=-5, px: x=14→y=70 急な右下がり -->
+                    <line x1="-14" y1="-70" x2="14" y2="70" stroke="#2980b9" stroke-width="2" stroke-linecap="round"/>
+                    <!-- ④ y=-2/3 x: x=3→y=-2, px: x=42→y=28 緩い右下がり -->
+                    <line x1="-70" y1="-46" x2="70" y2="46" stroke="#27ae60" stroke-width="2" stroke-linecap="round"/>
+                    <!-- ラベル -->
+                    <text x="62" y="-44" font-size="11" fill="#e74c3c" font-weight="bold">①</text>
+                    <text x="5" y="-58" font-size="11" fill="#8e44ad" font-weight="bold">②</text>
+                    <text x="-18" y="-60" font-size="11" fill="#2980b9" font-weight="bold">③</text>
+                    <text x="-72" y="-38" font-size="11" fill="#27ae60" font-weight="bold">④</text>
+                </svg>
+            </div>
+
+            <div class="ans-list">
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#e74c3c">①</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="3/4 x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h3a')">ヒント</button>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#8e44ad">②</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="4x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h3b')">ヒント</button>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#2980b9">③</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="-5x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h3c')">ヒント</button>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-num" style="color:#27ae60">④</span>
+                    <span class="ans-label">y =</span>
+                    <span class="drop-zone-inline" data-ans="-2/3 x" onclick="zCl(this)"></span>
+                    <button class="hint-btn" onclick="showHint('h3d')">ヒント</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+</div>
+
+<audio id="mainAudio" src="hirei7.wav"></audio>
+
+<script>
+    // ヒントデータ
+    var F32  = '<span class="frac-wrap"><span class="frac" style="color:#1a5276;"><span class="num">3</span><span class="den" style="color:#27ae60;">2</span></span><span class="frac-x" style="color:#1a5276;"></span></span>';
+    var F25  = '<span class="frac-wrap"><span style="font-weight:bold;">-</span><span class="frac" style="color:#e74c3c;"><span class="num">2</span><span class="den" style="color:#27ae60;">5</span></span><span class="frac-x" style="color:#1a5276;"></span></span>';
+    var F34  = '<span class="frac-wrap"><span class="frac" style="color:#1a5276;"><span class="num">3</span><span class="den" style="color:#27ae60;">4</span></span><span class="frac-x" style="color:#1a5276;"></span></span>';
+    var F23  = '<span class="frac-wrap"><span style="font-weight:bold;">-</span><span class="frac" style="color:#e74c3c;"><span class="num">2</span><span class="den" style="color:#27ae60;">3</span></span><span class="frac-x" style="color:#1a5276;"></span></span>';
+    var F32x = '<span class="frac-wrap"><span class="frac" style="color:#1a5276;"><span class="num">3</span><span class="den" style="color:#27ae60;">2</span></span><span class="frac-x" style="color:#c0392b;">x</span></span>';
+    var F25x = '<span class="frac-wrap"><span style="font-weight:bold;color:#c0392b;">-</span><span class="frac" style="color:#e74c3c;"><span class="num">2</span><span class="den" style="color:#27ae60;">5</span></span><span class="frac-x" style="color:#c0392b;">x</span></span>';
+    var F34x = '<span class="frac-wrap"><span class="frac" style="color:#1a5276;"><span class="num">3</span><span class="den" style="color:#27ae60;">4</span></span><span class="frac-x" style="color:#c0392b;">x</span></span>';
+    var F23x = '<span class="frac-wrap"><span style="font-weight:bold;color:#c0392b;">-</span><span class="frac" style="color:#e74c3c;"><span class="num">2</span><span class="den" style="color:#27ae60;">3</span></span><span class="frac-x" style="color:#c0392b;">x</span></span>';
+
+    var HINTS = {
+        h1a: '右上がりの直線です。<br>原点から右に<span class="kw">2</span>進むと上に<span class="kw">3</span>進みます。<br>傾き = ' + F32 + '<br>y = <span class="kw">' + F32x + '</span>',
+        h1b: '右下がりの直線です。<br>原点から右に<span class="kw">1</span>進むと下に<span class="kw">2</span>進みます。<br>傾き = <span class="kw">−2</span><br>y = <span class="kw">−2x</span>',
+        h2a: '右上がりで，傾きは 45° に見えます。<br>原点から右に<span class="kw">1</span>進むと上に<span class="kw">1</span>進みます。<br>傾き = <span class="kw">1</span><br>y = <span class="kw">x</span>　※ y = 1x とは書かない！',
+        h2b: '右下がりで，傾きは緩やかです。<br>原点から右に<span class="kw">5</span>進むと下に<span class="kw">2</span>進みます。<br>傾き = ' + F25 + '<br>y = <span class="kw">' + F25x + '</span>',
+        h3a: '右上がりで，4本の中で2番目に傾きが小さい直線。<br>右に<span class="kw">4</span>進むと上に<span class="kw">3</span>進みます。<br>傾き = ' + F34 + '<br>y = <span class="kw">' + F34x + '</span>',
+        h3b: '右上がりで，いちばん急な直線。<br>右に<span class="kw">1</span>進むと上に<span class="kw">4</span>進みます。<br>傾き = <span class="kw">4</span><br>y = <span class="kw">4x</span>',
+        h3c: '右下がりで，いちばん急な直線。<br>右に<span class="kw">1</span>進むと下に<span class="kw">5</span>進みます。<br>傾き = <span class="kw">−5</span><br>y = <span class="kw">−5x</span>',
+        h3d: '右下がりで，傾きは緩やかです。<br>右に<span class="kw">3</span>進むと下に<span class="kw">2</span>進みます。<br>傾き = ' + F23 + '<br>y = <span class="kw">' + F23x + '</span>'
+    };
+
+    function showHint(key) {
+        document.getElementById('hintBody').innerHTML = HINTS[key];
+        document.getElementById('hintPopup').classList.add('show');
+        document.getElementById('hintOverlay').classList.add('show');
+    }
+    function closeHint() {
+        document.getElementById('hintPopup').classList.remove('show');
+        document.getElementById('hintOverlay').classList.remove('show');
+    }
+
+    var sT, tI, isR = false, sW = null, bestTime = null;
+    var audio = document.getElementById('mainAudio');
+    var volSlider = document.getElementById('volSlider');
+    var volNum = document.getElementById('volNum');
+    var playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = function() { updatePlayUI(false); };
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', function(e) {
+        audio.volume = e.target.value;
+        volNum.innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    function fmtTime(ms) {
+        var total = ms / 1000;
+        var m = Math.floor(total / 60).toString().padStart(2, '0');
+        var s = (total % 60).toFixed(1).padStart(4, '0');
+        return m + ':' + s;
+    }
+
+    function addToBank(word) {
+        var b = document.getElementById('wordBank');
+        var d = document.createElement('div');
+        d.className = 'drag-item';
+        d.setAttribute('data-val', word);
+        var el = makeFracEl(word);
+        if (el) {
+            d.appendChild(el);
+            d.style.padding = '4px 10px';
+            d.style.lineHeight = '1';
+            d.style.minHeight = '2.2em';
+            d.style.display = 'inline-flex';
+            d.style.alignItems = 'center';
+        } else {
+            d.innerText = word;
+        }
+        d.onclick = function() {
+            if (sW) sW.classList.remove('selected');
+            if (sW === this) { sW = null; return; }
+            sW = this;
+            this.classList.add('selected');
+        };
+        b.appendChild(d);
+    }
+
+    function zCl(z) {
+        if (!isR) return;
+        var cur = getZoneVal(z);
+        if (cur !== '') {
+            addToBank(cur);
+            clearZoneEl(z);
+            return;
+        }
+        if (sW) {
+            var val = sW.getAttribute('data-val') || sW.innerText;
+            setZone(z, val);
+            sW.remove();
+            sW = null;
+        }
+    }
+
+    function stCh() {
+        isR = true; sW = null;
+        sT = Date.now(); clearInterval(tI);
+        tI = setInterval(function() {
+            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+        }, 100);
+        var zones = document.querySelectorAll('.drop-zone-inline');
+        var allAns = [];
+        zones.forEach(function(z) {
+            allAns.push(z.getAttribute('data-ans'));
+            clearZoneEl(z);
+        });
+        var b = document.getElementById('wordBank');
+        b.innerHTML = '';
+        allAns.sort(function() { return Math.random() - 0.5; });
+        allAns.forEach(function(w) { addToBank(w); });
+    }
+
+    function chAn() {
+        if (!isR) return;
+        var allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            var cur = getZoneVal(z);
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+            } else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                if (cur !== '') { addToBank(cur); clearZoneEl(z); }
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI); isR = false;
+            var elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+                document.getElementById('recordDisplay').innerText = '🏆 ベスト: ' + fmtTime(bestTime);
+            }
+            startCnf();
+        } else {
+            var wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake');
+            void wbc.offsetWidth;
+            wbc.classList.add('shake');
+            setTimeout(function() { wbc.classList.remove('shake'); }, 500);
+        }
+    }
+
+    // 分数HTML生成（SVGタグ不使用）
+    var FRAC_ANS = {
+        '3/2 x':  ['', '3', '2'],
+        '-2/5 x': ['-', '2', '5'],
+        '3/4 x':  ['', '3', '4'],
+        '-2/3 x': ['-', '2', '3']
+    };
+
+    function makeFracEl(val) {
+        var f = FRAC_ANS[val];
+        if (!f) return null;
+        var wrap = document.createElement('span');
+        wrap.className = 'frac-wrap';
+        wrap.style.pointerEvents = 'none';
+        if (f[0]) {
+            var sg = document.createElement('span');
+            sg.style.fontWeight = 'bold';
+            sg.innerText = f[0];
+            wrap.appendChild(sg);
+        }
+        var frac = document.createElement('span');
+        frac.className = 'frac';
+        var nc = (f[0] === '-') ? '#e74c3c' : '#1a5276';
+        frac.style.color = nc;
+        var num = document.createElement('span');
+        num.className = 'num';
+        num.innerText = f[1];
+        var den = document.createElement('span');
+        den.className = 'den';
+        den.style.color = '#27ae60';
+        den.innerText = f[2];
+        frac.appendChild(num);
+        frac.appendChild(den);
+        var xsp = document.createElement('span');
+        xsp.className = 'frac-x';
+        xsp.style.color = '#1a5276';
+        xsp.innerText = 'x';
+        wrap.appendChild(frac);
+        wrap.appendChild(xsp);
+        return wrap;
+    }
+
+    function setZone(z, val) {
+        z.innerHTML = '';
+        var el = makeFracEl(val);
+        if (el) {
+            z.appendChild(el);
+            z.setAttribute('data-filled', val);
+        } else {
+            z.innerText = val;
+            z.setAttribute('data-filled', val);
+        }
+    }
+
+    function getZoneVal(z) {
+        return z.getAttribute('data-filled') || z.innerText.trim();
+    }
+
+    function clearZoneEl(z) {
+        z.innerHTML = '';
+        z.removeAttribute('data-filled');
+        z.classList.remove('correct', 'wrong');
+    }
+
+    function shMo() {
+        clearInterval(tI); isR = false; sW = null;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            setZone(z, z.getAttribute('data-ans'));
+            z.classList.remove('correct', 'wrong');
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    var cvs = document.getElementById("confetti-canvas");
+    var ctx2 = cvs.getContext("2d");
+    var pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (var i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height - cvs.height,
+            s: Math.random()*9+4, c: 'hsl('+Math.floor(Math.random()*360)+',75%,65%)', sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(function() { cnfRunning = false; ctx2.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p) { p.y+=p.sp; ctx2.fillStyle=p.c; ctx2.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    shMo();
+</script>
+
+    <!-- 学習記録スクリプト -->
+    <script>
+    (function() {
+        var key = 'hirei7';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.count = (data.count || 0) + 1;
+            data.lastDate = new Date().toLocaleDateString('ja-JP');
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+        } catch(e) {}
+    })();
+    </script>
+    <!-- 復習ボタン -->
+    <div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+        <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+            <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+        </button>
+    </div>
+    <script>
+    function toggleReview() {
+        var key = 'hirei7';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.review = !data.review;
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+            updateReviewBtn(data.review);
+        } catch(e) {}
+    }
+    function updateReviewBtn(isReview) {
+        document.getElementById('reviewIcon').innerText = isReview ? '★' : '☆';
+        document.getElementById('reviewText').innerText = isReview ? '復習リストに追加済み' : '復習リストに追加';
+        document.getElementById('reviewBtn').style.background = isReview ? '#e74c3c' : '#f39c12';
+    }
+    (function() {
+        var key = 'hirei7';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            updateReviewBtn(data.review || false);
+        } catch(e) {}
+    })();
+    </script>
+
+</body>
+</html>

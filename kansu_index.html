@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GAMBA 関数 単元表</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'BIZ UDGothic','Hiragino Kaku Gothic Pro','Meiryo',sans-serif;background:#eef2f7;color:#1a1a2e;min-height:100vh;font-size:15px}
+.top-header{background:linear-gradient(135deg,#0d4f7a 0%,#0d9478 100%);color:#fff;padding:16px 16px 0;text-align:center}
+.top-header h1{font-size:18px;font-weight:700;letter-spacing:.05em}
+.top-header p{font-size:12px;margin-top:3px;opacity:.85}
+.summary-bar{background:rgba(0,0,0,.25);margin-top:12px;padding:9px 14px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:12px;color:#fff}
+.sum-item{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.sum-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sum-dot-a{background:#4caf50}
+.sum-dot-b{background:#f9a825}
+.sum-dot-c{background:#e53935}
+.sum-dot-n{background:#aaa}
+.sum-count{font-weight:700;font-size:15px;min-width:18px;text-align:center}
+.wrap{max-width:920px;margin:0 auto;padding:16px 12px 48px}
+
+.unit{background:#fff;border-radius:14px;border:1px solid #dde3ee;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.unit-hd{padding:12px 16px;display:flex;align-items:center;gap:10px;color:#fff}
+.unit-hd-1{background:linear-gradient(90deg,#0d9478,#1ab394)}
+.unit-hd-2{background:linear-gradient(90deg,#2055b0,#3a7bd5)}
+.unit-hd-3{background:linear-gradient(90deg,#7d3eb0,#a866d4)}
+.unit-num{background:rgba(255,255,255,.2);border-radius:8px;padding:3px 10px;font-size:13px;font-weight:700;white-space:nowrap}
+.unit-title{font-size:16px;font-weight:700;flex:1}
+.unit-badge{font-size:11px;background:rgba(255,255,255,.3);border-radius:10px;padding:2px 8px;white-space:nowrap;font-weight:700}
+.unit-body{padding:14px 16px}
+
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:4px}
+.sec-card{border-radius:10px;border:1.5px solid #dde3ee;overflow:hidden;transition:.2s;background:#fff}
+.sec-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
+.sec-card a{text-decoration:none;color:inherit;display:block}
+
+/* 中1: teal */
+.sec-card.grade-1 .sc-hd{background:#e6f5f1;border-bottom:2px solid #0d9478}
+.sec-card.grade-1 .sc-num{background:#0d9478}
+.sec-card.grade-1 .sc-title{color:#0a6b58}
+.sec-card.grade-1 .sc-btn-learn{background:#0d9478}
+.sec-card.grade-1 .sc-btn-learn:hover{background:#0a6b58}
+
+/* 中2: blue */
+.sec-card.grade-2 .sc-hd{background:#eaf0fb;border-bottom:2px solid #2055b0}
+.sec-card.grade-2 .sc-num{background:#2055b0}
+.sec-card.grade-2 .sc-title{color:#153a80}
+.sec-card.grade-2 .sc-btn-learn{background:#2055b0}
+.sec-card.grade-2 .sc-btn-learn:hover{background:#153a80}
+
+/* 中3: purple */
+.sec-card.grade-3 .sc-hd{background:#f1e8f7;border-bottom:2px solid #7d3eb0}
+.sec-card.grade-3 .sc-num{background:#7d3eb0}
+.sec-card.grade-3 .sc-title{color:#5a2a80}
+.sec-card.grade-3 .sc-btn-learn{background:#7d3eb0}
+.sec-card.grade-3 .sc-btn-learn:hover{background:#5a2a80}
+
+.sc-hd{padding:9px 12px;display:flex;align-items:center;gap:8px}
+.sc-num{color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;padding:3px 8px;min-width:36px;text-align:center}
+.sc-title{font-size:13px;font-weight:700;flex:1;line-height:1.3}
+.sc-stars{font-size:11px;color:#f9a825;letter-spacing:-1px;flex-shrink:0}
+.sc-body{padding:9px 12px;background:#fff}
+.sc-topics{list-style:none;margin:0;padding:0}
+.sc-topics li{font-size:12px;color:#555;padding:2px 0;border-bottom:1px solid #f0f0f5;line-height:1.5}
+.sc-topics li:last-child{border-bottom:none}
+.sc-topics li::before{content:"・";color:#0d9478}
+.sec-card.grade-2 .sc-topics li::before{color:#2055b0}
+.sec-card.grade-3 .sc-topics li::before{color:#7d3eb0}
+
+.sc-btn-row{display:flex;gap:6px;margin-top:8px}
+.sc-btn{flex:1;text-align:center;padding:7px 4px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;transition:.15s;font-family:inherit;border:none;cursor:pointer;display:block;color:#fff}
+.sc-btn-soon{background:#bbb;color:#fff;cursor:not-allowed;pointer-events:none}
+
+.abc-row{display:flex;gap:6px;padding:8px 12px 10px}
+.abc-btn{flex:1;padding:7px 2px;border-radius:20px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s;border:2px solid;text-align:center;background:#fff}
+.abc-btn-a{border-color:#2e7d32;color:#fff;background:#43a047}
+.abc-btn-b{border-color:#f9a825;color:#fff;background:#f9a825}
+.abc-btn-c{border-color:#e53935;color:#fff;background:#e53935}
+.abc-btn:hover{opacity:.85}
+.abc-btn-a.sel{background:#1b5e20;border-color:#1b5e20}
+.abc-btn-b.sel{background:#bf360c;color:#fff;border-color:#bf360c}
+.abc-btn-c.sel{background:#b71c1c;color:#fff;border-color:#b71c1c}
+
+.sec-card.status-a{border-color:#2e7d32}
+.sec-card.status-a .sc-hd{background:#e8f5e9 !important;border-bottom-color:#2e7d32 !important}
+.sec-card.status-b{border-color:#f9a825}
+.sec-card.status-b .sc-hd{background:#fff9e6 !important;border-bottom-color:#f9a825 !important}
+.sec-card.status-c{border-color:#e53935}
+.sec-card.status-c .sc-hd{background:#fce8e8 !important;border-bottom-color:#e53935 !important}
+.sec-card.coming-soon{opacity:.6}
+.sec-card.coming-soon .sc-hd{background:#f5f5f5 !important;border-bottom-color:#bbb !important}
+.sec-card.coming-soon .sc-num{background:#999 !important}
+.sec-card.coming-soon .sc-title{color:#888 !important}
+
+.flow{background:#fff;border-radius:14px;border:1px solid #dde3ee;padding:14px 16px;margin-bottom:20px}
+.flow-title{font-size:14px;font-weight:700;color:#0d4f7a;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #0d9478}
+.flow-steps{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.flow-step{background:#e6f5f1;border:1px solid #88c8b8;border-radius:8px;padding:7px 12px;font-size:12px;color:#0a6b58;font-weight:700;white-space:nowrap}
+.flow-arrow{color:#0d9478;font-size:16px;font-weight:700}
+
+.nav-links{display:flex;gap:10px;justify-content:center;margin:24px 0 8px;flex-wrap:wrap}
+.nav-link{padding:10px 18px;border-radius:10px;border:1.5px solid #dde3ee;background:#fff;color:#0d4f7a;font-size:13px;font-weight:700;text-decoration:none;transition:.15s}
+.nav-link:hover{border-color:#0d9478;color:#0d9478;background:#e6f5f1}
+.nav-link.active{background:#0d4f7a;color:#fff;border-color:#0d4f7a}
+
+canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:none}
+</style>
+</head>
+<body>
+<canvas id="cc"></canvas>
+
+<div class="top-header">
+  <h1>📊 GAMBA 関数 単元表</h1>
+  <p>中学数学・江原予備校 ― 単元をタップして学習を始めよう ―</p>
+  <div class="summary-bar">
+    <div class="sum-item"><span class="sum-dot sum-dot-a"></span>A わかった <span class="sum-count" id="cnt-a">0</span> 単元</div>
+    <div class="sum-item"><span class="sum-dot sum-dot-b"></span>B 要復習 <span class="sum-count" id="cnt-b">0</span> 単元</div>
+    <div class="sum-item"><span class="sum-dot sum-dot-c"></span>C 何度も復習 <span class="sum-count" id="cnt-c">0</span> 単元</div>
+    <div class="sum-item"><span class="sum-dot sum-dot-n"></span>未実施 <span class="sum-count" id="cnt-n">15</span> 単元</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="nav-links">
+    <a href="kansu_index.html" class="nav-link active">📊 関数</a>
+    <a href="bunshou_index.html" class="nav-link">📝 文章題</a>
+  </div>
+
+  <div class="flow">
+    <div class="flow-title">📖 学習の流れ</div>
+    <div class="flow-steps">
+      <div class="flow-step">① 例題で考え方を学ぶ</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">② 基本演習</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">③ 応用演習</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">④ 確認問題</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">⑤ A/B/C で自己評価</div>
+    </div>
+  </div>
+
+  <!-- Unit 1: 中1 正比例・反比例 -->
+  <div class="unit">
+    <div class="unit-hd unit-hd-1"><span class="unit-num">中1</span><span class="unit-title">正比例・反比例</span><span class="unit-badge">★ 基礎</span></div>
+    <div class="unit-body">
+      <div class="sec-grid">
+
+        <div class="sec-card grade-1" data-id="hirei5">
+          <a href="hirei5.html"><div class="sc-hd"><span class="sc-num">第5講</span><span class="sc-title">正比例の基本</span><span class="sc-stars">★☆☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>y = ax の式</li><li>比例定数の意味</li><li>表からの読み取り</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei5.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei5','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei5','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei5','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei6">
+          <a href="hirei6.html"><div class="sc-hd"><span class="sc-num">第6講</span><span class="sc-title">正比例のグラフ</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>原点を通る直線</li><li>傾きとグラフの関係</li><li>増加・減少の判別</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei6.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei6','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei6','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei6','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei7">
+          <a href="hirei7.html"><div class="sc-hd"><span class="sc-num">第7講</span><span class="sc-title">正比例の応用</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>式の決定</li><li>変域の問題</li><li>条件から比例定数を求める</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei7.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei7','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei7','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei7','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei8">
+          <a href="hirei8.html"><div class="sc-hd"><span class="sc-num">第8講</span><span class="sc-title">反比例の基本</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>y = a/x の式</li><li>反比例の意味</li><li>比例定数の決定</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei8.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei8','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei8','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei8','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei9">
+          <a href="hirei9.html"><div class="sc-hd"><span class="sc-num">第9講</span><span class="sc-title">反比例のグラフ</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>双曲線をかく</li><li>x軸・y軸との関係</li><li>aの正負とグラフ</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei9.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei9','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei9','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei9','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei10">
+          <a href="hirei10.html"><div class="sc-hd"><span class="sc-num">第10講</span><span class="sc-title">反比例の応用</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>式の決定（条件あり）</li><li>グラフからの読み取り</li><li>変域の問題</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei10.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei10','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei10','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei10','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei11">
+          <a href="hirei11.html"><div class="sc-hd"><span class="sc-num">第11講</span><span class="sc-title">座標と図形</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>座標平面の使い方</li><li>2点間の距離</li><li>三角形の面積</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei11.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei11','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei11','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei11','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei12">
+          <a href="hirei12.html"><div class="sc-hd"><span class="sc-num">第12講</span><span class="sc-title">比例の文章題</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>歯車・水槽の問題</li><li>時間と距離</li><li>料金と量</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei12.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei12','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei12','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei12','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei13">
+          <a href="hirei13.html"><div class="sc-hd"><span class="sc-num">第13講</span><span class="sc-title">グラフから式を読む</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>グラフ上の点から式</li><li>比例・反比例の判別</li><li>逆問題</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei13.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei13','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei13','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei13','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei14">
+          <a href="hirei14.html"><div class="sc-hd"><span class="sc-num">第14講</span><span class="sc-title">図形と比例</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>面積と比例の関係</li><li>三角形の底辺と面積</li><li>条件と比例関係</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei14.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei14','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei14','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei14','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei15">
+          <a href="hirei15.html"><div class="sc-hd"><span class="sc-num">第15講</span><span class="sc-title">図形と反比例</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>長方形と反比例</li><li>面積一定の関係</li><li>動点の問題</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei15.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei15','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei15','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei15','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei16">
+          <a href="hirei16.html"><div class="sc-hd"><span class="sc-num">第16講</span><span class="sc-title">速さと比例</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>時間・距離・速さ</li><li>速さ一定の問題</li><li>グラフから読み取り</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei16.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei16','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei16','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei16','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei17">
+          <a href="hirei17.html"><div class="sc-hd"><span class="sc-num">第17講</span><span class="sc-title">入試対策(1)</span><span class="sc-stars">★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>入試典型問題</li><li>基本〜標準レベル</li><li>表・グラフ・式の融合</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei17.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei17','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei17','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei17','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei18">
+          <a href="hirei18.html"><div class="sc-hd"><span class="sc-num">第18講</span><span class="sc-title">入試対策(2)</span><span class="sc-stars">★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>標準〜応用レベル</li><li>複合問題</li><li>記述式の解答</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei18.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei18','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei18','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei18','c',this)">C 何度も</button></div>
+        </div>
+
+        <div class="sec-card grade-1" data-id="hirei19">
+          <a href="hirei19.html"><div class="sc-hd"><span class="sc-num">第19講</span><span class="sc-title">総合演習</span><span class="sc-stars">★★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>入試レベルの総まとめ</li><li>難関校対策</li><li>記述問題</li></ul></div></a>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><a class="sc-btn sc-btn-learn" href="hirei19.html">学習を始める</a></div></div>
+          <div class="abc-row"><button class="abc-btn abc-btn-a" onclick="setABC('hirei19','a',this)">A OK</button><button class="abc-btn abc-btn-b" onclick="setABC('hirei19','b',this)">B 要復習</button><button class="abc-btn abc-btn-c" onclick="setABC('hirei19','c',this)">C 何度も</button></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Unit 2: 中2 一次関数 -->
+  <div class="unit">
+    <div class="unit-hd unit-hd-2"><span class="unit-num">中2</span><span class="unit-title">一次関数</span><span class="unit-badge">⭐ 直線の世界</span></div>
+    <div class="unit-body">
+      <div class="sec-grid">
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第1講</span><span class="sc-title">一次関数の基本</span><span class="sc-stars">★☆☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>y = ax + b の式</li><li>傾きと切片</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第2講</span><span class="sc-title">一次関数のグラフ</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>グラフのかき方</li><li>切片と傾き</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第3講</span><span class="sc-title">変化の割合</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>yの増加量 ÷ xの増加量</li><li>傾きとの関係</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第4講</span><span class="sc-title">式の決定</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>条件から式をつくる</li><li>2点を通る直線</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第5講</span><span class="sc-title">交点の座標</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>連立方程式との関係</li><li>2直線の交点</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第6講</span><span class="sc-title">図形と一次関数</span><span class="sc-stars">★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>三角形の面積</li><li>面積二等分</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第7講</span><span class="sc-title">動点問題</span><span class="sc-stars">★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>動く点と面積</li><li>場合分け</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-2 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第8講</span><span class="sc-title">入試対策</span><span class="sc-stars">★★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>総合演習</li><li>記述問題</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unit 3: 中3 二次関数 -->
+  <div class="unit">
+    <div class="unit-hd unit-hd-3"><span class="unit-num">中3</span><span class="unit-title">二次関数</span><span class="unit-badge">🌟 放物線へ</span></div>
+    <div class="unit-body">
+      <div class="sec-grid">
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第1講</span><span class="sc-title">二次関数の基本</span><span class="sc-stars">★☆☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>y = ax² の式</li><li>変化の特徴</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第2講</span><span class="sc-title">二次関数のグラフ</span><span class="sc-stars">★★☆</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>放物線をかく</li><li>aの符号と開き方</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第3講</span><span class="sc-title">変化の割合</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>二次関数バージョン</li><li>公式 a(p+q)</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第4講</span><span class="sc-title">変域</span><span class="sc-stars">★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>最大値・最小値</li><li>変域の決定</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第5講</span><span class="sc-title">放物線と直線</span><span class="sc-stars">★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>交点を求める</li><li>2次方程式の利用</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第6講</span><span class="sc-title">図形との融合</span><span class="sc-stars">★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>三角形の面積</li><li>等積変形</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第7講</span><span class="sc-title">動点問題</span><span class="sc-stars">★★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>二次関数で表す</li><li>場合分け</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+        <div class="sec-card grade-3 coming-soon">
+          <div class="sc-hd"><span class="sc-num">第8講</span><span class="sc-title">入試対策</span><span class="sc-stars">★★★★★</span></div>
+          <div class="sc-body"><ul class="sc-topics"><li>総合演習</li><li>難関校対策</li><li>準備中</li></ul></div>
+          <div class="sc-body" style="padding-top:0"><div class="sc-btn-row"><span class="sc-btn sc-btn-soon">準備中</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a href="bunshou_index.html" class="nav-link">📝 文章題の単元表へ →</a>
+  </div>
+
+</div>
+
+<script>
+var STORAGE_KEY = 'gamba_kansu_status_v1';
+var status = {};
+var activeIds = ['hirei5','hirei6','hirei7','hirei8','hirei9','hirei10','hirei11','hirei12','hirei13','hirei14','hirei15','hirei16','hirei17','hirei18','hirei19'];
+
+try {
+  var saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) status = JSON.parse(saved);
+} catch(e) {}
+
+function applyStoredStatus() {
+  Object.keys(status).forEach(function(id) {
+    var grade = status[id];
+    var card = document.querySelector('[data-id="'+id+'"]');
+    if (!card) return;
+    card.classList.add('status-' + grade);
+    var btnClass = 'abc-btn-' + grade;
+    var btn = card.querySelector('.' + btnClass);
+    if (btn) btn.classList.add('sel');
+  });
+}
+
+function saveStatus() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(status)); } catch(e) {}
+}
+
+function setABC(id, grade, btn) {
+  var card = document.querySelector('[data-id="'+id+'"]');
+  if (!card) return;
+  if (status[id] === grade) {
+    delete status[id];
+    card.className = card.className.replace(/ ?status-[abc]/g,'');
+    card.querySelectorAll('.abc-btn').forEach(function(b){b.classList.remove('sel');});
+    saveStatus();
+    updateSummary();
+    return;
+  }
+  status[id] = grade;
+  card.className = card.className.replace(/ ?status-[abc]/g,'');
+  card.classList.add('status-' + grade);
+  card.querySelectorAll('.abc-btn').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');
+  saveStatus();
+  if (grade === 'a') confetti();
+  updateSummary();
+}
+
+function updateSummary() {
+  var ca=0, cb=0, cc=0, cn=0;
+  activeIds.forEach(function(id) {
+    var s = status[id];
+    if (s === 'a') ca++;
+    else if (s === 'b') cb++;
+    else if (s === 'c') cc++;
+    else cn++;
+  });
+  document.getElementById('cnt-a').textContent = ca;
+  document.getElementById('cnt-b').textContent = cb;
+  document.getElementById('cnt-c').textContent = cc;
+  document.getElementById('cnt-n').textContent = cn;
+}
+
+function confetti() {
+  var cv = document.getElementById('cc');
+  cv.width = window.innerWidth;
+  cv.height = window.innerHeight;
+  cv.style.display = 'block';
+  var ctx = cv.getContext('2d');
+  var cols = ['#f9a825','#0d9478','#2055b0','#7d3eb0','#e53935','#2e7d32','#ff6f00','#ff4081'];
+  var ps = [];
+  for (var k=0; k<130; k++) {
+    ps.push({
+      x: Math.random() * cv.width,
+      y: -20 - Math.random() * 180,
+      w: 7 + Math.random() * 9,
+      h: 3 + Math.random() * 5,
+      c: cols[Math.floor(Math.random() * cols.length)],
+      s: 2 + Math.random() * 4,
+      a: Math.random() * 360,
+      sp: 3 - Math.random() * 6,
+      d: (Math.random() - 0.5) * 2.5
+    });
+  }
+  var fr = 0;
+  function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ps.forEach(function(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a * Math.PI / 180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.y += p.s;
+      p.x += p.d;
+      p.a += p.sp;
+    });
+    fr++;
+    if (fr < 100) requestAnimationFrame(draw);
+    else {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      cv.style.display = 'none';
+    }
+  }
+  draw();
+}
+
+applyStoredStatus();
+updateSummary();
+</script>
+</body>
+</html>
