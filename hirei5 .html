@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：⑤注意すべきグラフ</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold; transition: 0.2s; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.active { background: #1a5276; border: 2px solid #f1c40f; }
+
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+
+        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .speaker-btn-large.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 0.9em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        /* ポイントボックス */
+        .point-box { border-radius: 8px; padding: 12px 18px; margin: 12px 0; font-size: 14px; line-height: 2; }
+        .point-box.blue   { background: #eaf4fb; border: 2px solid #aed6f1; border-left: 5px solid #2980b9; }
+        .point-box.red    { background: #fdf2f2; border: 2px solid #f5b7b1; border-left: 5px solid #e74c3c; }
+        .point-box.orange { background: #fef5ec; border: 2px solid #f5cba7; border-left: 5px solid #e67e22; }
+        .point-box.green  { background: #eafaf1; border: 2px solid #a9dfbf; border-left: 5px solid #27ae60; }
+        .point-box .ph { font-weight: 900; font-size: 14.5px; }
+        .point-box.blue   .ph { color: #2980b9; }
+        .point-box.red    .ph { color: #c0392b; }
+        .point-box.orange .ph { color: #e67e22; }
+        .point-box.green  .ph { color: #27ae60; }
+
+        /* セクション */
+        .section-box { margin-bottom: 28px; padding: 22px; border: 1px solid #ddd; border-radius: 10px; }
+        .section-box.s1 { background: #fdf2f2; border-color: #f5b7b1; }
+        .section-box.s2 { background: #fff8f0; border-color: #f5cba7; }
+        .section-box.s3 { background: #f0fff5; border-color: #a9dfbf; }
+        .section-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 14px; padding-left: 12px; }
+        .section-box.s1 .section-title { border-left: 6px solid #e74c3c; color: #c0392b; }
+        .section-box.s2 .section-title { border-left: 6px solid #e67e22; color: #e67e22; }
+        .section-box.s3 .section-title { border-left: 6px solid #27ae60; color: #27ae60; }
+
+        /* 表 */
+        .val-table { border-collapse: collapse; font-size: 15px; margin: 10px 0 6px; }
+        .val-table th { background: #eaf0fb; color: #1a5276; font-weight: bold; border: 2px solid #aaa; padding: 8px 16px; text-align: center; }
+        .val-table td { border: 2px solid #aaa; padding: 8px 16px; text-align: center; min-width: 42px; }
+        .val-table td.hi { background: #fff9c4; font-weight: bold; color: #c0392b; }
+
+        /* カード内横並び：グラフ左・説明右 */
+        .card-inner { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; margin-top: 14px; }
+        .graph-wrap { background: #fafafa; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; flex-shrink: 0; text-align: center; }
+        .exp-area { flex: 1; min-width: 220px; font-size: 14px; line-height: 2; }
+
+        /* 分数SVGインライン用 */
+        .frac { display: inline-block; vertical-align: middle; }
+
+        /* 穴埋め */
+        .fill-area { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #ccc; }
+        .fill-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 14.5px; flex-wrap: wrap; }
+        .fill-label { font-weight: bold; color: #444; }
+
+        .drop-zone-inline {
+            display: inline-block; min-width: 60px; height: 1.8em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #c0392b; padding: 2px 8px;
+            white-space: nowrap; border-radius: 3px; font-size: 14px;
+            transition: background 0.15s, border 0.15s;
+        }
+        .drop-zone-inline.sm { min-width: 44px; }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <nav class="page-nav">
+        <a href="hirei1.html" class="nav-btn">①座標とは</a>
+        <a href="hirei2.html" class="nav-btn">②座標の演習</a>
+        <a href="hirei3.html" class="nav-btn">③対称な点</a>
+        <a href="hirei4.html" class="nav-btn">④正比例とグラフ</a>
+        <a href="hirei5.html" class="nav-btn active">⑤注意すべきグラフ</a>
+    </nav>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="audio-summary-area">
+        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
+            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+        </button>
+        <div class="volume-control">
+            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        </div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- 注意ポイント -->
+    <div class="point-box red" style="margin-bottom:24px;">
+        <div class="ph">⚠️ 注意ポイント</div>
+        傾きが負のとき・分数のときは，次のように考えるとグラフが書きやすい！<br>
+        <strong>分母 = x の増加量（必ずプラス）　分子 = y の増加量（符号そのまま）</strong>
+    </div>
+
+    <!-- ===== ① y = −2x ===== -->
+    <div class="section-box s1">
+        <div class="section-title">① y = −2x のグラフ</div>
+
+        <!-- 値の表 -->
+        <div style="overflow-x:auto;">
+            <table class="val-table">
+                <tr>
+                    <th>x</th>
+                    <td>−3</td><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td><td>3</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td class="hi">6</td><td class="hi">4</td><td class="hi">2</td><td>0</td><td class="hi">−2</td><td class="hi">−4</td><td class="hi">−6</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-inner">
+            <!-- グラフ SVG -->
+            <div class="graph-wrap">
+                <svg width="240" height="260" viewBox="-80 -100 160 200">
+                    <g stroke="#ececec" stroke-width="0.7">
+                        <line x1="-60" y1="-80" x2="-60" y2="80"/><line x1="-40" y1="-80" x2="-40" y2="80"/>
+                        <line x1="-20" y1="-80" x2="-20" y2="80"/><line x1="20" y1="-80" x2="20" y2="80"/>
+                        <line x1="40" y1="-80" x2="40" y2="80"/><line x1="60" y1="-80" x2="60" y2="80"/>
+                        <line x1="-70" y1="-80" x2="70" y2="-80"/><line x1="-70" y1="-60" x2="70" y2="-60"/>
+                        <line x1="-70" y1="-40" x2="70" y2="-40"/><line x1="-70" y1="-20" x2="70" y2="-20"/>
+                        <line x1="-70" y1="20" x2="70" y2="20"/><line x1="-70" y1="40" x2="70" y2="40"/>
+                        <line x1="-70" y1="60" x2="70" y2="60"/><line x1="-70" y1="80" x2="70" y2="80"/>
+                    </g>
+                    <line x1="-75" y1="0" x2="75" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="75,0 69,-3 69,3" fill="#333"/>
+                    <line x1="0" y1="90" x2="0" y2="-90" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-90 -3,-84 3,-84" fill="#333"/>
+                    <text x="70" y="12" font-size="10" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-82" font-size="10" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#666">O</text>
+                    <g font-size="8" fill="#999" text-anchor="middle">
+                        <text x="-60" y="10">-3</text><text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                        <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                    </g>
+                    <g font-size="8" fill="#999" text-anchor="end">
+                        <text x="-3" y="-76">4</text><text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                        <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text><text x="-3" y="84">-4</text>
+                    </g>
+                    <!-- y=-2x 直線: (-3,6)→(3,-6) → px: (-60,-120)→(60,120) クリップ -->
+                    <line x1="-40" y1="80" x2="40" y2="-80" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- 点 -->
+                    <circle cx="-40" cy="80" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="-20" cy="40" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="0"   cy="0"  r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="20"  cy="-40" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="40"  cy="-80" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <!-- 傾き矢印：原点から右1→下2 -->
+                    <line x1="0" y1="0" x2="20" y2="0" stroke="#2980b9" stroke-width="2" marker-end="url(#bl1)"/>
+                    <line x1="20" y1="0" x2="20" y2="-40" stroke="#e74c3c" stroke-width="2" marker-end="url(#rd1)"/>
+                    <defs>
+                        <marker id="bl1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#2980b9"/></marker>
+                        <marker id="rd1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#e74c3c"/></marker>
+                    </defs>
+                    <text x="8" y="-4" font-size="8" fill="#2980b9" font-weight="bold">①+1</text>
+                    <text x="22" y="-18" font-size="8" fill="#e74c3c" font-weight="bold">②−2</text>
+                </svg>
+            </div>
+
+            <div class="exp-area">
+                <p>次のように考えましょう。</p>
+                <p style="font-size:1.15em; font-style:italic; color:#1a5276; font-weight:bold; margin:4px 0;">y = −2x</p>
+                <p style="margin:8px 0;">
+                    y =
+                    <svg width="36" height="46" viewBox="0 0 36 46" style="vertical-align:middle; display:inline-block;">
+                        <text x="18" y="15" font-size="14" fill="#e74c3c" text-anchor="middle" font-weight="bold">−2</text>
+                        <line x1="3" y1="22" x2="33" y2="22" stroke="#333" stroke-width="1.8"/>
+                        <text x="18" y="38" font-size="14" fill="#27ae60" text-anchor="middle" font-weight="bold">1</text>
+                    </svg>
+                    x　と考える
+                </p>
+
+                <div class="point-box red" style="margin-top:10px;">
+                    <span class="ph">✏️ 書き方</span><br>
+                    ① <u>x が <strong>1</strong> 増加する</u>（原点から右に1進む）と，<br>
+                    ② <u>y は <strong>2 減少する</strong></u>（下に2進む）<br>
+                    この2点を結ぶ！
+                </div>
+
+                <div class="point-box blue" style="margin-top:10px; font-size:13.5px;">
+                    <span class="ph">⚠️ ここ注意！</span><br>
+                    分母は<span style="color:#27ae60; font-weight:bold;">必ずプラス</span>にする。<br>
+                    −2 = <svg width="36" height="40" viewBox="0 0 36 40" style="vertical-align:middle; display:inline-block;"><text x="18" y="14" font-size="13" fill="#e74c3c" text-anchor="middle" font-weight="bold">−2</text><line x1="3" y1="20" x2="33" y2="20" stroke="#333" stroke-width="1.5"/><text x="18" y="35" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">1</text></svg>　（分母 = <span style="color:#27ae60; font-weight:bold;">1</span>　分子 = −2）
+                </div>
+
+                <!-- 穴埋め① -->
+                <div class="fill-area">
+                    <p style="font-weight:bold; color:#1a5276; margin-bottom:8px;">📝 確認しよう</p>
+                    <div class="fill-row">
+                        <span class="fill-label">y = −2x のグラフは右</span>
+                        <span class="drop-zone-inline sm" data-ans="下がり" onclick="zCl(this)"></span>
+                        <span>の直線。</span>
+                    </div>
+                    <div class="fill-row">
+                        <span class="fill-label">x が 1 増えると y は</span>
+                        <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                        <span>減少する。</span>
+                    </div>
+                    <div class="fill-row">
+                        <span class="fill-label">分母は必ず</span>
+                        <span class="drop-zone-inline sm" data-ans="プラス" onclick="zCl(this)"></span>
+                        <span>にする。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ② y = −x/3 ===== -->
+    <div class="section-box s2">
+        <div class="section-title">② y = −x/3 のグラフ</div>
+
+        <p style="font-size:14px; margin-bottom:10px;">
+            y = −
+            <svg width="20" height="36" viewBox="0 0 20 36" style="vertical-align:middle; display:inline-block;">
+                <text x="10" y="13" font-size="13" fill="#1a5276" text-anchor="middle" font-weight="bold">x</text>
+                <line x1="1" y1="18" x2="19" y2="18" stroke="#333" stroke-width="1.5"/>
+                <text x="10" y="32" font-size="13" fill="#1a5276" text-anchor="middle" font-weight="bold">3</text>
+            </svg>
+            は　y = −
+            <svg width="20" height="36" viewBox="0 0 20 36" style="vertical-align:middle; display:inline-block;">
+                <text x="10" y="13" font-size="13" fill="#1a5276" text-anchor="middle" font-weight="bold">1</text>
+                <line x1="1" y1="18" x2="19" y2="18" stroke="#333" stroke-width="1.5"/>
+                <text x="10" y="32" font-size="13" fill="#1a5276" text-anchor="middle" font-weight="bold">3</text>
+            </svg>
+            x　です。
+        </p>
+
+        <!-- 値の表 -->
+        <div style="overflow-x:auto;">
+            <table class="val-table">
+                <tr>
+                    <th>x</th>
+                    <td>−6</td><td>−3</td><td>0</td><td>3</td><td>6</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td class="hi">2</td><td class="hi">1</td><td>0</td><td class="hi">−1</td><td class="hi">−2</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-inner">
+            <!-- グラフ SVG -->
+            <div class="graph-wrap">
+                <svg width="240" height="240" viewBox="-80 -80 160 160">
+                    <g stroke="#ececec" stroke-width="0.7">
+                        <line x1="-60" y1="-60" x2="-60" y2="60"/><line x1="-40" y1="-60" x2="-40" y2="60"/>
+                        <line x1="-20" y1="-60" x2="-20" y2="60"/><line x1="20" y1="-60" x2="20" y2="60"/>
+                        <line x1="40" y1="-60" x2="40" y2="60"/><line x1="60" y1="-60" x2="60" y2="60"/>
+                        <line x1="-70" y1="-60" x2="70" y2="-60"/><line x1="-70" y1="-40" x2="70" y2="-40"/>
+                        <line x1="-70" y1="-20" x2="70" y2="-20"/><line x1="-70" y1="20" x2="70" y2="20"/>
+                        <line x1="-70" y1="40" x2="70" y2="40"/><line x1="-70" y1="60" x2="70" y2="60"/>
+                    </g>
+                    <line x1="-75" y1="0" x2="75" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="75,0 69,-3 69,3" fill="#333"/>
+                    <line x1="0" y1="75" x2="0" y2="-75" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-75 -3,-69 3,-69" fill="#333"/>
+                    <text x="70" y="12" font-size="10" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-67" font-size="10" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#666">O</text>
+                    <g font-size="8" fill="#999" text-anchor="middle">
+                        <text x="-60" y="10">-3</text><text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                        <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                    </g>
+                    <g font-size="8" fill="#999" text-anchor="end">
+                        <text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                        <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text>
+                    </g>
+                    <!-- y=-x/3 直線 x単位10px: (-6,2)→(6,-2) = px(-60,-40)→(60,40) -->
+                    <line x1="-72" y1="24" x2="72" y2="-24" stroke="#e67e22" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- 点 -->
+                    <circle cx="-60" cy="20" r="4" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                    <circle cx="-30" cy="10" r="4" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                    <circle cx="0"   cy="0"  r="4" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                    <circle cx="30"  cy="-10" r="4" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                    <circle cx="60"  cy="-20" r="4" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                    <!-- 傾き矢印：原点から右3→下1 -->
+                    <line x1="0" y1="0" x2="30" y2="0" stroke="#2980b9" stroke-width="2" marker-end="url(#bl2)"/>
+                    <line x1="30" y1="0" x2="30" y2="-10" stroke="#e67e22" stroke-width="2" marker-end="url(#or2)"/>
+                    <defs>
+                        <marker id="bl2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#2980b9"/></marker>
+                        <marker id="or2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#e67e22"/></marker>
+                    </defs>
+                    <text x="8" y="-3" font-size="8" fill="#2980b9" font-weight="bold">①+3</text>
+                    <text x="32" y="-4" font-size="8" fill="#e67e22" font-weight="bold">②−1</text>
+                </svg>
+            </div>
+
+            <div class="exp-area">
+                <p>このように考えましょう。</p>
+                <p style="margin:8px 0;">
+                    y = −
+                    <svg width="20" height="36" viewBox="0 0 20 36" style="vertical-align:middle; display:inline-block;">
+                        <text x="10" y="13" font-size="13" fill="#1a5276" text-anchor="middle">x</text>
+                        <line x1="1" y1="18" x2="19" y2="18" stroke="#333" stroke-width="1.5"/>
+                        <text x="10" y="32" font-size="13" fill="#1a5276" text-anchor="middle">3</text>
+                    </svg>
+                    = −
+                    <svg width="20" height="36" viewBox="0 0 20 36" style="vertical-align:middle; display:inline-block;">
+                        <text x="10" y="13" font-size="13" fill="#1a5276" text-anchor="middle">1</text>
+                        <line x1="1" y1="18" x2="19" y2="18" stroke="#333" stroke-width="1.5"/>
+                        <text x="10" y="32" font-size="13" fill="#1a5276" text-anchor="middle">3</text>
+                    </svg>
+                    x =
+                    <svg width="36" height="40" viewBox="0 0 36 40" style="vertical-align:middle; display:inline-block;">
+                        <text x="18" y="14" font-size="13" fill="#e74c3c" text-anchor="middle" font-weight="bold">−1</text>
+                        <line x1="3" y1="20" x2="33" y2="20" stroke="#333" stroke-width="1.8"/>
+                        <text x="18" y="35" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">3</text>
+                    </svg>
+                    x
+                </p>
+
+                <div class="point-box orange" style="margin-top:10px;">
+                    <span class="ph">✏️ 書き方</span><br>
+                    ① <u>x が <strong>3</strong> 増加する</u>（原点から右に3進む）と，<br>
+                    ② <u>y は <strong>1 減少する</strong></u>（下に1進む）<br>
+                    この2点を結ぶ！
+                </div>
+
+                <div class="point-box blue" style="margin-top:10px; font-size:13.5px;">
+                    <span class="ph">⚠️ ここ注意！</span><br>
+                    分母を<span style="color:#27ae60; font-weight:bold;">プラスにするため</span>，<br>
+                    −
+                    <svg width="20" height="36" viewBox="0 0 20 36" style="vertical-align:middle; display:inline-block;">
+                        <text x="10" y="13" font-size="12" text-anchor="middle">1</text>
+                        <line x1="1" y1="18" x2="19" y2="18" stroke="#333" stroke-width="1.5"/>
+                        <text x="10" y="32" font-size="12" text-anchor="middle">3</text>
+                    </svg>
+                    →
+                    <svg width="36" height="40" viewBox="0 0 36 40" style="vertical-align:middle; display:inline-block;">
+                        <text x="18" y="14" font-size="13" fill="#e74c3c" text-anchor="middle" font-weight="bold">−1</text>
+                        <line x1="3" y1="20" x2="33" y2="20" stroke="#333" stroke-width="1.8"/>
+                        <text x="18" y="35" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">3</text>
+                    </svg>
+                    と書く（分母 = <span style="color:#27ae60; font-weight:bold;">3</span>　分子 = −1）
+                </div>
+
+                <!-- 穴埋め② -->
+                <div class="fill-area">
+                    <p style="font-weight:bold; color:#1a5276; margin-bottom:8px;">📝 確認しよう</p>
+                    <div class="fill-row">
+                        <span class="fill-label">y = −x/3 のグラフは右</span>
+                        <span class="drop-zone-inline sm" data-ans="下がり" onclick="zCl(this)"></span>
+                        <span>の直線。</span>
+                    </div>
+                    <div class="fill-row">
+                        <span class="fill-label">x が 3 増えると y は</span>
+                        <span class="drop-zone-inline sm" data-ans="1" onclick="zCl(this)"></span>
+                        <span>減少する。</span>
+                    </div>
+                    <div class="fill-row">
+                        <span class="fill-label">この傾きを分数で書くと</span>
+                        <span class="drop-zone-inline" data-ans="−1/3" onclick="zCl(this)" style="min-width:52px; display:inline-flex; align-items:center; justify-content:center; height:2.4em;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ③ y = −x ===== -->
+    <div class="section-box s3">
+        <div class="section-title">③ y = −x のグラフ</div>
+
+        <p style="font-size:14px; margin-bottom:12px;">
+            y = −x　は　y =
+            <svg width="36" height="40" viewBox="0 0 36 40" style="vertical-align:middle; display:inline-block;">
+                <text x="18" y="14" font-size="13" fill="#e74c3c" text-anchor="middle" font-weight="bold">−1</text>
+                <line x1="3" y1="20" x2="33" y2="20" stroke="#333" stroke-width="1.8"/>
+                <text x="18" y="35" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">1</text>
+            </svg>
+            x　と考えます。
+        </p>
+
+        <!-- 値の表 -->
+        <div style="overflow-x:auto;">
+            <table class="val-table">
+                <tr>
+                    <th>x</th>
+                    <td>−3</td><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td><td>3</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td class="hi">3</td><td class="hi">2</td><td class="hi">1</td><td>0</td><td class="hi">−1</td><td class="hi">−2</td><td class="hi">−3</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-inner">
+            <!-- グラフ SVG -->
+            <div class="graph-wrap">
+                <svg width="240" height="240" viewBox="-80 -80 160 160">
+                    <g stroke="#ececec" stroke-width="0.7">
+                        <line x1="-60" y1="-60" x2="-60" y2="60"/><line x1="-40" y1="-60" x2="-40" y2="60"/>
+                        <line x1="-20" y1="-60" x2="-20" y2="60"/><line x1="20" y1="-60" x2="20" y2="60"/>
+                        <line x1="40" y1="-60" x2="40" y2="60"/><line x1="60" y1="-60" x2="60" y2="60"/>
+                        <line x1="-70" y1="-60" x2="70" y2="-60"/><line x1="-70" y1="-40" x2="70" y2="-40"/>
+                        <line x1="-70" y1="-20" x2="70" y2="-20"/><line x1="-70" y1="20" x2="70" y2="20"/>
+                        <line x1="-70" y1="40" x2="70" y2="40"/><line x1="-70" y1="60" x2="70" y2="60"/>
+                    </g>
+                    <line x1="-75" y1="0" x2="75" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="75,0 69,-3 69,3" fill="#333"/>
+                    <line x1="0" y1="75" x2="0" y2="-75" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-75 -3,-69 3,-69" fill="#333"/>
+                    <text x="70" y="12" font-size="10" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-67" font-size="10" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#666">O</text>
+                    <g font-size="8" fill="#999" text-anchor="middle">
+                        <text x="-60" y="10">-3</text><text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                        <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                    </g>
+                    <g font-size="8" fill="#999" text-anchor="end">
+                        <text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                        <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text>
+                    </g>
+                    <!-- y=-x 直線: x=-3,y=3→x=3,y=-3 = SVGpx(-60,-60)→(60,60) 右下がり -->
+                    <line x1="-65" y1="-65" x2="65" y2="65" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- 点: y=-x なので y座標の符号が逆 -->
+                    <circle cx="-60" cy="-60" r="4" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                    <circle cx="-20" cy="-20" r="4" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                    <circle cx="0"   cy="0"   r="4" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                    <circle cx="20"  cy="20"  r="4" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                    <circle cx="60"  cy="60"  r="4" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                    <!-- 傾き矢印：原点から右1→下1（SVGでは下がプラス） -->
+                    <line x1="0" y1="0" x2="20" y2="0" stroke="#2980b9" stroke-width="2" marker-end="url(#bl3)"/>
+                    <line x1="20" y1="0" x2="20" y2="20" stroke="#27ae60" stroke-width="2" marker-end="url(#gr3)"/>
+                    <defs>
+                        <marker id="bl3" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#2980b9"/></marker>
+                        <marker id="gr3" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#27ae60"/></marker>
+                    </defs>
+                    <text x="4" y="-3" font-size="8" fill="#2980b9" font-weight="bold">①+1</text>
+                    <text x="22" y="16" font-size="8" fill="#27ae60" font-weight="bold">②−1</text>
+                </svg>
+            </div>
+
+            <div class="exp-area">
+                <p>y = −x は傾きが <strong>−1</strong> の直線です。</p>
+
+                <div class="point-box green" style="margin-top:10px;">
+                    <span class="ph">✏️ 書き方</span><br>
+                    y = −x =
+                    <svg width="36" height="40" viewBox="0 0 36 40" style="vertical-align:middle; display:inline-block;">
+                        <text x="18" y="14" font-size="13" fill="#e74c3c" text-anchor="middle" font-weight="bold">−1</text>
+                        <line x1="3" y1="20" x2="33" y2="20" stroke="#333" stroke-width="1.8"/>
+                        <text x="18" y="35" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">1</text>
+                    </svg>
+                    x と考える<br>
+                    ① <u>x が <strong>1</strong> 増加する</u>（原点から右に1進む）と，<br>
+                    ② <u>y は <strong>1 減少する</strong></u>（下に1進む）<br>
+                    この2点を結ぶ！
+                </div>
+
+                <div class="point-box blue" style="margin-top:10px; font-size:13.5px;">
+                    <span class="ph">💡 y = 2x と比べてみよう</span><br>
+                    y = 2x：右上がり　傾き =
+                    <svg width="28" height="36" viewBox="0 0 28 36" style="vertical-align:middle; display:inline-block;">
+                        <text x="14" y="13" font-size="12" fill="#2980b9" text-anchor="middle" font-weight="bold">2</text>
+                        <line x1="2" y1="18" x2="26" y2="18" stroke="#333" stroke-width="1.5"/>
+                        <text x="14" y="31" font-size="12" fill="#27ae60" text-anchor="middle" font-weight="bold">1</text>
+                    </svg><br>
+                    y = −x ：右下がり　傾き =
+                    <svg width="36" height="36" viewBox="0 0 36 36" style="vertical-align:middle; display:inline-block;">
+                        <text x="18" y="13" font-size="12" fill="#e74c3c" text-anchor="middle" font-weight="bold">−1</text>
+                        <line x1="3" y1="18" x2="33" y2="18" stroke="#333" stroke-width="1.5"/>
+                        <text x="18" y="31" font-size="12" fill="#27ae60" text-anchor="middle" font-weight="bold">1</text>
+                    </svg>
+                </div>
+
+                <!-- 穴埋め③ -->
+                <div class="fill-area">
+                    <p style="font-weight:bold; color:#1a5276; margin-bottom:8px;">📝 確認しよう</p>
+                    <div class="fill-row">
+                        <span class="fill-label">y = −x のグラフは右</span>
+                        <span class="drop-zone-inline sm" data-ans="下がり" onclick="zCl(this)"></span>
+                        <span>の直線。</span>
+                    </div>
+                    <div class="fill-row">
+                        <span class="fill-label">y = −x の比例定数は</span>
+                        <span class="drop-zone-inline sm" data-ans="−1" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="fill-row">
+                        <span class="fill-label">x が 1 増えると y は</span>
+                        <span class="drop-zone-inline sm" data-ans="1" onclick="zCl(this)"></span>
+                        <span>減少する。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- まとめ -->
+    <div class="point-box green" style="font-size:14px;">
+        <div class="ph">📋 まとめ：分数の傾きの読み方</div>
+        傾き a を
+        <svg width="36" height="40" viewBox="0 0 36 40" style="vertical-align:middle; display:inline-block;">
+            <text x="18" y="14" font-size="13" fill="#e74c3c" text-anchor="middle" font-weight="bold">分子</text>
+            <line x1="2" y1="20" x2="34" y2="20" stroke="#333" stroke-width="1.8"/>
+            <text x="18" y="35" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">分母</text>
+        </svg>
+        と書いたとき…<br>
+        ・<span style="color:#27ae60; font-weight:bold;">分母</span> = <strong>x の増加量</strong>（必ずプラス！）<br>
+        ・<span style="color:#e74c3c; font-weight:bold;">分子</span> = <strong>y の増加量</strong>（マイナスもOK）<br>
+        → 原点から「右に分母，上 or 下に分子」進んで点を打ち，結ぶ
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei5.wav"></audio>
+
+<script>
+    let sT, tI, isR = false, sW = null, bestTime = null;
+    const audio = document.getElementById('mainAudio');
+    const volSlider = document.getElementById('volSlider');
+    const volNum = document.getElementById('volNum');
+    const playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = () => updatePlayUI(false);
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', e => {
+        audio.volume = e.target.value;
+        volNum.innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    function fmtTime(ms) {
+        const total = ms / 1000;
+        const m = Math.floor(total / 60).toString().padStart(2, '0');
+        const s = (total % 60).toFixed(1).padStart(4, '0');
+        return `${m}:${s}`;
+    }
+
+    function makeFracSVG() {
+        return `<svg width="32" height="36" viewBox="0 0 32 36" style="vertical-align:middle; display:inline-block; pointer-events:none;">
+            <text x="16" y="13" font-size="12" fill="#c0392b" text-anchor="middle" font-weight="bold">−1</text>
+            <line x1="2" y1="19" x2="30" y2="19" stroke="#333" stroke-width="1.5"/>
+            <text x="16" y="33" font-size="12" fill="#27ae60" text-anchor="middle" font-weight="bold">3</text>
+        </svg>`;
+    }
+
+    function addToBank(word) {
+        const b = document.getElementById('wordBank');
+        const d = document.createElement('div');
+        d.className = 'drag-item';
+        if (word === '−1/3') {
+            d.innerHTML = makeFracSVG();
+            d.style.padding = '2px 8px';
+            d.style.lineHeight = '1';
+        } else {
+            d.innerText = word;
+        }
+        d.setAttribute('data-val', word);
+        d.onclick = function () {
+            if (sW) sW.classList.remove('selected');
+            if (sW === this) { sW = null; return; }
+            sW = this; this.classList.add('selected');
+        };
+        b.appendChild(d);
+    }
+
+    function zCl(z) {
+        if (!isR) return;
+        const cur = z.getAttribute('data-filled') || '';
+        if (cur !== '') {
+            addToBank(cur);
+            z.innerHTML = ''; z.removeAttribute('data-filled');
+            z.classList.remove('correct', 'wrong');
+            return;
+        }
+        if (sW) {
+            const val = sW.getAttribute('data-val') || sW.innerText;
+            if (val === '−1/3') {
+                z.innerHTML = makeFracSVG();
+            } else {
+                z.innerText = val;
+            }
+            z.setAttribute('data-filled', val);
+            z.classList.remove('correct', 'wrong');
+            sW.remove(); sW = null;
+        }
+    }
+
+    function stCh() {
+        isR = true; sW = null;
+        sT = Date.now(); clearInterval(tI);
+        tI = setInterval(() => {
+            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+        }, 100);
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            z.innerHTML = ''; z.removeAttribute('data-filled');
+            z.classList.remove('correct', 'wrong');
+        });
+        const allAns = [...document.querySelectorAll('.drop-zone-inline')].map(z => z.getAttribute('data-ans'));
+        const b = document.getElementById('wordBank');
+        b.innerHTML = '';
+        allAns.sort(() => Math.random() - 0.5).forEach(w => addToBank(w));
+    }
+
+    function chAn() {
+        if (!isR) return;
+        let allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            const ans = z.getAttribute('data-ans');
+            const cur = z.getAttribute('data-filled') || z.innerText.trim();
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+            } else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                if (cur !== '') {
+                    addToBank(cur);
+                    z.innerHTML = ''; z.removeAttribute('data-filled');
+                }
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI); isR = false;
+            const elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+                document.getElementById('recordDisplay').innerText = '🏆 ベスト: ' + fmtTime(bestTime);
+            }
+            startCnf();
+        } else {
+            const wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth;
+            wbc.classList.add('shake');
+            setTimeout(() => wbc.classList.remove('shake'), 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI); isR = false; sW = null;
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            const ans = z.getAttribute('data-ans');
+            if (ans === '−1/3') {
+                z.innerHTML = makeFracSVG();
+            } else {
+                z.innerText = ans;
+            }
+            z.setAttribute('data-filled', ans);
+            z.classList.remove('correct', 'wrong');
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    const cvs = document.getElementById("confetti-canvas");
+    const ctx = cvs.getContext("2d");
+    let pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (let i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height - cvs.height,
+            s: Math.random()*9+4, c: `hsl(${Math.random()*360},75%,65%)`, sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(() => { cnfRunning = false; ctx.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(p => { p.y+=p.sp; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    shMo();
+</script>
+</body>
+</html>

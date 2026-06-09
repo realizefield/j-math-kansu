@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：③対称な点の座標</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        
+                .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.index-btn:hover { background: #154360; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+
+        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .speaker-btn-large.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 0.9em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        /* ポイントボックス */
+        .point-box { background: linear-gradient(135deg, #eaf4fb 60%, #fef9e7); border: 2px solid #aed6f1; border-left: 5px solid #2980b9; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; font-size: 13.5px; line-height: 2; }
+        .point-box .pt-head { font-weight: 900; color: #1a5276; font-size: 15px; margin-bottom: 6px; }
+        .point-box table { border-collapse: collapse; width: 100%; margin-top: 6px; font-size: 13.5px; }
+        .point-box th { background: #d6eaf8; color: #1a5276; padding: 6px 12px; border: 1px solid #aed6f1; text-align: center; font-weight: 900; }
+        .point-box td { padding: 6px 12px; border: 1px solid #d0d9e8; text-align: center; }
+        .point-box tr:nth-child(even) td { background: #f4f9fd; }
+        .sym-x { color: #2980b9; font-weight: bold; }
+        .sym-y { color: #e67e22; font-weight: bold; }
+        .sym-o { color: #27ae60; font-weight: bold; }
+
+        /* セクション */
+        .section-box { margin-bottom: 24px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .section-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 6px; border-left: 6px solid #1a5276; padding-left: 10px; }
+        .section-sub { font-size: 0.85rem; color: #555; margin-bottom: 14px; padding-left: 16px; }
+        .section-box.sx  { background: #f0f6ff; border-color: #aed6f1; }
+        .section-box.sy  { background: #fff8f0; border-color: #f5cba7; }
+        .section-box.so  { background: #f0fff5; border-color: #a9dfbf; }
+        .section-box.sx .section-title  { border-left-color: #2980b9; color: #2980b9; }
+        .section-box.sy .section-title  { border-left-color: #e67e22; color: #e67e22; }
+        .section-box.so .section-title  { border-left-color: #27ae60; color: #27ae60; }
+
+        /* カード */
+        .q-card { border: 1.5px solid #dde; border-radius: 10px; padding: 20px 24px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .q-card-title { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.05em; margin-bottom: 14px; }
+        .badge { color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; flex-shrink: 0; }
+        .badge-x { background: #2980b9; }
+        .badge-y { background: #e67e22; }
+        .badge-o { background: #27ae60; }
+
+        /* 説明カード内レイアウト：SVG左・説明右 */
+        .card-inner { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+        .graph-wrap { background: #fafafa; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; flex-shrink: 0; text-align: center; }
+
+        /* 説明テキストエリア */
+        .exp-area { flex: 1; min-width: 200px; font-size: 14px; line-height: 2; padding-top: 4px; }
+        .exp-area .rule-box { background: #fff; border: 2px solid #aed6f1; border-radius: 6px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; }
+        .section-box.sy .exp-area .rule-box { border-color: #f5cba7; }
+        .section-box.so .exp-area .rule-box { border-color: #a9dfbf; }
+
+        /* 穴埋め問題 */
+        .fill-area { margin-top: 18px; }
+        .fill-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 14.5px; flex-wrap: wrap; }
+        .fill-label { font-weight: 900; color: #555; min-width: 160px; }
+
+        .drop-zone-inline {
+            display: inline-block; min-width: 52px; height: 1.8em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #c0392b; padding: 2px 6px;
+            white-space: nowrap; border-radius: 3px; font-size: 14px;
+            transition: background 0.15s, border 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <nav class="page-nav"><a href="hirei2.html" class="nav-btn">◀ ② 座標の演習</a><a href="index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei3b.html" class="nav-btn">④ 対称な点の演習 ▶</a></nav>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="audio-summary-area">
+        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
+            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+        </button>
+        <div class="volume-control">
+            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        </div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ポイントまとめ表 -->
+    <div class="point-box">
+        <div class="pt-head">💡 対称な点の座標　まとめ</div>
+        <table>
+            <tr>
+                <th>対称の種類</th>
+                <th>折り目 / 中心</th>
+                <th>点 A(a, b) に対称な点</th>
+                <th>変わるのは？</th>
+            </tr>
+            <tr>
+                <td><span class="sym-x">x軸について線対称</span></td>
+                <td>x軸（折り目）</td>
+                <td><span class="sym-x">(a, −b)</span></td>
+                <td>y座標の符号が逆</td>
+            </tr>
+            <tr>
+                <td><span class="sym-y">y軸について線対称</span></td>
+                <td>y軸（折り目）</td>
+                <td><span class="sym-y">(−a, b)</span></td>
+                <td>x座標の符号が逆</td>
+            </tr>
+            <tr>
+                <td><span class="sym-o">原点について点対称</span></td>
+                <td>原点（中心）</td>
+                <td><span class="sym-o">(−a, −b)</span></td>
+                <td>両方の符号が逆</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ===== x軸について線対称 ===== -->
+    <div class="section-box sx">
+        <div class="section-title">① x軸について線対称</div>
+        <div class="section-sub">x軸を折り目として紙を折ったとき、ぴったり重なる点</div>
+
+        <div class="q-card">
+            <div class="q-card-title"><span class="badge badge-x">x</span> 例題　点 A(2, 3) に対して，x軸について対称な点を求めよ。</div>
+            <div class="card-inner">
+                <!-- SVG: x軸対称 -->
+                <div class="graph-wrap">
+                    <svg width="240" height="240" viewBox="-80 -80 160 160">
+                        <!-- grid -->
+                        <g stroke="#ececec" stroke-width="0.7">
+                            <line x1="-60" y1="-60" x2="-60" y2="60"/><line x1="-40" y1="-60" x2="-40" y2="60"/><line x1="-20" y1="-60" x2="-20" y2="60"/>
+                            <line x1="20" y1="-60" x2="20" y2="60"/><line x1="40" y1="-60" x2="40" y2="60"/><line x1="60" y1="-60" x2="60" y2="60"/>
+                            <line x1="-60" y1="-60" x2="60" y2="-60"/><line x1="-60" y1="-40" x2="60" y2="-40"/><line x1="-60" y1="-20" x2="60" y2="-20"/>
+                            <line x1="-60" y1="20" x2="60" y2="20"/><line x1="-60" y1="40" x2="60" y2="40"/><line x1="-60" y1="60" x2="60" y2="60"/>
+                        </g>
+                        <!-- x軸を強調（折り目） -->
+                        <line x1="-75" y1="0" x2="75" y2="0" stroke="#2980b9" stroke-width="3" stroke-dasharray="none"/>
+                        <polygon points="75,0 69,-3 69,3" fill="#2980b9"/>
+                        <!-- y軸 -->
+                        <line x1="0" y1="75" x2="0" y2="-75" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="0,-75 -3,-69 3,-69" fill="#333"/>
+                        <text x="70" y="12" font-size="11" fill="#2980b9" font-style="italic" font-weight="bold">x</text>
+                        <text x="4" y="-67" font-size="11" fill="#333" font-style="italic">y</text>
+                        <text x="3" y="12" font-size="9" fill="#666">O</text>
+                        <!-- 目盛り -->
+                        <g font-size="8" fill="#999" text-anchor="middle">
+                            <text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                            <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                        </g>
+                        <g font-size="8" fill="#999" text-anchor="end">
+                            <text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                            <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text>
+                        </g>
+                        <!-- 折り目ラベル -->
+                        <text x="-72" y="-4" font-size="9" fill="#2980b9" font-weight="bold">折り目</text>
+                        <!-- 補助線（点A→x軸→点A'） -->
+                        <line x1="40" y1="-60" x2="40" y2="60" stroke="#aaa" stroke-width="0.8" stroke-dasharray="4,3"/>
+                        <!-- 点A(2,3) -->
+                        <circle cx="40" cy="-60" r="6" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                        <text x="47" y="-62" font-size="12" fill="#e74c3c" font-weight="bold">A(2, 3)</text>
+                        <!-- 点A'(2,-3) -->
+                        <circle cx="40" cy="60" r="6" fill="#2980b9" stroke="white" stroke-width="1.5"/>
+                        <text x="47" y="66" font-size="12" fill="#2980b9" font-weight="bold">A'(2,−3)</text>
+                        <!-- 矢印 -->
+                        <path d="M38,-50 C28,-20 28,20 38,50" stroke="#e74c3c" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+                        <defs>
+                            <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#e74c3c"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="exp-area">
+                    <p>x軸は <strong>折り目</strong> になります。<br>
+                    点を「x軸で折り返す」と，上下がひっくり返ります。</p>
+                    <p>➡ <strong>x座標はそのまま</strong>，<strong>y座標の符号が逆</strong>になります。</p>
+                    <div class="rule-box">
+                        <span class="sym-x">A(2, 3)</span> のx軸対称な点 <br>
+                        → x座標：そのまま → <strong>2</strong><br>
+                        → y座標：符号逆　 → <strong>−3</strong><br>
+                        ∴ <span class="sym-x">A'(2, −3)</span>
+                    </div>
+
+                    <!-- 穴埋め -->
+                    <div class="fill-area">
+                        <p style="font-weight:bold; color:#1a5276; margin-bottom:8px;">📝 練習してみよう</p>
+                        <div class="fill-row">
+                            <span class="fill-label">点 B(3, 1) のx軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="-1" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 C(−2, 4) のx軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="-2" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="-4" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 D(1, −3) のx軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="1" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 E(−3, −2) のx軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="-3" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="2" onclick="zCl(this)"></span>）
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== y軸について線対称 ===== -->
+    <div class="section-box sy">
+        <div class="section-title">② y軸について線対称</div>
+        <div class="section-sub">y軸を折り目として紙を折ったとき，ぴったり重なる点</div>
+
+        <div class="q-card">
+            <div class="q-card-title"><span class="badge badge-y">y</span> 例題　点 A(2, 3) に対して，y軸について対称な点を求めよ。</div>
+            <div class="card-inner">
+                <!-- SVG: y軸対称 -->
+                <div class="graph-wrap">
+                    <svg width="240" height="240" viewBox="-80 -80 160 160">
+                        <g stroke="#ececec" stroke-width="0.7">
+                            <line x1="-60" y1="-60" x2="-60" y2="60"/><line x1="-40" y1="-60" x2="-40" y2="60"/><line x1="-20" y1="-60" x2="-20" y2="60"/>
+                            <line x1="20" y1="-60" x2="20" y2="60"/><line x1="40" y1="-60" x2="40" y2="60"/><line x1="60" y1="-60" x2="60" y2="60"/>
+                            <line x1="-60" y1="-60" x2="60" y2="-60"/><line x1="-60" y1="-40" x2="60" y2="-40"/><line x1="-60" y1="-20" x2="60" y2="-20"/>
+                            <line x1="-60" y1="20" x2="60" y2="20"/><line x1="-60" y1="40" x2="60" y2="40"/><line x1="-60" y1="60" x2="60" y2="60"/>
+                        </g>
+                        <!-- x軸 -->
+                        <line x1="-75" y1="0" x2="75" y2="0" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="75,0 69,-3 69,3" fill="#333"/>
+                        <!-- y軸を強調（折り目） -->
+                        <line x1="0" y1="75" x2="0" y2="-75" stroke="#e67e22" stroke-width="3"/>
+                        <polygon points="0,-75 -3,-69 3,-69" fill="#e67e22"/>
+                        <text x="70" y="12" font-size="11" fill="#333" font-style="italic">x</text>
+                        <text x="4" y="-67" font-size="11" fill="#e67e22" font-style="italic" font-weight="bold">y</text>
+                        <text x="3" y="12" font-size="9" fill="#666">O</text>
+                        <g font-size="8" fill="#999" text-anchor="middle">
+                            <text x="-60" y="10">-3</text><text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                            <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                        </g>
+                        <g font-size="8" fill="#999" text-anchor="end">
+                            <text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                            <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text>
+                        </g>
+                        <!-- 折り目ラベル -->
+                        <text x="4" y="72" font-size="9" fill="#e67e22" font-weight="bold">折り目</text>
+                        <!-- 補助線（点A→y軸→点A'） -->
+                        <line x1="-40" y1="-60" x2="40" y2="-60" stroke="#aaa" stroke-width="0.8" stroke-dasharray="4,3"/>
+                        <!-- 点A(2,3) -->
+                        <circle cx="40" cy="-60" r="6" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                        <text x="44" y="-64" font-size="12" fill="#e74c3c" font-weight="bold">A(2, 3)</text>
+                        <!-- 点A'(-2,3) -->
+                        <circle cx="-40" cy="-60" r="6" fill="#e67e22" stroke="white" stroke-width="1.5"/>
+                        <text x="-74" y="-64" font-size="12" fill="#e67e22" font-weight="bold">A'(−2, 3)</text>
+                        <!-- 矢印 -->
+                        <path d="M30,-58 C10,-68 -10,-68 -30,-58" stroke="#e74c3c" stroke-width="1.5" fill="none" marker-end="url(#arr2)"/>
+                        <defs>
+                            <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#e74c3c"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="exp-area">
+                    <p>y軸は <strong>折り目</strong> になります。<br>
+                    点を「y軸で折り返す」と，左右がひっくり返ります。</p>
+                    <p>➡ <strong>y座標はそのまま</strong>，<strong>x座標の符号が逆</strong>になります。</p>
+                    <div class="rule-box">
+                        <span class="sym-y">A(2, 3)</span> のy軸対称な点 <br>
+                        → x座標：符号逆　 → <strong>−2</strong><br>
+                        → y座標：そのまま → <strong>3</strong><br>
+                        ∴ <span class="sym-y">A'(−2, 3)</span>
+                    </div>
+
+                    <div class="fill-area">
+                        <p style="font-weight:bold; color:#1a5276; margin-bottom:8px;">📝 練習してみよう</p>
+                        <div class="fill-row">
+                            <span class="fill-label">点 B(3, 1) のy軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="-3" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="1" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 C(−2, 4) のy軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="2" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="4" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 D(1, −3) のy軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="-1" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="-3" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 E(−3, −2) のy軸対称</span>
+                            →（<span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="-2" onclick="zCl(this)"></span>）
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 原点について点対称 ===== -->
+    <div class="section-box so">
+        <div class="section-title">③ 原点について点対称</div>
+        <div class="section-sub">原点を中心として 180° 回転させたときに重なる点</div>
+
+        <div class="q-card">
+            <div class="q-card-title"><span class="badge badge-o">O</span> 例題　点 A(2, 3) に対して，原点について対称な点を求めよ。</div>
+            <div class="card-inner">
+                <!-- SVG: 原点対称 -->
+                <div class="graph-wrap">
+                    <svg width="240" height="240" viewBox="-80 -80 160 160">
+                        <g stroke="#ececec" stroke-width="0.7">
+                            <line x1="-60" y1="-60" x2="-60" y2="60"/><line x1="-40" y1="-60" x2="-40" y2="60"/><line x1="-20" y1="-60" x2="-20" y2="60"/>
+                            <line x1="20" y1="-60" x2="20" y2="60"/><line x1="40" y1="-60" x2="40" y2="60"/><line x1="60" y1="-60" x2="60" y2="60"/>
+                            <line x1="-60" y1="-60" x2="60" y2="-60"/><line x1="-60" y1="-40" x2="60" y2="-40"/><line x1="-60" y1="-20" x2="60" y2="-20"/>
+                            <line x1="-60" y1="20" x2="60" y2="20"/><line x1="-60" y1="40" x2="60" y2="40"/><line x1="-60" y1="60" x2="60" y2="60"/>
+                        </g>
+                        <line x1="-75" y1="0" x2="75" y2="0" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="75,0 69,-3 69,3" fill="#333"/>
+                        <line x1="0" y1="75" x2="0" y2="-75" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="0,-75 -3,-69 3,-69" fill="#333"/>
+                        <text x="70" y="12" font-size="11" fill="#333" font-style="italic">x</text>
+                        <text x="4" y="-67" font-size="11" fill="#333" font-style="italic">y</text>
+                        <g font-size="8" fill="#999" text-anchor="middle">
+                            <text x="-60" y="10">-3</text><text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                            <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                        </g>
+                        <g font-size="8" fill="#999" text-anchor="end">
+                            <text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                            <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text>
+                        </g>
+                        <!-- OA, OA'の補助線 -->
+                        <line x1="40" y1="-60" x2="-40" y2="60" stroke="#aaa" stroke-width="1" stroke-dasharray="4,3"/>
+                        <!-- 原点を強調 -->
+                        <circle cx="0" cy="0" r="5" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                        <text x="6" y="-5" font-size="10" fill="#27ae60" font-weight="bold">O</text>
+                        <!-- 点A(2,3) -->
+                        <circle cx="40" cy="-60" r="6" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                        <text x="44" y="-64" font-size="12" fill="#e74c3c" font-weight="bold">A(2, 3)</text>
+                        <!-- 点A'(-2,-3) -->
+                        <circle cx="-40" cy="60" r="6" fill="#27ae60" stroke="white" stroke-width="1.5"/>
+                        <text x="-78" y="72" font-size="12" fill="#27ae60" font-weight="bold">A'(−2,−3)</text>
+                        <!-- 回転矢印 -->
+                        <path d="M32,-52 C8,-30 -8,30 -32,52" stroke="#e74c3c" stroke-width="1.5" fill="none" marker-end="url(#arr3)"/>
+                        <defs>
+                            <marker id="arr3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#e74c3c"/>
+                            </marker>
+                        </defs>
+                        <!-- 180°ラベル -->
+                        <text x="10" y="-10" font-size="9" fill="#e74c3c">180°</text>
+                    </svg>
+                </div>
+                <div class="exp-area">
+                    <p>原点を <strong>中心</strong> として，<br>
+                    180° 回転させると重なります。</p>
+                    <p>➡ <strong>x座標もy座標も，両方の符号が逆</strong>になります。</p>
+                    <div class="rule-box">
+                        <span class="sym-o">A(2, 3)</span> の原点対称な点 <br>
+                        → x座標：符号逆 → <strong>−2</strong><br>
+                        → y座標：符号逆 → <strong>−3</strong><br>
+                        ∴ <span class="sym-o">A'(−2, −3)</span>
+                    </div>
+
+                    <div class="fill-area">
+                        <p style="font-weight:bold; color:#1a5276; margin-bottom:8px;">📝 練習してみよう</p>
+                        <div class="fill-row">
+                            <span class="fill-label">点 B(3, 1) の原点対称</span>
+                            →（<span class="drop-zone-inline" data-ans="-3" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="-1" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 C(−2, 4) の原点対称</span>
+                            →（<span class="drop-zone-inline" data-ans="2" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="-4" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 D(1, −3) の原点対称</span>
+                            →（<span class="drop-zone-inline" data-ans="-1" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>）
+                        </div>
+                        <div class="fill-row">
+                            <span class="fill-label">点 E(−3, −2) の原点対称</span>
+                            →（<span class="drop-zone-inline" data-ans="3" onclick="zCl(this)"></span>，<span class="drop-zone-inline" data-ans="2" onclick="zCl(this)"></span>）
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei3.wav"></audio>
+
+<script>
+    let sT, tI, isR = false, sW = null, bestTime = null;
+    const audio = document.getElementById('mainAudio');
+    const volSlider = document.getElementById('volSlider');
+    const volNum = document.getElementById('volNum');
+    const playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = () => updatePlayUI(false);
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', e => {
+        audio.volume = e.target.value;
+        volNum.innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    function fmtTime(ms) {
+        const total = ms / 1000;
+        const m = Math.floor(total / 60).toString().padStart(2, '0');
+        const s = (total % 60).toFixed(1).padStart(4, '0');
+        return `${m}:${s}`;
+    }
+
+    function addToBank(word) {
+        const b = document.getElementById('wordBank');
+        const d = document.createElement('div');
+        d.className = 'drag-item';
+        d.innerText = word;
+        d.onclick = function () {
+            if (sW) sW.classList.remove('selected');
+            if (sW === this) { sW = null; return; }
+            sW = this; this.classList.add('selected');
+        };
+        b.appendChild(d);
+    }
+
+    function zCl(z) {
+        if (!isR) return;
+        if (z.innerText.trim() !== '') {
+            addToBank(z.innerText.trim());
+            z.innerText = ''; z.classList.remove('correct', 'wrong');
+            return;
+        }
+        if (sW) {
+            z.innerText = sW.innerText;
+            z.classList.remove('correct', 'wrong');
+            sW.remove(); sW = null;
+        }
+    }
+
+    function stCh() {
+        isR = true; sW = null;
+        sT = Date.now(); clearInterval(tI);
+        tI = setInterval(() => {
+            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+        }, 100);
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            z.innerText = ''; z.classList.remove('correct', 'wrong');
+        });
+        const allAns = [...document.querySelectorAll('.drop-zone-inline')].map(z => z.getAttribute('data-ans'));
+        const b = document.getElementById('wordBank');
+        b.innerHTML = '';
+        allAns.sort(() => Math.random() - 0.5).forEach(w => addToBank(w));
+    }
+
+    function chAn() {
+        if (!isR) return;
+        let allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            const ans = z.getAttribute('data-ans');
+            const cur = z.innerText.trim();
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+            } else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                if (cur !== '') { addToBank(cur); z.innerText = ''; }
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI); isR = false;
+            const elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+                document.getElementById('recordDisplay').innerText = '🏆 ベスト: ' + fmtTime(bestTime);
+            }
+            startCnf();
+        } else {
+            const wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth;
+            wbc.classList.add('shake');
+            setTimeout(() => wbc.classList.remove('shake'), 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI); isR = false; sW = null;
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            z.innerText = z.getAttribute('data-ans');
+            z.classList.remove('correct', 'wrong');
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    const cvs = document.getElementById("confetti-canvas");
+    const ctx = cvs.getContext("2d");
+    let pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (let i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height - cvs.height,
+            s: Math.random()*9+4, c: `hsl(${Math.random()*360},75%,65%)`, sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(() => { cnfRunning = false; ctx.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(p => { p.y+=p.sp; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    shMo();
+</script>
+
+    <!-- 学習記録スクリプト -->
+    <script>
+    (function() {
+        var key = 'hirei3';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.count = (data.count || 0) + 1;
+            data.lastDate = new Date().toLocaleDateString('ja-JP');
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+        } catch(e) {}
+    })();
+    </script>
+    <!-- 復習ボタン -->
+    <div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+        <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+            <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+        </button>
+    </div>
+    <script>
+    function toggleReview() {
+        var key = 'hirei3';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.review = !data.review;
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+            updateReviewBtn(data.review);
+        } catch(e) {}
+    }
+    function updateReviewBtn(isReview) {
+        document.getElementById('reviewIcon').innerText = isReview ? '★' : '☆';
+        document.getElementById('reviewText').innerText = isReview ? '復習リストに追加済み' : '復習リストに追加';
+        document.getElementById('reviewBtn').style.background = isReview ? '#e74c3c' : '#f39c12';
+    }
+    (function() {
+        var key = 'hirei3';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            updateReviewBtn(data.review || false);
+        } catch(e) {}
+    })();
+    </script>
+
+</body>
+</html>

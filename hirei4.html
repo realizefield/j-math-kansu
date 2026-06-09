@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>数学：④正比例とグラフ</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
+        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        
+                .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; padding: 6px 18px; }
+        .nav-btn.index-btn:hover { background: #154360; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+
+        .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
+        .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
+
+        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .speaker-btn-large.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 0.9em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        /* セクション */
+        .section-box { margin-bottom: 24px; padding: 22px; border: 1px solid #ddd; border-radius: 8px; }
+        .section-box.s1 { background: #fafcff; border-color: #aed6f1; }
+        .section-box.s2 { background: #fdfef5; border-color: #d5e8a0; }
+        .section-box.s3 { background: #fff8f0; border-color: #f5cba7; }
+        .section-box.s4 { background: #f0fff5; border-color: #a9dfbf; }
+        .section-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 14px; padding-left: 12px; }
+        .section-box.s1 .section-title { border-left: 6px solid #2980b9; color: #2980b9; }
+        .section-box.s2 .section-title { border-left: 6px solid #7dbb00; color: #5a8a00; }
+        .section-box.s3 .section-title { border-left: 6px solid #e67e22; color: #e67e22; }
+        .section-box.s4 .section-title { border-left: 6px solid #27ae60; color: #27ae60; }
+
+        /* 表 */
+        .data-table { border-collapse: collapse; margin: 12px 0 16px; font-size: 14px; }
+        .data-table th, .data-table td { border: 1.5px solid #aaa; padding: 7px 14px; text-align: center; min-width: 40px; }
+        .data-table th { background: #eaf0fb; font-weight: bold; color: #1a5276; }
+        .data-table td { background: white; }
+        .data-table td.hi { background: #fff9c4; font-weight: bold; color: #c0392b; }
+
+        /* 矢印つき倍数アノテーション */
+        .bai-wrap { position: relative; display: inline-block; margin-bottom: 4px; }
+
+        /* 説明テキスト */
+        .exp-text { font-size: 14px; line-height: 2; margin-bottom: 10px; }
+        .exp-text .kw { color: #c0392b; font-weight: bold; border-bottom: 2px solid #e74c3c; }
+        .exp-text .kw2 { color: #2980b9; font-weight: bold; }
+        .exp-text .kw3 { color: #27ae60; font-weight: bold; }
+
+        /* ポイントボックス */
+        .point-box { background: #eaf4fb; border: 2px solid #aed6f1; border-left: 5px solid #2980b9; border-radius: 8px; padding: 12px 18px; margin: 14px 0; font-size: 14px; line-height: 2; }
+        .point-box.green { background: #eafaf1; border-color: #a9dfbf; border-left-color: #27ae60; }
+        .point-box.orange { background: #fef5ec; border-color: #f5cba7; border-left-color: #e67e22; }
+        .point-box .ph { font-weight: 900; font-size: 14.5px; color: #1a5276; }
+        .point-box.green .ph { color: #27ae60; }
+        .point-box.orange .ph { color: #e67e22; }
+
+        /* カード内横並び */
+        .card-inner { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+        .graph-wrap { background: #fafafa; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; flex-shrink: 0; text-align: center; }
+        .exp-area { flex: 1; min-width: 220px; font-size: 14px; line-height: 2; }
+
+        /* 傾き説明ミニ図 */
+        .slope-mini { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; margin-top: 10px; }
+
+        /* 穴埋め */
+        .fill-area { margin-top: 16px; }
+        .fill-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 14.5px; flex-wrap: wrap; }
+        .fill-label { font-weight: bold; color: #444; min-width: 180px; }
+
+        .drop-zone-inline {
+            display: inline-block; min-width: 80px; height: 1.8em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #c0392b; padding: 2px 8px;
+            white-space: nowrap; border-radius: 3px; font-size: 14px;
+            transition: background 0.15s, border 0.15s;
+        }
+        .drop-zone-inline.sm { min-width: 52px; }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+
+        /* 数式風 */
+        .formula { font-size: 1.4em; font-style: italic; letter-spacing: 2px; color: #1a5276; margin: 6px 0; }
+        .formula .var { color: #c0392b; }
+        .formula .coef { display: inline-block; background: #fff3cd; border: 1.5px solid #e67e22; border-radius: 4px; padding: 0 8px; font-size: 0.85em; vertical-align: middle; cursor: pointer; }
+        .formula .coef.drop-zone-inline { font-style: normal; }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <nav class="page-nav"><a href="hirei3b.html" class="nav-btn">◀ ④ 対称な点の演習</a><a href="index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei5.html" class="nav-btn">⑥ 注意すべきグラフ ▶</a></nav>
+    <div class="challenge-panel">
+        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
+        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    </div>
+    <div class="audio-summary-area">
+        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
+            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+        </button>
+        <div class="volume-control">
+            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        </div>
+    </div>
+    <div class="word-bank-container">
+        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ===== セクション1：正比例とは ===== -->
+    <div class="section-box s1">
+        <div class="section-title">① 正比例とは</div>
+
+        <p class="exp-text">コピーをするのに，1枚 10 円かかります。枚数を <span class="kw2">x</span> 枚，かかる費用を <span class="kw2">y</span> 円とします。</p>
+
+        <!-- 倍数アノテーション付き表 -->
+        <div style="overflow-x:auto; margin: 10px 0;">
+            <!-- 上矢印（xの3倍・4倍） -->
+            <svg width="500" height="28" viewBox="0 0 500 28" style="display:block; margin-bottom:0;">
+                <defs>
+                    <marker id="ra" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#e74c3c"/></marker>
+                    <marker id="ra2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8e44ad"/></marker>
+                </defs>
+                <!-- 3倍矢印 x=1→3 (左端余白60px、各セル65px) -->
+                <path d="M 125,22 Q 220,4 315,22" stroke="#e74c3c" stroke-width="1.8" fill="none" marker-end="url(#ra)"/>
+                <text x="222" y="12" font-size="12" fill="#e74c3c" text-anchor="middle" font-weight="bold">3倍</text>
+                <!-- 4倍矢印 x=1→4 -->
+                <path d="M 125,22 Q 255,2 385,22" stroke="#8e44ad" stroke-width="1.8" fill="none" marker-end="url(#ra2)"/>
+                <text x="260" y="6" font-size="12" fill="#8e44ad" text-anchor="middle" font-weight="bold">4倍</text>
+            </svg>
+            <!-- 本体テーブル -->
+            <table style="border-collapse:collapse; font-size:15px; width:auto;">
+                <tr>
+                    <th style="background:#eaf0fb; color:#1a5276; font-weight:bold; border:2px solid #aaa; padding:8px 14px; min-width:55px;">x 枚</th>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center; min-width:46px;">1</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">2</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center; color:#e74c3c; font-weight:bold;">3</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center; color:#8e44ad; font-weight:bold;">4</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">5</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">6</td>
+                </tr>
+                <tr>
+                    <th style="background:#eaf0fb; color:#1a5276; font-weight:bold; border:2px solid #aaa; padding:8px 14px;">y 円</th>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">10</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">20</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center; color:#e74c3c; font-weight:bold;">30</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center; color:#8e44ad; font-weight:bold;">40</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">50</td>
+                    <td style="border:2px solid #aaa; padding:8px 18px; text-align:center;">60</td>
+                </tr>
+            </table>
+            <!-- 下矢印（yの3倍・4倍） -->
+            <svg width="500" height="28" viewBox="0 0 500 28" style="display:block; margin-top:0;">
+                <defs>
+                    <marker id="rb" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#e74c3c"/></marker>
+                    <marker id="rb2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8e44ad"/></marker>
+                </defs>
+                <path d="M 125,6 Q 220,24 315,6" stroke="#e74c3c" stroke-width="1.8" fill="none" marker-end="url(#rb)"/>
+                <text x="222" y="26" font-size="12" fill="#e74c3c" text-anchor="middle" font-weight="bold">3倍</text>
+                <path d="M 125,6 Q 255,26 385,6" stroke="#8e44ad" stroke-width="1.8" fill="none" marker-end="url(#rb2)"/>
+                <text x="260" y="26" font-size="12" fill="#8e44ad" text-anchor="middle" font-weight="bold">4倍</text>
+            </svg>
+        </div>
+
+        <p class="exp-text">上の表のように，<span class="kw2">x</span> が 2 倍，3 倍，4 倍，……となると，<span class="kw2">y</span> も 2 倍，3 倍，4 倍……となります。<br>
+        このような関係を <span class="kw">比例</span> といいます。</p>
+
+        <div class="point-box">
+            <span class="ph">📌 正比例の式</span><br>
+            y と x の関係は　<span style="font-size:1.2em; font-style:italic; color:#1a5276;">y = 10 × x</span><br>
+            一般に，y が x に比例する場合，<br>
+            <span style="font-size:1.3em; font-style:italic; font-weight:bold; color:#1a5276; letter-spacing:2px;">y = <span style="color:#e67e22;">a</span> x</span>　という式が成り立ちます。<br>
+            この係数 <span style="color:#e67e22; font-weight:bold; font-size:1.1em;">a</span> を <span class="kw">比例定数</span> といいます。
+        </div>
+
+        <!-- 穴埋め①正比例 -->
+        <div class="fill-area">
+            <p style="font-weight:bold; color:#1a5276; margin-bottom:10px;">📝 確認しよう</p>
+            <div class="fill-row">
+                <span class="fill-label">x が 2 倍になると y は</span>
+                <span class="drop-zone-inline" data-ans="2倍" onclick="zCl(this)"></span>
+                <span>になる。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">x と y のこの関係を</span>
+                <span class="drop-zone-inline" data-ans="比例" onclick="zCl(this)"></span>
+                <span>という。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">式 y = ax の係数 a を</span>
+                <span class="drop-zone-inline" data-ans="比例定数" onclick="zCl(this)"></span>
+                <span>という。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">コピーの例では y =</span>
+                <span class="drop-zone-inline sm" data-ans="10" onclick="zCl(this)"></span>
+                <span style="font-size:1.1em; font-style:italic;"> x　なので，比例定数は</span>
+                <span class="drop-zone-inline sm" data-ans="10" onclick="zCl(this)"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== セクション2：傾きとは ===== -->
+    <div class="section-box s2">
+        <div class="section-title">② 傾き（比例定数）とは</div>
+
+        <p class="exp-text">比例定数 <span style="color:#e67e22; font-weight:bold;">a</span> はグラフでは <span class="kw">傾き</span> ともいいます。</p>
+
+        <div class="point-box green">
+            <span class="ph">📐 傾きの求め方</span><br>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin: 8px 0;">
+                <span style="font-size:15px;">傾き　＝</span>
+                <!-- 分数SVG: y の増加量 / x の増加量 -->
+                <svg width="130" height="46" viewBox="0 0 130 46" style="vertical-align:middle;">
+                    <text x="65" y="16" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">y の増加量</text>
+                    <line x1="5" y1="23" x2="125" y2="23" stroke="#27ae60" stroke-width="2"/>
+                    <text x="65" y="40" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">x の増加量</text>
+                </svg>
+                <span style="font-size:15px;">＝　変化の割合</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px;">
+                <span style="font-size:15px; font-style:italic; color:#1a5276; font-weight:bold;">a　＝</span>
+                <svg width="130" height="46" viewBox="0 0 130 46" style="vertical-align:middle;">
+                    <text x="65" y="16" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">y の増加量</text>
+                    <line x1="5" y1="23" x2="125" y2="23" stroke="#27ae60" stroke-width="2"/>
+                    <text x="65" y="40" font-size="13" fill="#27ae60" text-anchor="middle" font-weight="bold">x の増加量</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 穴埋め②傾き -->
+        <div class="fill-area">
+            <p style="font-weight:bold; color:#1a5276; margin-bottom:10px;">📝 確認しよう</p>
+            <div class="fill-row">
+                <span class="fill-label">比例定数はグラフでは</span>
+                <span class="drop-zone-inline" data-ans="傾き" onclick="zCl(this)"></span>
+                <span>ともいう。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">傾き = y の増加量 ÷</span>
+                <span class="drop-zone-inline" data-ans="x の増加量" onclick="zCl(this)"></span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">傾きは</span>
+                <span class="drop-zone-inline" data-ans="変化の割合" onclick="zCl(this)"></span>
+                <span>と同じ。</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== セクション3：グラフの書き方 ===== -->
+    <div class="section-box s3">
+        <div class="section-title">③ y = 2x のグラフを書こう</div>
+
+        <p class="exp-text"><strong>問）</strong>　y = 2x のグラフはどんな直線ですか。書きなさい。</p>
+        <p class="exp-text"><strong>解）</strong>　まず表をつくります。</p>
+
+        <!-- 値の表 -->
+        <div style="overflow-x:auto; margin-bottom:16px;">
+            <table class="data-table">
+                <tr>
+                    <th>x</th>
+                    <td>−3</td><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td><td>3</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td class="hi">−6</td><td class="hi">−4</td><td class="hi">−2</td><td>0</td><td class="hi">2</td><td class="hi">4</td><td class="hi">6</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-inner">
+            <!-- グラフ SVG -->
+            <div class="graph-wrap">
+                <svg width="260" height="260" viewBox="-100 -100 200 200">
+                    <!-- グリッド -->
+                    <g stroke="#e8e8e8" stroke-width="0.6">
+                        <line x1="-80" y1="-80" x2="-80" y2="80"/><line x1="-60" y1="-80" x2="-60" y2="80"/>
+                        <line x1="-40" y1="-80" x2="-40" y2="80"/><line x1="-20" y1="-80" x2="-20" y2="80"/>
+                        <line x1="20" y1="-80" x2="20" y2="80"/><line x1="40" y1="-80" x2="40" y2="80"/>
+                        <line x1="60" y1="-80" x2="60" y2="80"/><line x1="80" y1="-80" x2="80" y2="80"/>
+                        <line x1="-80" y1="-80" x2="80" y2="-80"/><line x1="-80" y1="-60" x2="80" y2="-60"/>
+                        <line x1="-80" y1="-40" x2="80" y2="-40"/><line x1="-80" y1="-20" x2="80" y2="-20"/>
+                        <line x1="-80" y1="20" x2="80" y2="20"/><line x1="-80" y1="40" x2="80" y2="40"/>
+                        <line x1="-80" y1="60" x2="80" y2="60"/><line x1="-80" y1="80" x2="80" y2="80"/>
+                    </g>
+                    <!-- 軸 -->
+                    <line x1="-95" y1="0" x2="95" y2="0" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="95,0 89,-3 89,3" fill="#333"/>
+                    <line x1="0" y1="95" x2="0" y2="-95" stroke="#333" stroke-width="1.5"/>
+                    <polygon points="0,-95 -3,-89 3,-89" fill="#333"/>
+                    <text x="90" y="12" font-size="11" fill="#333" font-style="italic">x</text>
+                    <text x="4" y="-86" font-size="11" fill="#333" font-style="italic">y</text>
+                    <text x="3" y="12" font-size="9" fill="#666">O</text>
+                    <!-- 目盛り -->
+                    <g font-size="8" fill="#999" text-anchor="middle">
+                        <text x="-60" y="10">-3</text><text x="-40" y="10">-2</text><text x="-20" y="10">-1</text>
+                        <text x="20" y="10">1</text><text x="40" y="10">2</text><text x="60" y="10">3</text>
+                    </g>
+                    <g font-size="8" fill="#999" text-anchor="end">
+                        <text x="-3" y="-76">4</text><text x="-3" y="-56">3</text><text x="-3" y="-36">2</text><text x="-3" y="-16">1</text>
+                        <text x="-3" y="24">-1</text><text x="-3" y="44">-2</text><text x="-3" y="64">-3</text><text x="-3" y="84">-4</text>
+                    </g>
+                    <!-- y=2x の直線 (-3,-6)→(3,6)、座標単位20px -->
+                    <line x1="-60" y1="120" x2="60" y2="-120" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- 実際の表示範囲でクリップ -->
+                    <line x1="-45" y1="90" x2="45" y2="-90" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- 点を打つ -->
+                    <circle cx="-60" cy="120" r="0"/><!-- クリップ外 -->
+                    <circle cx="-40" cy="80" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="-20" cy="40" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="0" cy="0" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="20" cy="-40" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <circle cx="40" cy="-80" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <!-- 原点ラベル -->
+                    <text x="-18" y="16" font-size="9" fill="#e74c3c">スタート:原点</text>
+                </svg>
+            </div>
+
+            <div class="exp-area">
+                <p>それぞれの座標<br>
+                (−3, −6)，(−2, −4)，(−1, −2)，(0, 0)，…<br>
+                をグラフに書き入れ，<strong>直線で結びます。</strong></p>
+
+                <div class="point-box orange" style="margin-top:12px;">
+                    <span class="ph">💡 グラフの特徴（y = ax）</span><br>
+                    ● 必ず <span style="color:#e67e22; font-weight:bold;">原点</span> を通る直線<br>
+                    ● <span style="color:#e67e22; font-weight:bold;">a &gt; 0</span> のとき：右上がり<br>
+                    ● <span style="color:#e67e22; font-weight:bold;">a &lt; 0</span> のとき：右下がり
+                </div>
+
+                <!-- 傾きの読み方ミニ図 -->
+                <p style="margin-top:14px; font-weight:bold; color:#555; font-size:13px;">
+                    y = 2x を，y =
+                    <svg width="28" height="36" viewBox="0 0 28 36" style="vertical-align:middle; display:inline-block;">
+                        <text x="14" y="13" font-size="13" fill="#e67e22" text-anchor="middle" font-weight="bold">2</text>
+                        <line x1="2" y1="18" x2="26" y2="18" stroke="#e67e22" stroke-width="1.8"/>
+                        <text x="14" y="32" font-size="13" fill="#e67e22" text-anchor="middle" font-weight="bold">1</text>
+                    </svg>
+                    x と考えます。
+                </p>
+                <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+                    <svg width="110" height="110" viewBox="-10 -10 110 110">
+                        <line x1="0" y1="50" x2="100" y2="50" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="100,50 94,47 94,53" fill="#333"/>
+                        <line x1="50" y1="100" x2="50" y2="0" stroke="#333" stroke-width="1.5"/>
+                        <polygon points="50,0 47,6 53,6" fill="#333"/>
+                        <text x="96" y="60" font-size="10" fill="#333" font-style="italic">x</text>
+                        <text x="54" y="8" font-size="10" fill="#333" font-style="italic">y</text>
+                        <text x="46" y="60" font-size="9" fill="#666">O</text>
+                        <!-- 原点から右1，上2 -->
+                        <line x1="50" y1="50" x2="80" y2="50" stroke="#2980b9" stroke-width="2" marker-end="url(#bl)"/>
+                        <line x1="80" y1="50" x2="80" y2="10" stroke="#27ae60" stroke-width="2" marker-end="url(#gr)"/>
+                        <defs>
+                            <marker id="bl" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#2980b9"/></marker>
+                            <marker id="gr" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#27ae60"/></marker>
+                        </defs>
+                        <text x="56" y="64" font-size="9" fill="#2980b9" font-weight="bold">① +1</text>
+                        <text x="82" y="32" font-size="9" fill="#27ae60" font-weight="bold">② +2</text>
+                        <circle cx="50" cy="50" r="3" fill="#e74c3c"/>
+                        <circle cx="80" cy="10" r="3" fill="#e74c3c"/>
+                        <line x1="50" y1="50" x2="80" y2="10" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,2"/>
+                    </svg>
+                    <div style="font-size:13px; line-height:2; padding-top:8px;">
+                        ① x が原点から <strong>1</strong> 増加<br>
+                        ② y は <strong>2</strong> 増加<br>
+                        この2点を結ぶ！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 穴埋め③グラフ -->
+        <div class="fill-area" style="margin-top:20px;">
+            <p style="font-weight:bold; color:#1a5276; margin-bottom:10px;">📝 確認しよう</p>
+            <div class="fill-row">
+                <span class="fill-label">y = ax のグラフは必ず</span>
+                <span class="drop-zone-inline" data-ans="原点" onclick="zCl(this)"></span>
+                <span>を通る直線。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">a &gt; 0 のとき，グラフは右</span>
+                <span class="drop-zone-inline" data-ans="上がり" onclick="zCl(this)"></span>
+                <span>の直線になる。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">a &lt; 0 のとき，グラフは右</span>
+                <span class="drop-zone-inline" data-ans="下がり" onclick="zCl(this)"></span>
+                <span>の直線になる。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">y = 2x のグラフで，x が 1 増えると y は</span>
+                <span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span>
+                <span>増える。</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== セクション4：まとめ ===== -->
+    <div class="section-box s4">
+        <div class="section-title">④ まとめ</div>
+
+        <div class="point-box green">
+            <span class="ph">📋 正比例のまとめ</span><br>
+            ● y が x に <span style="color:#27ae60; font-weight:bold;">比例</span> するとき　→　<span style="font-size:1.15em; font-style:italic; color:#1a5276; font-weight:bold;">y = ax</span><br>
+            ● <span style="color:#27ae60; font-weight:bold;">a</span> を <span style="font-weight:bold;">比例定数</span>（= 傾き = 変化の割合）という<br>
+            ● グラフは <span style="font-weight:bold;">原点を通る直線</span><br>
+            ● a &gt; 0 → 右上がり　　a &lt; 0 → 右下がり
+        </div>
+
+        <!-- 穴埋め④まとめ -->
+        <div class="fill-area" style="margin-top:16px;">
+            <p style="font-weight:bold; color:#1a5276; margin-bottom:10px;">📝 まとめ確認</p>
+            <div class="fill-row">
+                <span class="fill-label">y が x に比例するとき，式は</span>
+                <span class="drop-zone-inline" data-ans="y = ax" onclick="zCl(this)"></span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">比例定数はグラフの</span>
+                <span class="drop-zone-inline" data-ans="傾き" onclick="zCl(this)"></span>
+                <span>と同じ。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">y = −3x のグラフは右</span>
+                <span class="drop-zone-inline" data-ans="下がり" onclick="zCl(this)"></span>
+                <span>の直線。</span>
+            </div>
+            <div class="fill-row">
+                <span class="fill-label">y = 5x の比例定数は</span>
+                <span class="drop-zone-inline sm" data-ans="5" onclick="zCl(this)"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="stCh()" style="background:#e67e22;">チャレンジ開始！</button>
+        <button class="main-btn" onclick="chAn()" style="background:#27ae60;">答え合わせ</button>
+        <button class="main-btn" onclick="shMo()" style="background:#95a5a6;">お手本に戻す</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei4.wav"></audio>
+
+<script>
+    let sT, tI, isR = false, sW = null, bestTime = null;
+    const audio = document.getElementById('mainAudio');
+    const volSlider = document.getElementById('volSlider');
+    const volNum = document.getElementById('volNum');
+    const playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = () => updatePlayUI(false);
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', e => {
+        audio.volume = e.target.value;
+        volNum.innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    function fmtTime(ms) {
+        const total = ms / 1000;
+        const m = Math.floor(total / 60).toString().padStart(2, '0');
+        const s = (total % 60).toFixed(1).padStart(4, '0');
+        return `${m}:${s}`;
+    }
+
+    function addToBank(word) {
+        const b = document.getElementById('wordBank');
+        const d = document.createElement('div');
+        d.className = 'drag-item';
+        d.innerText = word;
+        d.onclick = function () {
+            if (sW) sW.classList.remove('selected');
+            if (sW === this) { sW = null; return; }
+            sW = this; this.classList.add('selected');
+        };
+        b.appendChild(d);
+    }
+
+    function zCl(z) {
+        if (!isR) return;
+        if (z.innerText.trim() !== '') {
+            addToBank(z.innerText.trim());
+            z.innerText = ''; z.classList.remove('correct', 'wrong');
+            return;
+        }
+        if (sW) {
+            z.innerText = sW.innerText;
+            z.classList.remove('correct', 'wrong');
+            sW.remove(); sW = null;
+        }
+    }
+
+    function stCh() {
+        isR = true; sW = null;
+        sT = Date.now(); clearInterval(tI);
+        tI = setInterval(() => {
+            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+        }, 100);
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            z.innerText = ''; z.classList.remove('correct', 'wrong');
+        });
+        const allAns = [...document.querySelectorAll('.drop-zone-inline')].map(z => z.getAttribute('data-ans'));
+        const b = document.getElementById('wordBank');
+        b.innerHTML = '';
+        allAns.sort(() => Math.random() - 0.5).forEach(w => addToBank(w));
+    }
+
+    function chAn() {
+        if (!isR) return;
+        let allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            const ans = z.getAttribute('data-ans');
+            const cur = z.innerText.trim();
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+            } else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                if (cur !== '') { addToBank(cur); z.innerText = ''; }
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI); isR = false;
+            const elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+                document.getElementById('recordDisplay').innerText = '🏆 ベスト: ' + fmtTime(bestTime);
+            }
+            startCnf();
+        } else {
+            const wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth;
+            wbc.classList.add('shake');
+            setTimeout(() => wbc.classList.remove('shake'), 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI); isR = false; sW = null;
+        document.querySelectorAll('.drop-zone-inline').forEach(z => {
+            z.innerText = z.getAttribute('data-ans');
+            z.classList.remove('correct', 'wrong');
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    const cvs = document.getElementById("confetti-canvas");
+    const ctx = cvs.getContext("2d");
+    let pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (let i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height - cvs.height,
+            s: Math.random()*9+4, c: `hsl(${Math.random()*360},75%,65%)`, sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(() => { cnfRunning = false; ctx.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(p => { p.y+=p.sp; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    shMo();
+</script>
+
+    <!-- 学習記録スクリプト -->
+    <script>
+    (function() {
+        var key = 'hirei4';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.count = (data.count || 0) + 1;
+            data.lastDate = new Date().toLocaleDateString('ja-JP');
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+        } catch(e) {}
+    })();
+    </script>
+    <!-- 復習ボタン -->
+    <div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+        <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+            <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+        </button>
+    </div>
+    <script>
+    function toggleReview() {
+        var key = 'hirei4';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            data.review = !data.review;
+            localStorage.setItem('study_' + key, JSON.stringify(data));
+            updateReviewBtn(data.review);
+        } catch(e) {}
+    }
+    function updateReviewBtn(isReview) {
+        document.getElementById('reviewIcon').innerText = isReview ? '★' : '☆';
+        document.getElementById('reviewText').innerText = isReview ? '復習リストに追加済み' : '復習リストに追加';
+        document.getElementById('reviewBtn').style.background = isReview ? '#e74c3c' : '#f39c12';
+    }
+    (function() {
+        var key = 'hirei4';
+        try {
+            var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+            updateReviewBtn(data.review || false);
+        } catch(e) {}
+    })();
+    </script>
+
+</body>
+</html>
