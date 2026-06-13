@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学：㉚一次関数 確認テスト</title>
+    <style>
+        :root { --bg-color: #f8f9fa; --drop-zone-bg: #e1f5fe; --line-green: #06C755; }
+        body { font-family: 'BIZ UDPGothic', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 6px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        /* コンパクトヘッダー：全要素を1〜2行に集約 */
+        .header-row1 { max-width: 900px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .page-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 4px 10px; border-radius: 16px; font-size: 0.8em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; }
+        .header-row2 { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .audio-compact { display: flex; align-items: center; gap: 8px; }
+        .speaker-btn-small { background: #e67e22; color: white; border: none; cursor: pointer; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 0.82em; white-space: nowrap; }
+        .speaker-btn-small.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+        input[type="range"] { cursor: pointer; width: 90px; }
+        .record-display { font-size: 0.78em; color: #555; margin-left: auto; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        .unit-header { text-align: center; margin-bottom: 24px; padding: 18px; background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); border-radius: 10px; border: 2px solid #90caf9; }
+        .unit-title { font-size: 1.4em; font-weight: 900; color: #0d47a1; margin: 0; }
+        .unit-sub { font-size: 0.9em; color: #555; margin-top: 6px; }
+
+        /* 大問ボックス */
+        .daimon { background: #fafcff; border: 2px solid #90caf9; border-radius: 10px; padding: 20px 24px; margin-bottom: 28px; }
+        .daimon-title { font-weight: 900; font-size: 1.05em; color: #1565c0; margin-bottom: 4px; border-left: 5px solid #1565c0; padding-left: 10px; }
+        .daimon-subtitle { font-size: 12px; color: #777; margin-bottom: 16px; margin-left: 15px; }
+
+        /* 問題行 */
+        .q-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px dashed #cde; flex-wrap: wrap; }
+        .q-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .q-badge { background: #1565c0; color: white; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; margin-top: 2px; }
+        .q-body { flex: 1; min-width: 0; font-size: 14.5px; line-height: 2; }
+        .q-text { margin-bottom: 6px; }
+        .q-ans { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+        /* グラフ行 */
+        .graph-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin: 8px 0; }
+        .graph-panel { background: white; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; text-align: center; }
+        .graph-panel .g-title { font-size: 11px; font-weight: bold; color: #1565c0; margin-bottom: 4px; }
+        .explain-col { flex: 1; min-width: 200px; font-size: 14px; line-height: 2.2; }
+
+        /* ヒントボックス */
+        .hint-box { background: #f0f7ff; border-radius: 6px; padding: 8px 14px; margin: 6px 0 10px; font-size: 13px; color: #555; line-height: 1.9; }
+
+        /* 分数 */
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.85em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 4px; font-weight: bold; text-align: center; }
+        .frac .den { padding: 0 4px; font-weight: bold; text-align: center; }
+
+        /* 空欄・選択肢 */
+        .drop-zone-inline {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 90px; min-height: 1.9em;
+            background: var(--drop-zone-bg); border: 1.5px solid #90caf9;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #1565c0; padding: 2px 10px;
+            border-radius: 4px; font-size: 14px; font-style: italic; transition: 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #1565c0; background: #bbdefb; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.w60 { min-width: 60px; }
+        .drop-zone-inline.w80 { min-width: 80px; }
+        .drop-zone-inline.wide { min-width: 120px; }
+
+        .choice-group { display: inline-flex; gap: 4px; flex-wrap: wrap; vertical-align: middle; margin-left: 4px; }
+        .choice-btn { background: white; color: #1565c0; border: 1.5px solid #64b5f6; padding: 3px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.15s; }
+        .choice-btn:hover { background: #e3f2fd; border-color: #1565c0; }
+        .choice-btn.selected { background: #f1c40f; color: #333; border-color: #e67e22; box-shadow: 0 0 0 2px #e67e22; }
+        .choice-btn.btn-correct { background: #d4edda; color: #155724; border-color: #28a745; }
+        .choice-btn.btn-wrong { background: #f8d7da; color: #721c24; border-color: #dc3545; }
+
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+        .math-p { font-style: italic; color: #1565c0; font-weight: bold; }
+        .math-r { font-style: italic; color: #c0392b; font-weight: bold; }
+
+        /* 得点表示 */
+        .score-box { background: #e3f2fd; border: 2px solid #90caf9; border-radius: 10px; padding: 16px 24px; text-align: center; margin-bottom: 24px; display: none; }
+        .score-box.show { display: block; }
+        .score-num { font-size: 2.5em; font-weight: 900; color: #1565c0; }
+        .score-msg { font-size: 1.1em; font-weight: bold; margin-top: 6px; }
+
+        /* まとめ表 */
+        .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        .summary-table th { background: #1565c0; color: white; padding: 8px 12px; text-align: center; }
+        .summary-table td { padding: 8px 12px; border: 1px solid #cde; }
+        .summary-table tr:nth-child(even) { background: #f0f7ff; }
+        .summary-table .unit-link { color: #1565c0; text-decoration: none; font-weight: bold; }
+        .summary-table .unit-link:hover { text-decoration: underline; }
+
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <div class="header-row1">
+        <nav class="page-nav">
+        <a href="hirei29.html" class="nav-btn">◀ ㉙ 動点問題</a>
+        <a href="hirei_index.html" class="nav-btn index-btn">📋 目次</a>
+        <a href="hirei_index.html" class="nav-btn">📋 シリーズ一覧</a>
+        </nav>
+    </div>
+    <div class="header-row2">
+        <div class="audio-compact">
+            <button id="playBtn" class="speaker-btn-small" onclick="toggleAudio()">
+                <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+            </button>
+            <div class="volume-control">
+                <span style="font-size:0.78em;color:#e67e22;font-weight:bold;">音量</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+                <span id="volNum" style="font-size:0.78em;min-width:32px;">100%</span>
+            </div>
+        </div>
+    </div>
+    <div class="word-bank-container" style="display:none;">
+        <div id="wordBank" class="word-bank"></div>
+    </div>
+</div>
+
+
+
+<div class="container">
+
+    <div class="unit-header">
+        <div class="unit-title">㉚ 一次関数 確認テスト</div>
+        <div class="unit-sub">⑳〜㉙ のまとめ｜全 15 問</div>
+    </div>
+
+    <!-- 得点ボックス -->
+    <div class="score-box" id="scoreBox">
+        <div style="font-size:1em; color:#555; margin-bottom:4px;">あなたの得点</div>
+        <div class="score-num"><span id="scoreNum">0</span> <span style="font-size:0.5em;">/ 15</span></div>
+        <div class="score-msg" id="scoreMsg"></div>
+    </div>
+
+    <!-- 大問1：一次関数の基本 -->
+    <div class="daimon">
+        <div class="daimon-title">大問１　一次関数の基本</div>
+        <div class="daimon-subtitle">⑳ 一次関数とは</div>
+
+        <div class="q-row">
+            <div class="q-badge">1</div>
+            <div class="q-body">
+                <div class="q-text">
+                    <span class="math">y = −3x + 5</span> の<strong>傾き</strong>を答えよ。
+                </div>
+                <div class="q-ans">
+                    <span>傾き ＝</span>
+                    <span class="drop-zone-inline w60" data-ans="−3" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">2</div>
+            <div class="q-body">
+                <div class="q-text">
+                    <span class="math">y = −3x + 5</span> の<strong>切片</strong>を答えよ。
+                </div>
+                <div class="q-ans">
+                    <span>切片 ＝</span>
+                    <span class="drop-zone-inline w60" data-ans="5" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">3</div>
+            <div class="q-body">
+                <div class="q-text">
+                    次の式のうち <span class="math">y</span> が <span class="math">x</span> の一次関数であるものはどれか。<br>
+                    ア <span class="math">y = 5x</span>　　イ <span class="math">y = x²</span>　　ウ <span class="math">y = 8</span>　　エ <span class="math">y = <span style="font-style:normal;">3/x</span></span>
+                </div>
+                <div class="q-ans">
+                    <span>答）</span>
+                    <span class="drop-zone-inline w60" data-ans="ア" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">4</div>
+            <div class="q-body">
+                <div class="q-text">
+                    一次関数 <span class="math">y = 4x − 3</span> について、<span class="math">x</span> が 1 から 3 まで増加するときの<strong>変化の割合</strong>を答えよ。
+                </div>
+                <div class="hint-box">▶ 一次関数の変化の割合は、どの範囲でも常に傾き <span class="math-p">a</span> と等しい。</div>
+                <div class="q-ans">
+                    <span>変化の割合 ＝</span>
+                    <span class="drop-zone-inline w60" data-ans="4" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大問2：グラフ -->
+    <div class="daimon">
+        <div class="daimon-title">大問２　グラフの読み取り・かき方</div>
+        <div class="daimon-subtitle">㉒ グラフの基本 ／ ㉓ グラフ演習</div>
+
+        <div class="q-row">
+            <div class="q-badge">5</div>
+            <div class="q-body">
+                <div class="q-text">
+                    <span class="math">y = −x + 3</span> のグラフは右上がりか、右下がりか。
+                </div>
+                <div class="q-ans">
+                    <span class="drop-zone-inline wide" data-ans="右下がり" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">6</div>
+            <div class="q-body">
+                <div class="q-text">
+                    右のグラフの一次関数の式を求めよ。<br>
+                    <span style="font-size:13px; color:#666;">（グラフは (0, −1) を通り、傾きが 2 の直線）</span>
+                </div>
+                <div class="graph-row">
+                    <div class="graph-panel">
+                        <div class="g-title">グラフを読み取る</div>
+                        <!-- y=2x-1: viewBox -110 -110 220 220, 1unit=25px -->
+                        <!-- clip: x1=-66.25,y1=107.5 x2=41.25,y2=-107.5 wait... -->
+                        <!-- y=2x-1: at x=-4.3: y=-9.6 out; at y=4.3: x=2.65 → (2.65,4.3)=(66.25,-107.5) -->
+                        <!-- at y=-4.3: x=-1.65→(-41.25,107.5) -->
+                        <svg width="210" height="210" viewBox="-105 -105 210 210">
+                            <defs><clipPath id="clipT6"><rect x="-100" y="-100" width="200" height="200"/></clipPath></defs>
+                            <g stroke="#e8e0d8" stroke-width="0.5">
+                                <line x1="-100" y1="-100" x2="-100" y2="100"/><line x1="-75" y1="-100" x2="-75" y2="100"/>
+                                <line x1="-50" y1="-100" x2="-50" y2="100"/><line x1="-25" y1="-100" x2="-25" y2="100"/>
+                                <line x1="25" y1="-100" x2="25" y2="100"/><line x1="50" y1="-100" x2="50" y2="100"/>
+                                <line x1="75" y1="-100" x2="75" y2="100"/><line x1="100" y1="-100" x2="100" y2="100"/>
+                                <line x1="-100" y1="-100" x2="100" y2="-100"/><line x1="-100" y1="-75" x2="100" y2="-75"/>
+                                <line x1="-100" y1="-50" x2="100" y2="-50"/><line x1="-100" y1="-25" x2="100" y2="-25"/>
+                                <line x1="-100" y1="25" x2="100" y2="25"/><line x1="-100" y1="50" x2="100" y2="50"/>
+                                <line x1="-100" y1="75" x2="100" y2="75"/><line x1="-100" y1="100" x2="100" y2="100"/>
+                            </g>
+                            <line x1="-103" y1="0" x2="103" y2="0" stroke="#444" stroke-width="1.5"/>
+                            <polygon points="103,0 97,-3 97,3" fill="#444"/>
+                            <line x1="0" y1="103" x2="0" y2="-103" stroke="#444" stroke-width="1.5"/>
+                            <polygon points="0,-103 -3,-97 3,-97" fill="#444"/>
+                            <text x="97" y="12" font-size="10" fill="#444" font-style="italic">x</text>
+                            <text x="4" y="-93" font-size="10" fill="#444" font-style="italic">y</text>
+                            <text x="3" y="12" font-size="9" fill="#888">O</text>
+                            <g font-size="9" fill="#888" text-anchor="middle">
+                                <text x="-75" y="12">−3</text><text x="-50" y="12">−2</text>
+                                <text x="-25" y="12">−1</text><text x="25" y="12">1</text>
+                                <text x="50" y="12">2</text><text x="75" y="12">3</text>
+                            </g>
+                            <g font-size="9" fill="#888" text-anchor="end">
+                                <text x="-3" y="-71">3</text><text x="-3" y="-46">2</text>
+                                <text x="-3" y="-21">1</text><text x="-3" y="29">−1</text>
+                                <text x="-3" y="54">−2</text><text x="-3" y="79">−3</text>
+                            </g>
+                            <!-- y=2x-1: (0,-1)→sy=25; x=3→y=5→sy=-125 out; clip: y=4.3 x=2.65→(66.25,-107.5); y=-4.3 x=-1.65→(-41.25,107.5) -->
+                            <line x1="-41.25" y1="107.5" x2="66.25" y2="-107.5"
+                                  stroke="#1565c0" stroke-width="2.5" stroke-linecap="round" clip-path="url(#clipT6)"/>
+                            <!-- y切片 (0,-1): sx=0, sy=25 -->
+                            <circle cx="0" cy="25" r="5" fill="#e74c3c" stroke="white" stroke-width="2"/>
+                            <text x="5" y="37" font-size="10" fill="#e74c3c" font-weight="bold">(0,−1)</text>
+                            <!-- もう1点 (1,1): sx=25, sy=-25 -->
+                            <circle cx="25" cy="-25" r="4" fill="#1565c0" stroke="white" stroke-width="1.5"/>
+                            <text x="29" y="-27" font-size="9" fill="#1565c0">(1,1)</text>
+                        </svg>
+                    </div>
+                    <div class="explain-col">
+                        <div class="hint-box">
+                            ▶ グラフが通る 2 点から傾きと切片を読み取ります。<br>
+                            　 (0, −1) を通る → 切片 ＝ −1<br>
+                            　 x が 1 増えると y が 2 増える → 傾き ＝ 2
+                        </div>
+                        <div class="q-ans">
+                            <span>答）</span>
+                            <span class="drop-zone-inline wide" data-ans="y = 2x − 1" onclick="zCl(this)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大問3：式を求める -->
+    <div class="daimon">
+        <div class="daimon-title">大問３　一次関数の式を求める</div>
+        <div class="daimon-subtitle">㉔ 式を求める① ／ ㉕ 式を求める②</div>
+
+        <div class="q-row">
+            <div class="q-badge">7</div>
+            <div class="q-body">
+                <div class="q-text">
+                    傾きが <span class="math">3</span>、点 <span class="math">(2, 7)</span> を通る一次関数の式を求めよ。
+                </div>
+                <div class="hint-box">▶ y = 3x + b に (2, 7) を代入 → b を求める。</div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span><span class="math">7 = 3 × 2 + b</span> → <span class="math">b =</span></span>
+                        <span class="drop-zone-inline w60" data-ans="1" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="q-ans" style="margin-top:8px;">
+                    <span>答）</span>
+                    <span class="drop-zone-inline wide" data-ans="y = 3x + 1" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">8</div>
+            <div class="q-body">
+                <div class="q-text">
+                    2 点 <span class="math">(0, 2)</span>、<span class="math">(3, 8)</span> を通る一次関数の式を求めよ。
+                </div>
+                <div class="hint-box">▶ 傾き ＝
+                    <span class="frac-wrap" style="color:#1565c0;">
+                        <span class="frac"><span class="num">y の増加量</span><span class="den">x の増加量</span></span>
+                    </span>
+                    で求め、切片は x = 0 のときの y の値。
+                </div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>傾き ＝</span>
+                        <span class="frac-wrap" style="color:#1565c0;">
+                            <span class="frac">
+                                <span class="num">8 − 2</span>
+                                <span class="den">3 − 0</span>
+                            </span>
+                        </span>
+                        <span>＝</span>
+                        <span class="drop-zone-inline w60" data-ans="2" onclick="zCl(this)"></span>
+                        <span>、切片 ＝</span>
+                        <span class="drop-zone-inline w60" data-ans="2" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="q-ans" style="margin-top:8px;">
+                    <span>答）</span>
+                    <span class="drop-zone-inline wide" data-ans="y = 2x + 2" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大問4：変域 -->
+    <div class="daimon">
+        <div class="daimon-title">大問４　変域</div>
+        <div class="daimon-subtitle">㉖ 変域</div>
+
+        <div class="q-row">
+            <div class="q-badge">9</div>
+            <div class="q-body">
+                <div class="q-text">
+                    一次関数 <span class="math">y = 2x + 1</span> において、<span class="math">1 ≦ x ≦ 3</span> のとき、<span class="math">y</span> の<strong>変域</strong>を求めよ。
+                </div>
+                <div class="hint-box">▶ 傾き＞0（右上がり）なので、x が最小のとき y も最小、x が最大のとき y も最大になる。</div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span><span class="math">x = 1</span> のとき <span class="math">y =</span></span>
+                        <span class="drop-zone-inline w60" data-ans="3" onclick="zCl(this)"></span>
+                        <span>（最小値）</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span><span class="math">x = 3</span> のとき <span class="math">y =</span></span>
+                        <span class="drop-zone-inline w60" data-ans="7" onclick="zCl(this)"></span>
+                        <span>（最大値）</span>
+                    </div>
+                </div>
+                <div class="q-ans" style="margin-top:8px;">
+                    <span>答）</span>
+                    <span class="drop-zone-inline wide" data-ans="3 ≦ y ≦ 7" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大問5：図形と一次関数 -->
+    <div class="daimon">
+        <div class="daimon-title">大問５　図形と一次関数（交点・面積）</div>
+        <div class="daimon-subtitle">㉘ 図形と一次関数</div>
+
+        <div class="q-row">
+            <div class="q-badge">10</div>
+            <div class="q-body">
+                <div class="q-text">
+                    2 直線 <span class="math">y = x + 1</span> と <span class="math">y = −x + 5</span> の交点の座標を求めよ。
+                </div>
+                <div class="graph-row">
+                    <div class="graph-panel">
+                        <div class="g-title">y=x+1 と y=−x+5 の交点</div>
+                        <svg width="200" height="200" viewBox="-100 -100 200 200">
+                            <defs><clipPath id="clipT10"><rect x="-97" y="-97" width="194" height="194"/></clipPath></defs>
+                            <g stroke="#e8e0d8" stroke-width="0.5">
+                                <line x1="-100" y1="-75" x2="100" y2="-75"/><line x1="-100" y1="-50" x2="100" y2="-50"/>
+                                <line x1="-100" y1="-25" x2="100" y2="-25"/><line x1="-100" y1="25" x2="100" y2="25"/>
+                                <line x1="-100" y1="50" x2="100" y2="50"/><line x1="-100" y1="75" x2="100" y2="75"/>
+                                <line x1="-75" y1="-100" x2="-75" y2="100"/><line x1="-50" y1="-100" x2="-50" y2="100"/>
+                                <line x1="-25" y1="-100" x2="-25" y2="100"/><line x1="25" y1="-100" x2="25" y2="100"/>
+                                <line x1="50" y1="-100" x2="50" y2="100"/><line x1="75" y1="-100" x2="75" y2="100"/>
+                            </g>
+                            <line x1="-98" y1="0" x2="98" y2="0" stroke="#444" stroke-width="1.5"/>
+                            <polygon points="98,0 92,-3 92,3" fill="#444"/>
+                            <line x1="0" y1="98" x2="0" y2="-98" stroke="#444" stroke-width="1.5"/>
+                            <polygon points="0,-98 -3,-92 3,-92" fill="#444"/>
+                            <text x="92" y="11" font-size="10" fill="#444" font-style="italic">x</text>
+                            <text x="3" y="-88" font-size="10" fill="#444" font-style="italic">y</text>
+                            <text x="3" y="11" font-size="8" fill="#888">O</text>
+                            <g font-size="8" fill="#888" text-anchor="middle">
+                                <text x="-50" y="11">−2</text><text x="-25" y="11">−1</text>
+                                <text x="25" y="11">1</text><text x="50" y="11">2</text><text x="75" y="11">3</text>
+                            </g>
+                            <g font-size="8" fill="#888" text-anchor="end">
+                                <text x="-3" y="-71">3</text><text x="-3" y="-46">2</text>
+                                <text x="-3" y="-21">1</text><text x="-3" y="29">−1</text>
+                            </g>
+                            <!-- y=x+1: x1=-107.5,y1=82.5 x2=82.5,y2=-107.5 → clip at ±97 -->
+                            <!-- y=x+1: at y=97 x=96 → (96,-97 in svg). at y=-97 x=-98 out; at x=-97 y=-96 → (-97,96) -->
+                            <line x1="-97" y1="96" x2="96" y2="-97"
+                                  stroke="#1565c0" stroke-width="2.5" clip-path="url(#clipT10)"/>
+                            <!-- y=-x+5: at x=-97 y=102 out; at y=97 x=-92 → (-92×25,-97)=out wait: 1unit=25px here
+                                 scale = 25px. y=-x+5: at x=17.5/25=0.7 y=4.3; at x=97/25=3.88 y=5-3.88=1.12 → sy=-28
+                                 Actually: sx=x*25, sy=-y*25
+                                 y=-x+5: at sy=-97(y=3.88): sx=x*25=(5-3.88)*25=28 → (28,-97)
+                                 at sy=97(y=-3.88): sx=(5+3.88)*25=222 out; at sx=97(x=3.88): sy=-(5-3.88)*25=-28
+                                 at sx=-97(x=-3.88): sy=-(5+3.88)*25=-222 out
+                                 → from (28,-97) to (97,-28): 計算済み -->
+                            <!-- Recheck: y=-x+5. clipbox ±97 in SVG. 
+                                 x(SVG)=-97 → x(math)=-97/25=-3.88 → y=3.88+5=8.88 → sy=-8.88*25=-222 OUTSIDE
+                                 y(SVG)=-97 → y(math)=97/25=3.88 → x=-y+5=1.12 → sx=1.12*25=28 → (28,-97) ✓
+                                 x(SVG)=97 → x(math)=3.88 → y=5-3.88=1.12 → sy=-1.12*25=-28 → (97,-28) ✓ -->
+                            <line x1="28" y1="-97" x2="97" y2="-28"
+                                  stroke="#e74c3c" stroke-width="2.5" clip-path="url(#clipT10)"/>
+                            <!-- 交点(2,3): sx=50, sy=-75 -->
+                            <circle cx="50" cy="-75" r="6" fill="#1565c0" stroke="white" stroke-width="2"/>
+                            <line x1="50" y1="-75" x2="50" y2="0" stroke="#1565c0" stroke-width="1" stroke-dasharray="4,3"/>
+                            <line x1="50" y1="-75" x2="0" y2="-75" stroke="#1565c0" stroke-width="1" stroke-dasharray="4,3"/>
+                            <text x="54" y="-77" font-size="10" fill="#1565c0" font-weight="bold">( ? , ? )</text>
+                            <!-- ラベル -->
+                            <text x="-92" y="90" font-size="9" fill="#1565c0" font-weight="bold">y=x+1</text>
+                            <text x="30" y="-85" font-size="9" fill="#e74c3c" font-weight="bold">y=−x+5</text>
+                        </svg>
+                    </div>
+                    <div class="explain-col">
+                        <div class="hint-box">▶ 2 式を等しいとおいて x を求め、どちらかに代入する。</div>
+                        <div style="font-size:14px; line-height:2.4;">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <span><span class="math">x + 1 = −x + 5</span></span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <span><span class="math">2x =</span></span>
+                                <span class="drop-zone-inline w60" data-ans="4" onclick="zCl(this)"></span>
+                                <span><span class="math">→ x =</span></span>
+                                <span class="drop-zone-inline w60" data-ans="2" onclick="zCl(this)"></span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <span><span class="math">y = 2 + 1 =</span></span>
+                                <span class="drop-zone-inline w60" data-ans="3" onclick="zCl(this)"></span>
+                            </div>
+                        </div>
+                        <div class="q-ans" style="margin-top:8px;">
+                            <span>答）交点</span>
+                            <span class="drop-zone-inline wide" data-ans="(2, 3)" onclick="zCl(this)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">11</div>
+            <div class="q-body">
+                <div class="q-text">
+                    3 点 A(0, 6)、B(−2, 0)、C(4, 0) を頂点とする三角形の面積を求めよ。
+                </div>
+                <div class="hint-box">▶ B・C が x 軸上 → 底辺 BC、高さ ＝ A の y 座標。</div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>底辺 BC ＝</span>
+                        <span class="drop-zone-inline w60" data-ans="4" onclick="zCl(this)"></span>
+                        <span>−（−2）＝</span>
+                        <span class="drop-zone-inline w60" data-ans="6" onclick="zCl(this)"></span>
+                        <span>、高さ ＝</span>
+                        <span class="drop-zone-inline w60" data-ans="6" onclick="zCl(this)"></span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>面積 ＝</span>
+                        <span class="frac-wrap" style="color:#1565c0;">
+                            <span class="frac"><span class="num">6 × 6</span><span class="den">2</span></span>
+                        </span>
+                        <span>＝</span>
+                        <span class="drop-zone-inline w60" data-ans="18" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大問6：利用・動点 -->
+    <div class="daimon">
+        <div class="daimon-title">大問６　利用・動点問題</div>
+        <div class="daimon-subtitle">㉗ 利用 ／ ㉙ 動点問題</div>
+
+        <div class="q-row">
+            <div class="q-badge">12</div>
+            <div class="q-body">
+                <div class="q-text">
+                    水が 20 L 入った水槽から、毎分 2 L ずつ水を抜く。<br>
+                    <span class="math">x</span> 分後の水の量を <span class="math">y</span> L として、<span class="math">y</span> を <span class="math">x</span> の式で表せ。
+                </div>
+                <div class="hint-box">▶ 最初 20 L、毎分 2 L 減る → y = 20 − 2x</div>
+                <div class="q-ans">
+                    <span>答）</span>
+                    <span class="drop-zone-inline wide" data-ans="y = −2x + 20" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">13</div>
+            <div class="q-body">
+                <div class="q-text">
+                    問12で、水が 0 L になるのは出発から何分後か。
+                </div>
+                <div class="hint-box">▶ y = 0 を代入して x を求める。</div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span><span class="math">0 = −2x + 20 → x =</span></span>
+                        <span class="drop-zone-inline w60" data-ans="10" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="q-ans" style="margin-top:4px;">
+                    <span>答）</span>
+                    <span class="drop-zone-inline w80" data-ans="10分後" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">14</div>
+            <div class="q-body">
+                <div class="q-text">
+                    長方形 OABC で OA = 4 cm、OC = 3 cm。<br>
+                    点 P が O を出発して辺 OA 上を動く。<br>
+                    OP = <span class="math">x</span> cm のとき、△OCP の面積 <span class="math">y</span> cm² を <span class="math">x</span> の式で表せ。<br>
+                    また変域も答えよ。
+                </div>
+                <div class="hint-box">▶ 底辺 OC = 3、高さ = OP = x → y =
+                    <span class="frac-wrap" style="color:#1565c0;">
+                        <span class="frac"><span class="num">3x</span><span class="den">2</span></span>
+                    </span>
+                </div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>y ＝</span>
+                        <span class="frac-wrap" style="color:#1565c0;">
+                            <span class="frac"><span class="num">3 × x</span><span class="den">2</span></span>
+                        </span>
+                        <span>＝</span>
+                        <span class="drop-zone-inline wide" data-ans="3/2 x" onclick="zCl(this)"></span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>変域：</span>
+                        <span class="drop-zone-inline w60" data-ans="0" onclick="zCl(this)"></span>
+                        <span>≦ x ≦</span>
+                        <span class="drop-zone-inline w60" data-ans="4" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-row">
+            <div class="q-badge">15</div>
+            <div class="q-body">
+                <div class="q-text">
+                    問14で、△OCP の面積が 3 cm² になるのは OP = 何 cm のときか。
+                </div>
+                <div class="hint-box">▶ y = 3/2 × x に y = 3 を代入する。</div>
+                <div style="font-size:14px; line-height:2.4; margin-left:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span><span class="math">3 =</span></span>
+                        <span class="frac-wrap" style="color:#1565c0;">
+                            <span class="frac"><span class="num">3</span><span class="den">2</span></span>
+                        </span>
+                        <span><span class="math">x → x =</span></span>
+                        <span class="drop-zone-inline w60" data-ans="2" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="q-ans" style="margin-top:4px;">
+                    <span>答）</span>
+                    <span class="drop-zone-inline w80" data-ans="2 cm" onclick="zCl(this)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- まとめ表 -->
+    <div style="background:#f8fbff; border:2px solid #90caf9; border-radius:10px; padding:18px 20px; margin-bottom:24px;">
+        <div style="font-weight:900; color:#1565c0; font-size:1em; margin-bottom:12px; border-left:5px solid #1565c0; padding-left:10px;">📚 各単元の復習リンク</div>
+        <table class="summary-table">
+            <tr><th>単元</th><th>テーマ</th><th>対応問題</th></tr>
+            <tr><td><a href="hirei20.html" class="unit-link">⑳</a></td><td>一次関数とは・変化の割合</td><td>問1・2・3・4</td></tr>
+            <tr><td><a href="hirei22.html" class="unit-link">㉒㉓</a></td><td>グラフの読み取り</td><td>問5・6</td></tr>
+            <tr><td><a href="hirei24.html" class="unit-link">㉔㉕</a></td><td>式を求める</td><td>問7・8</td></tr>
+            <tr><td><a href="hirei26.html" class="unit-link">㉖</a></td><td>変域</td><td>問9</td></tr>
+            <tr><td><a href="hirei28.html" class="unit-link">㉘</a></td><td>図形と一次関数</td><td>問10・11</td></tr>
+            <tr><td><a href="hirei27.html" class="unit-link">㉗</a></td><td>利用（文章題）</td><td>問12・13</td></tr>
+            <tr><td><a href="hirei29.html" class="unit-link">㉙</a></td><td>動点問題</td><td>問14・15</td></tr>
+        </table>
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" style="background:#1565c0;" onclick="stCh()">🔄 リセット</button>
+        <button class="main-btn" style="background:#27ae60;" onclick="chAn()">✅ 答え合わせ・採点</button>
+        <button class="main-btn" style="background:#7f8c8d;" onclick="shMo()">👁 お手本を見る</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei30.wav"></audio>
+
+<script>
+    var audio = document.getElementById('mainAudio');
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = function() { updatePlayUI(false); };
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        document.getElementById('playBtn').classList.toggle('playing', p);
+    }
+    document.getElementById('volSlider').addEventListener('input', function(e) {
+        audio.volume = e.target.value;
+        document.getElementById('volNum').innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    var timerRunning = true, timerVisible = true, lastElapsed = 0;
+    function toggleTimer(){}
+    function toggleTimerVisible(){}
+
+    var sT = Date.now(), bestTime = null;
+    
+
+    function fmtTime(ms) {
+        var t = ms/1000;
+        return Math.floor(t/60).toString().padStart(2,'0') + ':' + (t%60).toFixed(1).padStart(4,'0');
+    }
+
+    var allAnswers = [];
+    document.querySelectorAll('.drop-zone-inline').forEach(function(z) { allAnswers.push(z.getAttribute('data-ans')); });
+
+    var DISTRACTORS = [
+        '0','1','2','3','4','5','6','7','8','9','10','12','15','18','20',
+        '−1','−2','−3','−4','−5','−6','−7','−8',
+        'ア','イ','ウ','エ',
+        '右上がり','右下がり','一次関数','一次関数でない',
+        'y = 2x + 1','y = 2x − 1','y = 3x + 1','y = 2x + 2','y = −2x + 20',
+        '(2, 3)','(1, 2)','(3, 3)',
+        '3 ≦ y ≦ 7','1 ≦ y ≦ 3','3/2 x','2x',
+        '2 cm','4 cm','10分後','5分後'
+    ];
+
+    function buildChoices() {
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            if (z.getAttribute('data-built') === '1') return;
+            z.setAttribute('data-built', '1');
+            var ans = z.getAttribute('data-ans');
+            var pool = [...new Set(allAnswers.filter(function(a){ return a !== ans; }))];
+            pool.sort(function(){ return Math.random()-0.5; });
+            var distractors = pool.slice(0,3);
+            var extra = DISTRACTORS.filter(function(a){ return a!==ans && distractors.indexOf(a)===-1; });
+            extra.sort(function(){ return Math.random()-0.5; });
+            while (distractors.length < 3 && extra.length > 0) distractors.push(extra.shift());
+            var choices = [ans].concat(distractors.slice(0,3));
+            choices.sort(function(){ return Math.random()-0.5; });
+            var grp = document.createElement('div');
+            grp.className = 'choice-group';
+            choices.forEach(function(c) {
+                var btn = document.createElement('button');
+                btn.className = 'choice-btn'; btn.innerText = c; btn.setAttribute('data-choice', c);
+                btn.onclick = function() { selectChoice(z, this, c); };
+                grp.appendChild(btn);
+            });
+            z.parentNode.insertBefore(grp, z.nextSibling);
+        });
+    }
+
+    function selectChoice(zone, btn, val) {
+        btn.parentNode.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        zone.setAttribute('data-filled', val); zone.innerText = val; zone.classList.remove('correct','wrong');
+    }
+
+    function zCl(z) {
+        z.removeAttribute('data-filled'); z.innerText = ''; z.classList.remove('correct','wrong');
+        if (z.nextElementSibling && z.nextElementSibling.classList.contains('choice-group'))
+            z.nextElementSibling.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected','btn-correct','btn-wrong'); });
+    }
+
+    function chAn() {
+        clearInterval(tI);
+        var correct = 0, total = 0;
+        // 大問の「答」空欄だけを採点対象（大問バッジの数）
+        // → 全空欄を採点し、得点は正解数/全空欄数でなく、大問毎に大問答え空欄で判定
+        var zones = document.querySelectorAll('.drop-zone-inline');
+        zones.forEach(function(z) {
+            var ans = z.getAttribute('data-ans'), cur = z.getAttribute('data-filled') || '';
+            var grp = z.nextElementSibling;
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+                if (grp && grp.classList.contains('choice-group'))
+                    grp.querySelectorAll('.choice-btn').forEach(function(b){ if(b.getAttribute('data-choice')===ans) b.classList.add('btn-correct'); });
+            } else {
+                if (cur !== '') {
+                    if (grp && grp.classList.contains('choice-group'))
+                        grp.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); b.classList.add('btn-wrong'); });
+                    z.innerText=''; z.removeAttribute('data-filled');
+                    setTimeout(function(){ if(grp) grp.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('btn-wrong'); }); }, 600);
+                }
+            }
+        });
+
+        // 問番号ごとに採点（q-badgeの番号でグループ化）
+        var score = 0;
+        var questions = document.querySelectorAll('.q-row');
+        var total_q = 15;
+        // 簡易採点：問ごとに全空欄が正解なら1点
+        var qScore = 0;
+        questions.forEach(function(qrow) {
+            var drops = qrow.querySelectorAll('.drop-zone-inline');
+            var allOk = true;
+            drops.forEach(function(z){
+                if (z.getAttribute('data-filled') !== z.getAttribute('data-ans')) allOk = false;
+            });
+            if (allOk && drops.length > 0) qScore++;
+        });
+
+        var elapsed = Date.now()-sT;
+        if (bestTime===null || elapsed<bestTime) {
+            bestTime=elapsed;
+        }
+
+        // 得点表示
+        var sb = document.getElementById('scoreBox');
+        sb.classList.add('show');
+        document.getElementById('scoreNum').innerText = qScore;
+        var msg = '';
+        if (qScore >= 13) msg = '🎉 素晴らしい！一次関数はバッチリです！';
+        else if (qScore >= 10) msg = '👍 よくできました！苦手な問題を復習しよう。';
+        else if (qScore >= 7)  msg = '📖 もう少し！各単元を見直してみましょう。';
+        else                   msg = '💪 基礎から復習しましょう。下のリンクから確認！';
+        document.getElementById('scoreMsg').innerText = msg;
+        sb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (qScore === total_q) startCnf();
+    }
+
+    function shMo() {
+        clearInterval(tI);
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            z.setAttribute('data-filled', ans); z.innerText = ans; z.classList.remove('correct','wrong');
+            var grp = z.nextElementSibling;
+            if (grp && grp.classList.contains('choice-group'))
+                grp.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected','btn-correct','btn-wrong'); if(b.getAttribute('data-choice')===ans) b.classList.add('selected'); });
+        });
+    }
+
+    function stCh() {
+        clearInterval(tI); sT = Date.now();
+        
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z){ z.innerText=''; z.removeAttribute('data-filled'); z.classList.remove('correct','wrong'); });
+        document.querySelectorAll('.choice-group').forEach(function(g){ g.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected','btn-correct','btn-wrong'); }); });
+        document.getElementById('timerDisplay').innerText='00:00.0';
+        var sb = document.getElementById('scoreBox');
+        sb.classList.remove('show');
+    }
+
+    var cvs = document.getElementById("confetti-canvas"), ctx2 = cvs.getContext("2d"), pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width=window.innerWidth; cvs.height=window.innerHeight; pts=[];
+        for(var i=0;i<200;i++) pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height-cvs.height,s:Math.random()*9+4,c:'hsl('+Math.floor(Math.random()*360)+',75%,65%)',sp:Math.random()*3+2});
+        cnfRunning=true; updateCnf();
+        setTimeout(function(){cnfRunning=false;ctx2.clearRect(0,0,cvs.width,cvs.height);pts=[];},5000);
+    }
+    function updateCnf() {
+        if(!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p){p.y+=p.sp;ctx2.fillStyle=p.c;ctx2.fillRect(p.x,p.y,p.s,p.s);if(p.y>cvs.height)p.y=-20;});
+        requestAnimationFrame(updateCnf);
+    }
+
+    buildChoices();
+</script>
+
+<script>
+(function(){ var key='hirei30'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.count=(d.count||0)+1; d.lastDate=new Date().toLocaleDateString('ja-JP'); localStorage.setItem('study_'+key,JSON.stringify(d)); }catch(e){} })();
+</script>
+<div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+    <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+        <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+    </button>
+</div>
+<script>
+function toggleReview(){ var key='hirei30'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.review=!d.review; localStorage.setItem('study_'+key,JSON.stringify(d)); updateReviewBtn(d.review); }catch(e){} }
+function updateReviewBtn(r){ document.getElementById('reviewIcon').innerText=r?'★':'☆'; document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加'; document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12'; }
+(function(){ var key='hirei30'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
+</script>
+</body>
+</html>

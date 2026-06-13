@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>数学：⑦確認　グラフの式を求めよ</title>
     <style>
-        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
-        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #e1f5fe; --line-green: #06C755; }
+        body { font-family: 'BIZ UDPGothic', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
 
         .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
         
@@ -19,7 +19,7 @@
         .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
         .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
 
-        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .audio-summary-area { background: #e3f2fd; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #bbdefb; max-width: 900px; }
         .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .speaker-btn-large.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 10px; }
@@ -27,14 +27,14 @@
 
         .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
         .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
-        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; font-style: italic; }
+        .drag-item { background: #fff; color: #1565c0; border: 1px solid #1565c0; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; font-style: italic; }
         .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
         @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
         .word-bank-container.shake { animation: shake 0.4s ease; }
 
         .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
 
-        .instruction { font-size: 15px; font-weight: bold; color: #1a5276; margin-bottom: 20px; padding: 12px 16px; background: #eaf0fb; border-left: 5px solid #2980b9; border-radius: 6px; }
+        .instruction { font-size: 15px; font-weight: bold; color: #1a5276; margin-bottom: 20px; padding: 12px 16px; background: #eaf0fb; border-left: 5px solid #1565c0; border-radius: 6px; }
 
         /* 問題カード */
         .q-card { border: 1.5px solid #dde; border-radius: 10px; padding: 20px; background: #fafafa; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 24px; }
@@ -59,7 +59,7 @@
             border-radius: 3px; font-size: 14px; font-style: italic;
             transition: background 0.15s;
         }
-        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #dbeeff; }
         .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
         .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
 
@@ -109,6 +109,33 @@
         .frac .den { padding: 0 2px; font-weight: bold; }
         .frac-x { font-style: italic; font-weight: bold; font-size: 1em; }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    
+        /* === 追加スタイル === */
+        .unit-header { text-align: center; margin-bottom: 20px; padding: 14px 16px; background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); border-radius: 10px; border: 2px solid #90caf9; }
+        .unit-title  { font-size: 1.3em; font-weight: 900; color: #0d47a1; margin: 0; }
+        .unit-sub    { font-size: 0.88em; color: #666; margin-top: 4px; }
+        .intro-box { background: #e3f2fd; border: 2px solid #90caf9; border-left: 5px solid #1565c0; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; font-size: 14px; line-height: 2; }
+        .intro-box .intro-title { font-weight: 900; color: #0d47a1; font-size: 14px; margin-bottom: 6px; }
+        .hint-box { background: #f0f7ff; border-radius: 6px; padding: 8px 14px; margin: 6px 0 10px; font-size: 13px; color: #555; line-height: 1.9; }
+        .point-box .ph { font-weight: 900; color: #0d47a1; font-size: 14px; margin-bottom: 6px; }
+
+    
+        /* コンパクトヘッダー */
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 6px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .header-row1 { max-width: 900px; margin: 0 auto 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .page-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 4px 10px; border-radius: 16px; font-size: 0.8em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+        .timer-area { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .timer { font-size: 1.1em; color: #0d47a1; font-family: monospace; font-weight: bold; }
+        .header-row2 { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+        .audio-compact { display: flex; align-items: center; gap: 8px; }
+        .speaker-btn-small { background: #e67e22; color: white; border: none; cursor: pointer; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 0.82em; white-space: nowrap; }
+        .speaker-btn-small.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+        input[type="range"] { cursor: pointer; width: 90px; }
     </style>
 </head>
 <body>
@@ -122,29 +149,40 @@
     <button class="hint-close" onclick="closeHint()">閉じる</button>
 </div>
 
+    <div class="intro-box">
+        <div class="intro-title">💡 グラフの形から式を見抜こう</div>
+        <p>原点を通る直線 → <strong>正比例 y = ax</strong>、なめらかな曲線（双曲線）→ <strong>反比例 y = a/x</strong> です。</p>
+        <p>グラフ上の点の座標を読み取って a に代入するだけで式が求められます。</p>
+    </div>
+
 <a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
     質問する
 </a>
 
 <div class="sticky-header">
-    <nav class="page-nav"><a href="hirei6.html" class="nav-btn">◀ ⑦ 演習１</a><a href="index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei8.html" class="nav-btn">⑨ 正比例の式(1) ▶</a></nav>
-    <div class="challenge-panel">
-        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
-        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
-    </div>
-    <div class="audio-summary-area">
-        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
-            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
-        </button>
-        <div class="volume-control">
-            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
-            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
-            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+    <div class="header-row1">
+        <nav class="page-nav">
+        <a href="hirei6.html" class="nav-btn">◀ ⑦ 演習１</a>
+        <a href="hirei_index.html" class="nav-btn index-btn">📋 目次</a>
+        <a href="hirei8.html" class="nav-btn">⑨ 正比例の式(1) ▶</a>
+        </nav>
+        <div class="audio-compact">
+            <button id="playBtn" class="speaker-btn-small" onclick="toggleAudio()">
+                <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+            </button>
+            <div class="volume-control">
+                <span style="font-size:0.78em;color:#e67e22;font-weight:bold;">音量</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+                <span id="volNum" style="font-size:0.78em;min-width:32px;">100%</span>
+            </div>
         </div>
     </div>
-    <div class="word-bank-container">
-        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    <div class="header-row2">
+        <div id="wordBankWrap" class="word-bank-wrap">
+            <span style="font-size:0.8em;font-weight:bold;color:#1565c0;margin-right:6px;">【語群】</span>
+            <div id="wordBank" class="word-bank"></div>
+        </div>
     </div>
 </div>
 
@@ -311,14 +349,14 @@
                     <!-- ① y=3/4 x: x=4→y=3, px: x=56→y=-42 右上がり緩め -->
                     <line x1="-70" y1="52" x2="70" y2="-52" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/>
                     <!-- ② y=4x: x=1→y=4, px: x=14→y=-56 急な右上がり -->
-                    <line x1="-14" y1="56" x2="14" y2="-56" stroke="#8e44ad" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="-14" y1="56" x2="14" y2="-56" stroke="#1565c0" stroke-width="2" stroke-linecap="round"/>
                     <!-- ③ y=-5x: x=1→y=-5, px: x=14→y=70 急な右下がり -->
                     <line x1="-14" y1="-70" x2="14" y2="70" stroke="#2980b9" stroke-width="2" stroke-linecap="round"/>
                     <!-- ④ y=-2/3 x: x=3→y=-2, px: x=42→y=28 緩い右下がり -->
                     <line x1="-70" y1="-46" x2="70" y2="46" stroke="#27ae60" stroke-width="2" stroke-linecap="round"/>
                     <!-- ラベル -->
                     <text x="62" y="-44" font-size="11" fill="#e74c3c" font-weight="bold">①</text>
-                    <text x="5" y="-58" font-size="11" fill="#8e44ad" font-weight="bold">②</text>
+                    <text x="5" y="-58" font-size="11" fill="#1565c0" font-weight="bold">②</text>
                     <text x="-18" y="-60" font-size="11" fill="#2980b9" font-weight="bold">③</text>
                     <text x="-72" y="-38" font-size="11" fill="#27ae60" font-weight="bold">④</text>
                 </svg>
@@ -332,7 +370,7 @@
                     <button class="hint-btn" onclick="showHint('h3a')">ヒント</button>
                 </div>
                 <div class="ans-row">
-                    <span class="ans-num" style="color:#8e44ad">②</span>
+                    <span class="ans-num" style="color:#1565c0">②</span>
                     <span class="ans-label">y =</span>
                     <span class="drop-zone-inline" data-ans="4x" onclick="zCl(this)"></span>
                     <button class="hint-btn" onclick="showHint('h3b')">ヒント</button>
@@ -466,7 +504,7 @@
         isR = true; sW = null;
         sT = Date.now(); clearInterval(tI);
         tI = setInterval(function() {
-            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+            // timer display disabled
         }, 100);
         var zones = document.querySelectorAll('.drop-zone-inline');
         var allAns = [];
@@ -499,7 +537,6 @@
             var elapsed = Date.now() - sT;
             if (bestTime === null || elapsed < bestTime) {
                 bestTime = elapsed;
-                document.getElementById('recordDisplay').innerText = '🏆 ベスト: ' + fmtTime(bestTime);
             }
             startCnf();
         } else {
@@ -605,6 +642,41 @@
     }
 
     shMo();
+
+    // ===== タイマー操作（コンパクトヘッダー対応） =====
+    var _timerRunning = false;
+    var _timerVisible = true;
+    var _lastElapsed = 0;
+
+    function toggleTimer() {}
+
+    function toggleTimerVisible() {}
+    // ==========================================
+
+
+    // stCh をラップしてタイマーフラグを更新
+    var _origStCh = stCh;
+    stCh = function() {
+        _timerRunning = true;
+        _lastElapsed = 0;
+        _origStCh();
+    };
+
+    // ページロード時に語群を自動表示
+    (function() {
+        var allAns = [].slice.call(document.querySelectorAll('.drop-zone-inline'))
+                       .map(function(z) { return z.getAttribute('data-ans'); })
+                       .filter(Boolean);
+        var b = document.getElementById('wordBank');
+        if (b && allAns.length > 0) {
+            b.innerHTML = '';
+            allAns.sort(function() { return Math.random() - 0.5; })
+                  .forEach(function(w) { addToBank(w); });
+        }
+        // word-bank-container を表示
+        var wbc = document.querySelector('.word-bank-container');
+        if (wbc) wbc.style.display = '';
+    })();
 </script>
 
     <!-- 学習記録スクリプト -->

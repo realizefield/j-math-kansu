@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>数学：⑮反比例の式②</title>
     <style>
-        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #fff9c4; --line-green: #06C755; }
-        body { font-family: sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #e1f5fe; --line-green: #06C755; }
+        body { font-family: 'BIZ UDPGothic', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
 
         .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 10px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
         .page-nav { max-width: 900px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
@@ -18,7 +18,7 @@
         .challenge-panel { background: #eaf0fb; border: 1.5px solid #aed6f1; color: #1a5276; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; max-width: 900px; margin: 0 auto 10px; }
         .timer { font-size: 1.5em; color: #1a5276; font-family: monospace; font-weight: bold; }
 
-        .audio-summary-area { background: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #ffe0b2; max-width: 900px; }
+        .audio-summary-area { background: #e3f2fd; padding: 12px 16px; border-radius: 8px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #bbdefb; max-width: 900px; }
         .speaker-btn-large { background: #e67e22; color: white; border: none; cursor: pointer; padding: 10px 25px; border-radius: 30px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .speaker-btn-large.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 10px; }
@@ -26,7 +26,7 @@
 
         .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
         .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
-        .drag-item { background: #fff; color: #c0392b; border: 1px solid #333; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; }
+        .drag-item { background: #fff; color: #1565c0; border: 1px solid #1565c0; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; }
         .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
         @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
         .word-bank-container.shake { animation: shake 0.4s ease; }
@@ -53,7 +53,7 @@
         .prop-table { border-collapse: collapse; font-size: 14px; }
         .prop-table th { background: #eaf0fb; color: #1a5276; font-weight: bold; border: 2px solid #aaa; padding: 7px 14px; text-align: center; min-width: 42px; }
         .prop-table td { border: 2px solid #aaa; padding: 7px 14px; text-align: center; min-width: 42px; background: white; }
-        .prop-table td.hi { background: #fff9c4; font-weight: bold; color: #c0392b; }
+        .prop-table td.hi { background: #e1f5fe; font-weight: bold; color: #c0392b; }
         .prop-table td.slash { background: #eee; }
 
         /* ステップ */
@@ -75,7 +75,7 @@
             font-weight: bold; color: #c0392b; padding: 2px 8px;
             border-radius: 3px; font-size: 14px; transition: background 0.15s;
         }
-        .drop-zone-inline:hover { border-color: #e67e22; background: #fff3cd; }
+        .drop-zone-inline:hover { border-color: #e67e22; background: #dbeeff; }
         .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
         .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
         .drop-zone-inline.wide { min-width: 90px; }
@@ -94,6 +94,33 @@
         .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
         .line-float-btn:hover { transform: scale(1.1); }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    
+        /* === 追加スタイル === */
+        .unit-header { text-align: center; margin-bottom: 20px; padding: 14px 16px; background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); border-radius: 10px; border: 2px solid #90caf9; }
+        .unit-title  { font-size: 1.3em; font-weight: 900; color: #0d47a1; margin: 0; }
+        .unit-sub    { font-size: 0.88em; color: #666; margin-top: 4px; }
+        .intro-box { background: #e3f2fd; border: 2px solid #90caf9; border-left: 5px solid #1565c0; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; font-size: 14px; line-height: 2; }
+        .intro-box .intro-title { font-weight: 900; color: #0d47a1; font-size: 14px; margin-bottom: 6px; }
+        .hint-box { background: #f0f7ff; border-radius: 6px; padding: 8px 14px; margin: 6px 0 10px; font-size: 13px; color: #555; line-height: 1.9; }
+        .point-box .ph { font-weight: 900; color: #0d47a1; font-size: 14px; margin-bottom: 6px; }
+
+    
+        /* コンパクトヘッダー */
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 6px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .header-row1 { max-width: 900px; margin: 0 auto 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .page-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 4px 10px; border-radius: 16px; font-size: 0.8em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+        .timer-area { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .timer { font-size: 1.1em; color: #0d47a1; font-family: monospace; font-weight: bold; }
+        .header-row2 { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+        .audio-compact { display: flex; align-items: center; gap: 8px; }
+        .speaker-btn-small { background: #e67e22; color: white; border: none; cursor: pointer; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 0.82em; white-space: nowrap; }
+        .speaker-btn-small.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+        input[type="range"] { cursor: pointer; width: 90px; }
     </style>
 </head>
 <body>
@@ -104,29 +131,35 @@
 </a>
 
 <div class="sticky-header">
-    <nav class="page-nav">
+    <div class="header-row1">
+        <nav class="page-nav">
         <a href="hirei14.html" class="nav-btn">◀ ⑮ 反比例の式　演習①</a>
-        <a href="index.html" class="nav-btn index-btn">📋 目次</a>
-        <span class="nav-btn disabled">次へ ▶</span>
-    </nav>
-    <div class="challenge-panel">
-        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
-        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
-    </div>
-    <div class="audio-summary-area">
-        <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
-            <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
-        </button>
-        <div class="volume-control">
-            <span style="font-size:0.8em; font-weight:bold; color:#e67e22;">音量</span>
-            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
-            <span id="volNum" style="font-size:0.8em; min-width:35px;">100%</span>
+        <a href="hirei_index.html" class="nav-btn index-btn">📋 目次</a>
+        </nav>
+        <div class="audio-compact">
+            <button id="playBtn" class="speaker-btn-small" onclick="toggleAudio()">
+                <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+            </button>
+            <div class="volume-control">
+                <span style="font-size:0.78em;color:#e67e22;font-weight:bold;">音量</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+                <span id="volNum" style="font-size:0.78em;min-width:32px;">100%</span>
+            </div>
         </div>
     </div>
-    <div class="word-bank-container">
-        <div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div>
+    <div class="header-row2">
+        <div id="wordBankWrap" class="word-bank-wrap">
+            <span style="font-size:0.8em;font-weight:bold;color:#1565c0;margin-right:6px;">【語群】</span>
+            <div id="wordBank" class="word-bank"></div>
+        </div>
     </div>
 </div>
+
+    <div class="intro-box">
+        <div class="intro-title">💡 表の穴埋めは式を先に求める</div>
+        <p>表の中のペアで xy = a を求め → 式を確定 → 残りの値を代入して求める、という流れです。</p>
+        <p>「ア」のような未知の値も、式が求まれば代入するだけで解けます。</p>
+    </div>
 
 <div class="container">
 
@@ -661,7 +694,6 @@
             var elapsed = Date.now()-sT;
             if (bestTime === null || elapsed < bestTime) {
                 bestTime = elapsed;
-                document.getElementById('recordDisplay').innerText = '🏆 ベスト: '+fmtTime(bestTime);
             }
             startCnf();
         } else {
@@ -712,6 +744,41 @@
     })();
 
     shMo();
+
+    // ===== タイマー操作（コンパクトヘッダー対応） =====
+    var _timerRunning = false;
+    var _timerVisible = true;
+    var _lastElapsed = 0;
+
+    function toggleTimer() {}
+
+    function toggleTimerVisible() {}
+    // ==========================================
+
+
+    // stCh をラップしてタイマーフラグを更新
+    var _origStCh = stCh;
+    stCh = function() {
+        _timerRunning = true;
+        _lastElapsed = 0;
+        _origStCh();
+    };
+
+    // ページロード時に語群を自動表示
+    (function() {
+        var allAns = [].slice.call(document.querySelectorAll('.drop-zone-inline'))
+                       .map(function(z) { return z.getAttribute('data-ans'); })
+                       .filter(Boolean);
+        var b = document.getElementById('wordBank');
+        if (b && allAns.length > 0) {
+            b.innerHTML = '';
+            allAns.sort(function() { return Math.random() - 0.5; })
+                  .forEach(function(w) { addToBank(w); });
+        }
+        // word-bank-container を表示
+        var wbc = document.querySelector('.word-bank-container');
+        if (wbc) wbc.style.display = '';
+    })();
 </script>
 
 <div style="position:fixed;bottom:110px;left:16px;z-index:3000;">

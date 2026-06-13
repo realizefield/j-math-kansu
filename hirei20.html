@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学：⑳一次関数とは</title>
+    <style>
+        :root { --primary-color: #1a5276; --bg-color: #f8f9fa; --drop-zone-bg: #e1f5fe; --line-green: #06C755; --accent: #1565c0; }
+        body { font-family: 'BIZ UDPGothic', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 6px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        /* コンパクトヘッダー：全要素を1〜2行に集約 */
+        .header-row1 { max-width: 900px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .page-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 4px 10px; border-radius: 16px; font-size: 0.8em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; }
+        .header-row2 { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .audio-compact { display: flex; align-items: center; gap: 8px; }
+        .speaker-btn-small { background: #e67e22; color: white; border: none; cursor: pointer; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 0.82em; white-space: nowrap; }
+        .speaker-btn-small.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+        input[type="range"] { cursor: pointer; width: 90px; }
+        .record-display { font-size: 0.78em; color: #555; margin-left: auto; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .drag-item { background: #fff; color: #1565c0; border: 1px solid #0d47a1; padding: 5px 14px; cursor: pointer; font-weight: bold; font-size: 1em; border-radius: 3px; }
+        .drag-item.selected { background: #f1c40f; color: #333; box-shadow: 0 0 0 3px #e67e22; transform: scale(1.08); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+        .word-bank-container.shake { animation: shake 0.4s ease; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        /* 単元タイトル */
+        .unit-header { text-align: center; margin-bottom: 24px; padding: 16px; background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); border-radius: 10px; border: 2px solid #90caf9; }
+        .unit-title { font-size: 1.4em; font-weight: 900; color: #0d47a1; margin: 0; }
+        .unit-sub { font-size: 0.9em; color: #666; margin-top: 4px; }
+
+        /* ポイントボックス */
+        .point-box { background: #e3f2fd; border: 2px solid #90caf9; border-left: 5px solid #1565c0; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; font-size: 14px; line-height: 2; }
+        .point-box .ph { font-weight: 900; color: #0d47a1; font-size: 15px; margin-bottom: 6px; }
+
+        /* 定義ボックス */
+        .def-box { background: #f8fbff; border: 2px solid #1565c0; border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; }
+        .def-title { font-weight: 900; font-size: 1.05em; color: #0d47a1; margin-bottom: 12px; border-left: 5px solid #1565c0; padding-left: 10px; }
+        .formula-center { font-size: 1.6em; font-weight: 900; text-align: center; color: #0d47a1; background: #e3f2fd; padding: 12px; border-radius: 8px; border: 2px solid #90caf9; margin: 12px 0; font-style: italic; letter-spacing: 2px; }
+        .formula-note { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 10px; font-size: 13px; }
+        .formula-note span { background: white; border: 1px solid #90caf9; border-radius: 4px; padding: 4px 10px; color: #555; }
+
+        /* 例題ボックス */
+        .example-box { background: #f8fbff; border: 2px solid #aed6f1; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .example-title { font-weight: 900; font-size: 1.05em; color: #2980b9; margin-bottom: 14px; border-left: 5px solid #2980b9; padding-left: 10px; }
+        .example-question { font-size: 14.5px; margin-bottom: 16px; line-height: 1.9; background: #f0f6ff; border-radius: 6px; padding: 10px 14px; }
+
+        /* 解説ステップ */
+        .step-area { font-size: 14.5px; line-height: 2.2; }
+        .step-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .step-label { color: #888; min-width: 60px; font-size: 13px; }
+        .step-arrow { color: #e67e22; font-weight: bold; font-size: 14px; }
+
+        /* 表 */
+        .table-wrap { overflow-x: auto; margin: 12px 0; }
+        table { border-collapse: collapse; font-size: 14px; }
+        table th, table td { border: 1px solid #aaa; padding: 8px 14px; text-align: center; }
+        table th { background: #e3f2fd; color: #0d47a1; font-weight: bold; }
+        table .hilite { background: #fff3cd; font-weight: bold; color: #1565c0; }
+
+        /* 練習ボックス */
+        .practice-box { background: #fffdf5; border: 2px solid #f9e4b0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .practice-title { font-weight: 900; font-size: 1.05em; color: #e67e22; margin-bottom: 16px; border-left: 5px solid #e67e22; padding-left: 10px; }
+        .q-item { margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px dashed #e0d0a0; }
+        .q-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .q-num { font-weight: 900; color: #e67e22; font-size: 1em; }
+        .q-text { font-size: 14.5px; line-height: 1.9; margin: 8px 0 12px; background: #fef9ec; border-radius: 6px; padding: 8px 12px; }
+        .q-pref { font-size: 12px; color: #888; float: right; }
+
+        /* 空欄 */
+        .drop-zone-inline {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 70px; min-height: 1.9em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #1565c0; padding: 2px 8px;
+            border-radius: 3px; font-size: 14px; font-style: italic;
+            transition: background 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #1565c0; background: #e3f2fd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.wide { min-width: 100px; }
+        .drop-zone-inline.w60 { min-width: 60px; }
+
+        /* 数式スタイル */
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+        .math-p { font-style: italic; color: #1565c0; font-weight: bold; }
+        .math-r { font-style: italic; color: #c0392b; font-weight: bold; }
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 15px; flex-wrap: wrap; }
+        .ans-label-final { font-weight: 900; color: #1a5276; }
+        .ans-box-final { border: 2px solid #aaa; border-radius: 4px; padding: 3px 18px; font-style: italic; font-weight: bold; color: #1a5276; font-size: 15px; display: inline-flex; align-items: center; gap: 4px; }
+
+        /* 変化の割合ボックス */
+        .ratio-box { background: #e8f8f5; border: 2px solid #76d7c4; border-left: 5px solid #1abc9c; border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+        .ratio-title { font-weight: 900; color: #0e6655; font-size: 14px; margin-bottom: 8px; }
+
+        /* コントロール */
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+
+        /* 縦型分数 */
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.85em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 4px; font-weight: bold; text-align: center; }
+        .frac .den { padding: 0 4px; font-weight: bold; text-align: center; }
+
+
+        /* 4択ボタン */
+        .choice-group { display: inline-flex; gap: 4px; flex-wrap: wrap; vertical-align: middle; margin-left: 4px; }
+        .choice-btn {
+            background: white; color: #0d47a1; border: 1.5px solid #64b5f6;
+            padding: 3px 12px; border-radius: 6px; cursor: pointer;
+            font-weight: bold; font-size: 13px; transition: 0.15s;
+        }
+        .choice-btn:hover { background: #e3f2fd; border-color: #1565c0; }
+        .choice-btn.selected { background: #f1c40f; color: #333; border-color: #e67e22; box-shadow: 0 0 0 2px #e67e22; }
+        .choice-btn.btn-correct { background: #d4edda; color: #155724; border-color: #28a745; }
+        .choice-btn.btn-wrong { background: #f8d7da; color: #721c24; border-color: #dc3545; }
+
+        /* 導入ボックス */
+        .intro-box { background: #e3f2fd; border: 2px solid #82c7f5; border-left: 5px solid #1976d2; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 14px; line-height: 2; }
+        .intro-box p { margin: 0 0 6px 0; }
+        .intro-title { font-weight: 900; color: #1565c0; font-size: 15px; margin-bottom: 10px; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+
+<div class="sticky-header">
+    <div class="header-row1">
+        <nav class="page-nav">
+        <a href="hirei19.html" class="nav-btn">◀ ⑲ 反比例（整数）</a>
+        <a href="hirei_index.html" class="nav-btn index-btn">📋 目次</a>
+        <a href="hirei21.html" class="nav-btn">㉑ 表と式 ▶</a>
+        </nav>
+    </div>
+    <div class="header-row2">
+        <div class="audio-compact">
+            <button id="playBtn" class="speaker-btn-small" onclick="toggleAudio()">
+                <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+            </button>
+            <div class="volume-control">
+                <span style="font-size:0.78em;color:#e67e22;font-weight:bold;">音量</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+                <span id="volNum" style="font-size:0.78em;min-width:32px;">100%</span>
+            </div>
+        </div>
+    </div>
+    <div class="word-bank-container" style="display:none;">
+        <div id="wordBank" class="word-bank"></div>
+    </div>
+</div>
+
+
+
+<div class="container">
+
+    <div class="unit-header">
+        <div class="unit-title">⑳ 一次関数とは</div>
+        <div class="unit-sub">y = ax + b の意味・傾き・切片・変化の割合</div>
+    </div>
+
+    <!-- 導入：日常場面から -->
+    <div class="intro-box">
+        <div class="intro-title">💡 まずはイメージから入りましょう</div>
+        <p>たとえば、1 分間に 3 円ずつ貯金するとします。</p>
+        <p>はじめに 10 円持っていたとすると、<span class="math-p">x</span> 分後の所持金 <span class="math-p">y</span> 円は…</p>
+        <div style="text-align:center; font-size:1.15em; font-weight:bold; margin:12px 0; color:#0d47a1;">
+            y = 3x + 10
+        </div>
+        <p>このように、<strong>「一定の割合で変わる量」</strong>を式で表したものが<strong>一次関数</strong>です。</p>
+        <p>グラフにすると<strong>必ずまっすぐな直線</strong>になるのが大きな特徴です。</p>
+    </div>
+
+    <!-- 定義 -->
+    <div class="def-box">
+        <div class="def-title">📐 一次関数の定義</div>
+        <p style="font-size:14px; line-height:2; margin-bottom:10px;">
+            <span class="math-p">y</span> が <span class="math-p">x</span> の<strong>一次式</strong>（<span class="math-p">x</span> が 1 乗だけの式）で表されるとき、<br>
+            「<span class="math-p">y</span> は <span class="math-p">x</span> の <strong>一次関数</strong> である」といいます。
+        </p>
+        <div class="formula-center">y = ax + b</div>
+        <div class="formula-note">
+            <span><span class="math-p">a</span>：傾き（変化の割合）</span>
+            <span><span class="math-p">b</span>：切片（y 軸との交点の y 座標）</span>
+            <span><span class="math-r">a ≠ 0</span>（a が 0 だと x が消えてしまうため）</span>
+        </div>
+        <div style="background:#fef9ff; border-radius:8px; padding:12px 16px; margin-top:14px; font-size:14px; line-height:2.2;">
+            <div style="font-weight:900; color:#0d47a1; margin-bottom:6px;">📝 言葉の意味</div>
+            <div>● <strong>傾き（a）</strong>… x が 1 増えるたびに y がいくつ変わるかを表す数。グラフの「傾き具合」。</div>
+            <div>● <strong>切片（b）</strong>… グラフが y 軸と交わる点の y 座標。x = 0 のときの y の値。</div>
+        </div>
+        <div style="margin-top:14px; font-size:14px; line-height:2.2;">
+            <div style="font-weight:900; color:#0d47a1; margin-bottom:4px;">🔍 具体例で確認</div>
+            <div>例）<span class="math-p">y = 2x + 3</span>
+                → 傾き <span class="math-r">a = 2</span>（x が 1 増えると y が 2 増える）、切片 <span class="math-r">b = 3</span>（グラフは (0, 3) を通る）</div>
+            <div>例）<span class="math-p">y = −x + 5</span>
+                → 傾き <span class="math-r">a = −1</span>（x が 1 増えると y が 1 減る）、切片 <span class="math-r">b = 5</span></div>
+            <div>例）<span class="math-p">y = 3x</span>（正比例）
+                → 傾き <span class="math-r">a = 3</span>、切片 <span class="math-r">b = 0</span>。<strong>正比例は一次関数の特別な場合</strong>です。</div>
+        </div>
+    </div>
+
+    <!-- 一次関数でないものとの比較 -->
+    <div class="point-box">
+        <div class="ph">📌 「一次関数でないもの」に注意！</div>
+        <div style="font-size:14px; line-height:2.2;">
+            <div>❌ <span class="math">y = x²</span>　… x が <strong>2 乗</strong>になっている → <strong>二次関数</strong>（一次関数でない）</div>
+            <div>❌ <span class="math">y = 5</span>　… x がどこにもない（a = 0 相当）→ <strong>定数関数</strong>（一次関数でない）</div>
+            <div>❌ <span class="math">y = <span style="font-style:normal;">2/x</span></span>　… x が分母にある → <strong>反比例</strong>（一次関数でない）</div>
+            <div>✅ <span class="math">y = −4x</span>　… <span class="math-p">y = −4x + 0</span> の形 → <strong>一次関数（正比例）</strong></div>
+        </div>
+    </div>
+
+    <!-- 変化の割合 -->
+    <div class="ratio-box">
+        <div class="ratio-title">🔑 変化の割合とは</div>
+        <div style="font-size:14px; line-height:2.2;">
+            <p><strong>「x が 1 増えるとき、y がいくつ変わるか」</strong>を表す数を<strong>変化の割合</strong>といいます。</p>
+            <p>一次関数 <span class="math-p">y = ax + b</span> では、変化の割合は<strong>どの範囲でも必ず一定</strong>で、傾き <span class="math-r">a</span> に等しくなります。</p>
+            <div style="text-align:center; margin:10px 0; font-size:1.05em; font-weight:bold; color:#0e6655;">
+                変化の割合 ＝
+                <span class="frac-wrap" style="color:#0e6655; font-size:1.1em;">
+                    <span class="frac">
+                        <span class="num">y の増加量</span>
+                        <span class="den">x の増加量</span>
+                    </span>
+                </span>
+                ＝ <span style="font-style:italic; font-weight:bold; color:#c0392b;">a（傾き）</span>
+            </div>
+            <div style="background:#e8f8f5; border-radius:6px; padding:8px 14px; font-size:13px; color:#0e6655;">
+                💡 たとえば <span class="math">y = 3x + 1</span> は、x が 2 増えると y は 6 増えます。<br>
+                変化の割合 ＝
+                <span class="frac-wrap" style="color:#0e6655;">
+                    <span class="frac">
+                        <span class="num">6</span>
+                        <span class="den">2</span>
+                    </span>
+                </span>
+                ＝ <strong>3</strong>。これは傾き a = 3 と同じです。
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題1 -->
+    <div class="example-box">
+        <div class="example-title">📖 例題１　一次関数かどうか判断する</div>
+        <div class="example-question">
+            次の式のうち、<span class="math">y</span> が <span class="math">x</span> の一次関数であるものをすべて選べ。<br>
+            ①　<span class="math">y = 3x + 2</span>　　
+            ②　<span class="math">y = x²</span>　　
+            ③　<span class="math">y = −5x</span>　　
+            ④　<span class="math">y = 4</span>
+        </div>
+        <div style="background:#f0f7ff; border-radius:6px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#666; line-height:1.9;">
+            ▶ チェックポイント：<span class="math-p">y = ax + b</span>（a ≠ 0）の形になっているか確認します。<br>
+            x が 1 乗（ふつうの x）だけあれば OK。2 乗や分母に x があれば NG です。
+        </div>
+        <div class="step-area">
+            <div style="font-size:14px; line-height:2.6; margin-left:8px;">
+                <div>① <span class="math">y = 3x + 2</span>
+                    → <span style="color:#555;">a = 3, b = 2 の形　✅</span>
+                    <span class="drop-zone-inline wide" data-ans="一次関数" onclick="zCl(this)"></span>
+                </div>
+                <div>② <span class="math">y = x²</span>
+                    → <span style="color:#c0392b;">x が 2 乗になっている。一次式ではない　❌</span>
+                    <span class="drop-zone-inline wide" data-ans="一次関数でない" onclick="zCl(this)"></span>
+                </div>
+                <div>③ <span class="math">y = −5x</span>
+                    → <span style="color:#555;">y = −5x + 0 と書ける。正比例も一次関数　✅</span>
+                    <span class="drop-zone-inline wide" data-ans="一次関数" onclick="zCl(this)"></span>
+                </div>
+                <div>④ <span class="math">y = 4</span>
+                    → <span style="color:#c0392b;">x がどこにもない（a = 0 相当）　❌</span>
+                    <span class="drop-zone-inline wide" data-ans="一次関数でない" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row" style="margin-top:10px;">
+                <span class="ans-label-final">答）</span>
+                <span class="drop-zone-inline ans-final" data-ans="① と ③" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題2 -->
+    <div class="example-box">
+        <div class="example-title">📖 例題２　傾きと切片を読み取る</div>
+        <div class="example-question">
+            一次関数 <span class="math">y = −2x + 7</span> の傾きと切片を答えよ。
+        </div>
+        <div style="background:#f0f7ff; border-radius:6px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#666; line-height:1.9;">
+            ▶ <span class="math-p">y = ax + b</span> と見比べます。<br>
+            x の前の数が <strong>傾き a</strong>、数だけの部分が <strong>切片 b</strong> です。
+        </div>
+        <div class="step-area">
+            <div style="margin-left:16px;">
+                <div class="step-row">
+                    <span style="min-width:80px; color:#555;">x の前の数：</span>
+                    <span>傾き <span class="math">a =</span></span>
+                    <span class="drop-zone-inline w60" data-ans="−2" onclick="zCl(this)"></span>
+                    <span style="font-size:13px; color:#888; margin-left:8px;">（マイナスごと読む）</span>
+                </div>
+                <div class="step-row">
+                    <span style="min-width:80px; color:#555;">数だけの部分：</span>
+                    <span>切片 <span class="math">b =</span></span>
+                    <span class="drop-zone-inline w60" data-ans="7" onclick="zCl(this)"></span>
+                    <span style="font-size:13px; color:#888; margin-left:8px;">（グラフは (0, 7) を通る）</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題3 -->
+    <div class="example-box">
+        <div class="example-title">📖 例題３　変化の割合を求める</div>
+        <div class="example-question">
+            一次関数 <span class="math">y = 3x − 1</span> において、<span class="math">x</span> が 2 から 5 まで増加するときの変化の割合を求めよ。
+        </div>
+        <div style="background:#f0f7ff; border-radius:6px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#666; line-height:1.9;">
+            ▶ 変化の割合 ＝
+            <span class="frac-wrap" style="color:#666;">
+                <span class="frac">
+                    <span class="num">y の増加量</span>
+                    <span class="den">x の増加量</span>
+                </span>
+            </span>
+            です。<br>
+            まず x = 2 と x = 5 を式に代入して、それぞれの y を求めましょう。
+        </div>
+        <div class="step-area">
+            <div style="margin-left:16px;">
+                <div class="step-row">
+                    <span style="min-width:110px;"><span class="math">x = 2</span> のとき：</span>
+                    <span class="math">y = 3 × 2 − 1 =</span>
+                    <span class="drop-zone-inline w60" data-ans="5" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span style="min-width:110px;"><span class="math">x = 5</span> のとき：</span>
+                    <span class="math">y = 3 × 5 − 1 =</span>
+                    <span class="drop-zone-inline w60" data-ans="14" onclick="zCl(this)"></span>
+                </div>
+                <div style="margin:8px 0 4px; font-size:13px; color:#666;">▶ y は 5 から 14 に増えた（増加量＝9）。x は 2 から 5 に増えた（増加量＝3）。</div>
+                <div class="step-row">
+                    <span>y の増加量 ＝</span>
+                    <span class="drop-zone-inline w60" data-ans="14" onclick="zCl(this)"></span>
+                    <span>−</span>
+                    <span class="drop-zone-inline w60" data-ans="5" onclick="zCl(this)"></span>
+                    <span>＝</span>
+                    <span class="drop-zone-inline w60" data-ans="9" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span>x の増加量 ＝</span>
+                    <span class="drop-zone-inline w60" data-ans="5" onclick="zCl(this)"></span>
+                    <span>−</span>
+                    <span class="drop-zone-inline w60" data-ans="2" onclick="zCl(this)"></span>
+                    <span>＝</span>
+                    <span class="drop-zone-inline w60" data-ans="3" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span>変化の割合 ＝</span>
+                    <span class="frac-wrap" style="color:#1a5276;">
+                        <span class="frac">
+                            <span class="num">y の増加量</span>
+                            <span class="den">x の増加量</span>
+                        </span>
+                    </span>
+                    <span>＝</span>
+                    <span class="frac-wrap" style="color:#1a5276;">
+                        <span class="frac">
+                            <span class="num">9</span>
+                            <span class="den">3</span>
+                        </span>
+                    </span>
+                    <span>＝</span>
+                    <span class="drop-zone-inline w60" data-ans="3" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row" style="margin-top:10px;">
+                <span class="ans-label-final">答）</span>
+                <span class="drop-zone-inline ans-final" data-ans="変化の割合 = 3" onclick="zCl(this)" style="min-width:150px;font-size:14px;"></span>
+            </div>
+            <div style="background:#e8f8f5; border-radius:6px; padding:10px 14px; margin-top:10px; font-size:13px; color:#0e6655; line-height:1.9;">
+                💡 <strong>ショートカット：</strong>一次関数 <span class="math">y = ax + b</span> の変化の割合は、どの範囲を選んでも<strong>常に傾き a と同じ</strong>になります。<br>
+                この問題では <span class="math">a = 3</span> なので、計算しなくても変化の割合 ＝ 3 とわかります。
+            </div>
+        </div>
+    </div>
+
+    <!-- 練習問題 -->
+    <div class="practice-box">
+        <div class="practice-title">✏️ 練習問題</div>
+
+        <div class="q-item">
+            <span class="q-num">（1）</span>
+            <div class="q-text">
+                次の式のうち、<span class="math">y</span> が <span class="math">x</span> の一次関数であるものはどれか。<br>
+                ア　<span class="math">y = x + 6</span>　　
+                イ　<span class="math">y = 2x²</span>　　
+                ウ　<span class="math">y = −4x</span>　　
+                エ　<span class="math">y = 10</span>
+            </div>
+            <div style="background:#f0f7ff; border-radius:6px; padding:8px 12px; margin-bottom:10px; font-size:13px; color:#666;">
+                ▶ それぞれ「x が 1 乗だけ・a ≠ 0」かどうか確認します。
+            </div>
+            <div class="step-area">
+                <div style="font-size:14px; line-height:2.6; margin-left:8px;">
+                    <div>ア <span class="math">y = x + 6</span>：a = 1, b = 6 の形 →
+                        <span class="drop-zone-inline wide" data-ans="一次関数" onclick="zCl(this)"></span>
+                    </div>
+                    <div>イ <span class="math">y = 2x²</span>：x が 2 乗 →
+                        <span class="drop-zone-inline wide" data-ans="一次関数でない" onclick="zCl(this)"></span>
+                    </div>
+                    <div>ウ <span class="math">y = −4x</span>：y = −4x + 0 の形（正比例）→
+                        <span class="drop-zone-inline wide" data-ans="一次関数" onclick="zCl(this)"></span>
+                    </div>
+                    <div>エ <span class="math">y = 10</span>：x がない →
+                        <span class="drop-zone-inline wide" data-ans="一次関数でない" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-item">
+            <span class="q-num">（2）</span>
+            <div class="q-text">
+                一次関数 <span class="math">y = 5x − 3</span> の傾きと切片を答えよ。
+            </div>
+            <div style="background:#f0f7ff; border-radius:6px; padding:8px 12px; margin-bottom:10px; font-size:13px; color:#666;">
+                ▶ y = ax + b と見比べて、x の前の数が傾き、数だけの部分が切片です。
+            </div>
+            <div class="step-area">
+                <div style="margin-left:16px;">
+                    <div class="step-row">
+                        傾き <span class="math">a</span> ＝
+                        <span class="drop-zone-inline w60" data-ans="5" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        切片 <span class="math">b</span> ＝
+                        <span class="drop-zone-inline w60" data-ans="−3" onclick="zCl(this)"></span>
+                        <span style="font-size:13px; color:#888; margin-left:8px;">（マイナスごと読む）</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-item">
+            <span class="q-num">（3）</span>
+            <span class="q-pref">〈基礎〉</span>
+            <div class="q-text">
+                一次関数 <span class="math">y = −3x + 4</span> について、<span class="math">x</span> が 1 から 4 まで増加するときの変化の割合を求めよ。
+            </div>
+            <div style="background:#f0f7ff; border-radius:6px; padding:8px 12px; margin-bottom:10px; font-size:13px; color:#666;">
+                ▶ x = 1 と x = 4 をそれぞれ代入して y を求め、変化の割合を計算します。
+            </div>
+            <div class="step-area">
+                <div style="margin-left:16px;">
+                    <div class="step-row">
+                        <span class="math">x = 1</span> → <span class="math">y = −3 × 1 + 4 =</span>
+                        <span class="drop-zone-inline w60" data-ans="1" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">x = 4</span> → <span class="math">y = −3 × 4 + 4 =</span>
+                        <span class="drop-zone-inline w60" data-ans="−8" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span>y の増加量 ＝</span>
+                        <span class="drop-zone-inline w60" data-ans="−8" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span>　　　　　− </span>
+                        <span class="drop-zone-inline w60" data-ans="1" onclick="zCl(this)"></span>
+                        <span>＝ −9</span>
+                    </div>
+                    <div class="step-row">
+                        <span>x の増加量 ＝</span>
+                        <span class="drop-zone-inline w60" data-ans="4" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        <span>　　　　　− </span>
+                        <span class="drop-zone-inline w60" data-ans="1" onclick="zCl(this)"></span>
+                        <span>＝ 3</span>
+                    </div>
+                    <div class="step-row">
+                        変化の割合 ＝
+                        <span class="frac-wrap" style="color:#1a5276;">
+                            <span class="frac">
+                                <span class="num">−9</span>
+                                <span class="den">3</span>
+                            </span>
+                        </span>
+                        ＝
+                        <span class="drop-zone-inline w60" data-ans="−3" onclick="zCl(this)"></span>
+                    </div>
+                    <div style="font-size:13px; color:#0e6655; margin-top:4px; background:#e8f8f5; padding:6px 10px; border-radius:6px;">
+                        💡 傾き a = −3 なので、変化の割合も −3 と一致します。
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span class="drop-zone-inline ans-final" data-ans="変化の割合 = −3" onclick="zCl(this)" style="min-width:150px;font-size:14px;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-item">
+            <span class="q-num">（4）</span>
+            <span class="q-pref">〈神奈川県〉</span>
+            <div class="q-text">
+                一次関数 <span class="math">y = ax + 1</span> において、<span class="math">x</span> が 0 から 3 まで増加するとき変化の割合が 4 であった。<span class="math">a</span> の値を求めよ。
+            </div>
+            <div style="background:#f0f7ff; border-radius:6px; padding:8px 12px; margin-bottom:10px; font-size:13px; color:#666;">
+                ▶ 一次関数の変化の割合は、常に「傾き a」と同じになります。<br>
+                変化の割合 = 4 とわかっているので、a もそのまま求められます。
+            </div>
+            <div class="step-area">
+                <div style="margin-left:16px;">
+                    <div class="step-row">
+                        一次関数の変化の割合は常に傾き
+                        <span class="drop-zone-inline w60" data-ans="a" onclick="zCl(this)"></span>
+                        に等しい。
+                    </div>
+                    <div class="step-row">
+                        変化の割合 = 4 なので <span class="math">a =</span>
+                        <span class="drop-zone-inline w60" data-ans="4" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span class="drop-zone-inline ans-final" data-ans="a = 4" onclick="zCl(this)" style="min-width:80px;font-size:14px;"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" style="background:#1565c0;" onclick="stCh()">🔄 リセット</button>
+        <button class="main-btn" style="background:#27ae60;" onclick="chAn()">✅ 答え合わせ</button>
+        <button class="main-btn" style="background:#7f8c8d;" onclick="shMo()">👁 お手本を見る</button>
+    </div>
+
+</div>
+
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span class="drop-zone-inline ans-final" data-ans="a = 4" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- コントロールボタン -->
+    <div class="controls">
+        <button class="main-btn" style="background:#1565c0;" onclick="stCh()">🎯 チャレンジ開始</button>
+        <button class="main-btn" style="background:#27ae60;" onclick="chAn()">✅ 答え合わせ</button>
+        <button class="main-btn" style="background:#7f8c8d;" onclick="shMo()">👁 お手本を見る</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei20.wav"></audio>
+
+<script>
+
+    // ========== 4択モード ==========
+    var isR = true; // 常にアクティブ
+    var sT = Date.now();
+    
+    var bestTime = null;
+
+
+    // ===== タイマー操作 =====
+    var timerRunning = true;
+    var timerVisible = true;
+    var lastElapsed = 0;
+    function toggleTimer(){}
+    function toggleTimerVisible(){}
+    // ========================
+    function fmtTime(ms) {
+        var total = ms / 1000;
+        var m = Math.floor(total / 60).toString().padStart(2, '0');
+        var s = (total % 60).toFixed(1).padStart(4, '0');
+        return m + ':' + s;
+    }
+
+    // 全穴埋めの正解リスト（シャッフル用）
+    var allAnswers = [];
+    document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+        allAnswers.push(z.getAttribute('data-ans'));
+    });
+
+    // 4択ボタンを各空欄の下に生成
+    function buildChoices() {
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            if (z.getAttribute('data-built') === '1') return;
+            z.setAttribute('data-built', '1');
+            var ans = z.getAttribute('data-ans');
+            // 選択肢：正解＋allAnswersから重複なし3つ
+            var pool = allAnswers.filter(function(a){ return a !== ans; });
+            var distractors = [];
+            // poolからランダム3つ（不足分はNUMERIC_DISTRACTORSから補充）
+            var shuffled = pool.slice().sort(function(){ return Math.random()-0.5; });
+            for (var i=0; i<shuffled.length && distractors.length<3; i++) {
+                if (distractors.indexOf(shuffled[i]) === -1) distractors.push(shuffled[i]);
+            }
+            var extraPool = NUMERIC_DISTRACTORS.filter(function(a){ return a!==ans && distractors.indexOf(a)===-1 && allAnswers.indexOf(a)===-1; });
+            extraPool.sort(function(){ return Math.random()-0.5; });
+            for (var j=0; j<extraPool.length && distractors.length<3; j++) {
+                distractors.push(extraPool[j]);
+            }
+            var choices = [ans].concat(distractors.slice(0,3));
+            choices.sort(function(){ return Math.random()-0.5; });
+
+            var grp = document.createElement('div');
+            grp.className = 'choice-group';
+            grp.style.cssText = 'display:inline-flex;gap:4px;flex-wrap:wrap;vertical-align:middle;margin-left:4px;';
+            choices.forEach(function(c) {
+                var btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = c;
+                btn.setAttribute('data-choice', c);
+                btn.onclick = function() { selectChoice(z, this, c); };
+                grp.appendChild(btn);
+            });
+            z.parentNode.insertBefore(grp, z.nextSibling);
+        });
+    }
+
+    var NUMERIC_DISTRACTORS = [
+        '1','2','3','4','5','6','7','8','9','10',
+        '−1','−2','−3','−4','−5','−6','−7','−8','−9','−10',
+        '0','½','a','b',
+        '右上がり','右下がり','一次関数','一次関数でない','通る','通らない'
+    ];
+
+    function selectChoice(zone, btn, val) {
+        // 同グループの選択解除
+        var grp = btn.parentNode;
+        grp.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        // 空欄に値をセット
+        zone.setAttribute('data-filled', val);
+        zone.innerText = val;
+        zone.classList.remove('correct','wrong');
+    }
+
+    function chAn() {
+        var allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            var cur = z.getAttribute('data-filled') || '';
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+                // ボタンも正解色に
+                var grp = z.nextElementSibling;
+                if (grp && grp.classList.contains('choice-group')) {
+                    grp.querySelectorAll('.choice-btn').forEach(function(b){
+                        if (b.getAttribute('data-choice')===ans) b.classList.add('btn-correct');
+                    });
+                }
+            } else {
+                z.classList.add('wrong'); z.classList.remove('correct');
+                allCorrect = false;
+                // 選択解除
+                var grp2 = z.nextElementSibling;
+                if (grp2 && grp2.classList.contains('choice-group')) {
+                    grp2.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); b.classList.add('btn-wrong'); });
+                }
+                // 空欄リセット
+                z.innerText = ''; z.removeAttribute('data-filled'); z.classList.remove('wrong');
+                setTimeout(function(){ 
+                    if(grp2) grp2.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('btn-wrong'); });
+                }, 600);
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI);
+            var elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+            }
+            startCnf();
+        } else {
+            var wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth; wbc.classList.add('shake');
+            setTimeout(function(){ wbc.classList.remove('shake'); }, 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI);
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            z.setAttribute('data-filled', ans);
+            z.innerText = ans;
+            z.classList.remove('correct','wrong');
+            var grp = z.nextElementSibling;
+            if (grp && grp.classList.contains('choice-group')) {
+                grp.querySelectorAll('.choice-btn').forEach(function(b){
+                    b.classList.remove('selected','btn-correct','btn-wrong');
+                    if (b.getAttribute('data-choice')===ans) b.classList.add('selected');
+                });
+            }
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。リセットするにはページを再読み込みしてください。</span>';
+    }
+
+    function stCh() {
+        // リセット
+        clearInterval(tI);
+        sT = Date.now();
+        
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            z.innerText = ''; z.removeAttribute('data-filled'); z.classList.remove('correct','wrong');
+        });
+        document.querySelectorAll('.choice-group').forEach(function(g){
+            g.querySelectorAll('.choice-btn').forEach(function(b){
+                b.classList.remove('selected','btn-correct','btn-wrong');
+            });
+        });
+        document.getElementById('wordBank').innerHTML = '';
+        document.getElementById('timerDisplay').innerText = '00:00.0';
+    }
+
+    // ページロード時に選択肢を生成してタイマー開始
+
+    var cvs = document.getElementById("confetti-canvas");
+    var ctx2 = cvs.getContext("2d");
+    var pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight; pts = [];
+        for (var i = 0; i < 180; i++) pts.push({
+            x: Math.random()*cvs.width, y: Math.random()*cvs.height - cvs.height,
+            s: Math.random()*9+4, c: 'hsl('+Math.floor(Math.random()*360)+',75%,65%)', sp: Math.random()*3+2
+        });
+        cnfRunning = true; updateCnf();
+        setTimeout(function() { cnfRunning = false; ctx2.clearRect(0,0,cvs.width,cvs.height); pts=[]; }, 4000);
+    }
+    function updateCnf() {
+        if (!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p) { p.y+=p.sp; ctx2.fillStyle=p.c; ctx2.fillRect(p.x,p.y,p.s,p.s); if(p.y>cvs.height)p.y=-20; });
+        requestAnimationFrame(updateCnf);
+    }
+
+    buildChoices();
+    document.getElementById('wordBank').innerHTML = '';
+
+
+    // 音声
+    var _aud = document.getElementById('mainAudio');
+    function toggleAudio() {
+        if (!_aud) return;
+        if (_aud.paused) { _aud.play(); _updUI(true); }
+        else { _aud.pause(); _updUI(false); }
+    }
+    function _updUI(p) {
+        var ic=document.getElementById('btnIcon'),bt=document.getElementById('btnText'),pb=document.getElementById('playBtn');
+        if(ic)ic.innerText=p?'⏸':'📢';
+        if(bt)bt.innerText=p?'停止中':'解説を聴く';
+        if(pb)pb.classList.toggle('playing',p);
+    }
+    if(_aud){ _aud.onended=function(){_updUI(false);}; }
+    var _vs=document.getElementById('volSlider');
+    if(_vs)_vs.addEventListener('input',function(e){
+        if(_aud)_aud.volume=e.target.value;
+        var vn=document.getElementById('volNum');
+        if(vn)vn.innerText=Math.round(e.target.value*100)+'%';
+    });
+
+</script>
+
+<!-- 学習記録 -->
+<script>
+(function() {
+    var key = 'hirei20';
+    try {
+        var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+        data.count = (data.count || 0) + 1;
+        data.lastDate = new Date().toLocaleDateString('ja-JP');
+        localStorage.setItem('study_' + key, JSON.stringify(data));
+    } catch(e) {}
+})();
+</script>
+<!-- 復習ボタン -->
+<div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+    <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+        <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+    </button>
+</div>
+<script>
+function toggleReview() {
+    var key = 'hirei20';
+    try {
+        var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+        data.review = !data.review;
+        localStorage.setItem('study_' + key, JSON.stringify(data));
+        updateReviewBtn(data.review);
+    } catch(e) {}
+}
+function updateReviewBtn(isReview) {
+    document.getElementById('reviewIcon').innerText = isReview ? '★' : '☆';
+    document.getElementById('reviewText').innerText = isReview ? '復習リストに追加済み' : '復習リストに追加';
+    document.getElementById('reviewBtn').style.background = isReview ? '#e74c3c' : '#f39c12';
+}
+(function() {
+    var key = 'hirei20';
+    try {
+        var data = JSON.parse(localStorage.getItem('study_' + key) || '{"count":0,"review":false}');
+        updateReviewBtn(data.review || false);
+    } catch(e) {}
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学：㉗一次関数の利用</title>
+    <style>
+        :root { --bg-color: #f8f9fa; --drop-zone-bg: #e1f5fe; --line-green: #06C755; }
+        body { font-family: 'BIZ UDPGothic', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0 16px; overflow-x: hidden; box-sizing: border-box; }
+
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 6px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        /* コンパクトヘッダー：全要素を1〜2行に集約 */
+        .header-row1 { max-width: 900px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .page-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 4px 10px; border-radius: 16px; font-size: 0.8em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; }
+        .header-row2 { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .audio-compact { display: flex; align-items: center; gap: 8px; }
+        .speaker-btn-small { background: #e67e22; color: white; border: none; cursor: pointer; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 0.82em; white-space: nowrap; }
+        .speaker-btn-small.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+        input[type="range"] { cursor: pointer; width: 90px; }
+        .record-display { font-size: 0.78em; color: #555; margin-left: auto; }
+
+        .word-bank-container { background: #eee; padding: 12px 16px; border-radius: 8px; border: 1px solid #ccc; max-width: 900px; margin: 0 auto; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 24px; border-radius: 12px; box-sizing: border-box; }
+
+        .unit-header { text-align: center; margin-bottom: 24px; padding: 16px; background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); border-radius: 10px; border: 2px solid #90caf9; }
+        .unit-title { font-size: 1.4em; font-weight: 900; color: #0d47a1; margin: 0; }
+        .unit-sub { font-size: 0.9em; color: #666; margin-top: 4px; }
+
+        .point-box { background: #e3f2fd; border: 2px solid #90caf9; border-left: 5px solid #1565c0; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; font-size: 14px; line-height: 2.2; }
+        .point-box .ph { font-weight: 900; color: #0d47a1; font-size: 15px; margin-bottom: 6px; }
+
+        .example-box { background: #f8fbff; border: 2px solid #aed6f1; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .example-title { font-weight: 900; font-size: 1.05em; color: #2980b9; margin-bottom: 14px; border-left: 5px solid #2980b9; padding-left: 10px; }
+        .example-question { font-size: 14.5px; margin-bottom: 16px; line-height: 1.9; background: #f0f6ff; border-radius: 6px; padding: 12px 16px; }
+
+        .step-area { font-size: 14.5px; line-height: 2.4; }
+        .step-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+        .step-num { background: #1565c0; color: white; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; }
+
+        /* グラフ */
+        .graph-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin: 12px 0; }
+        .graph-panel { background: white; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px; text-align: center; flex-shrink: 0; }
+        .graph-panel .g-title { font-size: 12px; font-weight: bold; color: #1565c0; margin-bottom: 4px; }
+        .explain-col { flex: 1; min-width: 220px; }
+
+        /* 文章題の設定ボックス */
+        .setup-box { background: #e8f5e9; border: 2px solid #a9dfbf; border-left: 5px solid #27ae60; border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 14px; line-height: 2; }
+        .setup-box .sh { font-weight: 900; color: #1e8449; margin-bottom: 4px; }
+
+        .practice-box { background: #fffdf5; border: 2px solid #f9e4b0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+        .practice-title { font-weight: 900; font-size: 1.05em; color: #e67e22; margin-bottom: 16px; border-left: 5px solid #e67e22; padding-left: 10px; }
+        .q-item { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed #e0d0a0; }
+        .q-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .q-num { font-weight: 900; color: #e67e22; }
+        .q-text { font-size: 14.5px; line-height: 1.9; margin: 8px 0 12px; background: #fef9ec; border-radius: 6px; padding: 10px 14px; }
+        .q-pref { font-size: 12px; color: #888; float: right; }
+
+        .drop-zone-inline {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 70px; min-height: 1.9em;
+            background: var(--drop-zone-bg); border: 1.5px solid #aaa;
+            vertical-align: middle; cursor: pointer; text-align: center;
+            font-weight: bold; color: #1565c0; padding: 2px 8px;
+            border-radius: 3px; font-size: 14px; font-style: italic; transition: background 0.15s;
+        }
+        .drop-zone-inline:hover { border-color: #1565c0; background: #e3f2fd; }
+        .drop-zone-inline.correct { background: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
+        .drop-zone-inline.wrong   { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .drop-zone-inline.w60 { min-width: 60px; }
+        .drop-zone-inline.w80 { min-width: 80px; }
+        .drop-zone-inline.w100 { min-width: 100px; }
+
+        /* 縦型分数 */
+        .frac-wrap { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; pointer-events: none; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 0.85em; line-height: 1.1; }
+        .frac .num { border-bottom: 1.5px solid currentColor; padding: 0 4px; font-weight: bold; text-align: center; }
+        .frac .den { padding: 0 4px; font-weight: bold; text-align: center; }
+
+        /* 4択ボタン */
+        .choice-group { display: inline-flex; gap: 4px; flex-wrap: wrap; vertical-align: middle; margin-left: 4px; }
+        .choice-btn { background: white; color: #0d47a1; border: 1.5px solid #64b5f6; padding: 3px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.15s; }
+        .choice-btn:hover { background: #e3f2fd; border-color: #1565c0; }
+        .choice-btn.selected { background: #f1c40f; color: #333; border-color: #e67e22; box-shadow: 0 0 0 2px #e67e22; }
+        .choice-btn.btn-correct { background: #d4edda; color: #155724; border-color: #28a745; }
+        .choice-btn.btn-wrong { background: #f8d7da; color: #721c24; border-color: #dc3545; }
+
+        .math { font-style: italic; color: #1a5276; font-weight: bold; }
+        .math-p { font-style: italic; color: #1565c0; font-weight: bold; }
+        .math-r { font-style: italic; color: #c0392b; font-weight: bold; }
+        .ans-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 15px; flex-wrap: wrap; }
+        .ans-label-final { font-weight: 900; color: #1a5276; }
+        .ans-box-final { border: 2px solid #aaa; border-radius: 4px; padding: 3px 18px; font-weight: bold; color: #1a5276; font-size: 15px; }
+
+        .controls { text-align: center; margin-top: 30px; padding-bottom: 100px; }
+        .main-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; margin: 0 8px; }
+
+        .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
+        .line-float-btn:hover { transform: scale(1.1); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<a href="https://line.me/R/ti/p/@自分のID" target="_blank" class="line-float-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="30" height="30" style="margin-bottom:3px;">
+    質問する
+</a>
+
+<div class="sticky-header">
+    <div class="header-row1">
+        <nav class="page-nav">
+        <a href="hirei26.html" class="nav-btn">◀ ㉖ 変域</a>
+        <a href="hirei_index.html" class="nav-btn index-btn">📋 目次</a>
+        <a href="hirei28.html" class="nav-btn">㉘ 確認テスト ▶</a>
+        </nav>
+    </div>
+    <div class="header-row2">
+        <div class="audio-compact">
+            <button id="playBtn" class="speaker-btn-small" onclick="toggleAudio()">
+                <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+            </button>
+            <div class="volume-control">
+                <span style="font-size:0.78em;color:#e67e22;font-weight:bold;">音量</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+                <span id="volNum" style="font-size:0.78em;min-width:32px;">100%</span>
+            </div>
+        </div>
+    </div>
+    <div class="word-bank-container" style="display:none;">
+        <div id="wordBank" class="word-bank"></div>
+    </div>
+</div>
+
+
+
+<div class="container">
+
+    <div class="unit-header">
+        <div class="unit-title">㉗ 一次関数の利用</div>
+        <div class="unit-sub">日常場面を一次関数で表して問題を解く</div>
+    </div>
+
+    <div class="point-box">
+        <div class="ph">📌 文章題の解き方の流れ</div>
+        ① 何を <span class="math-p">x</span>（独立変数）、何を <span class="math-p">y</span>（従属変数）にするかを決める<br>
+        ② 問題文の条件から <span class="math-p">y = ax + b</span> の式を求める<br>
+        ③ 求めたい値を式に代入して答えを出す<br>
+        ④ <strong>単位・文脈に合った答え</strong>を書く（分・円・km など）
+    </div>
+
+    <!-- 例題1：水量 -->
+    <div class="example-box">
+        <div class="example-title">📖 例題１　水槽の水量（定番問題）</div>
+        <div class="example-question">
+            水槽に水が 80 L 入っている。毎分 3 L の割合で水を抜いていく。<br>
+            水を抜き始めてから <span class="math">x</span> 分後の水量を <span class="math">y</span> L とするとき、次の問いに答えよ。<br>
+            ① <span class="math">y</span> を <span class="math">x</span> の式で表せ。　② 水量が 20 L になるのは何分後か。
+        </div>
+        <div class="graph-row">
+            <div class="graph-panel">
+                <div class="g-title">水量グラフ（x：時間、y：水量）</div>
+                <!-- x:0〜30, y:0〜90 グラフ -->
+                <!-- scale: x方向 1分=7px (0〜30), y方向 1L=1px (0〜90) -->
+                <!-- viewBox: 0 0 240 120, origin(30,110) -->
+                <svg width="240" height="130" viewBox="0 0 240 130">
+                    <defs>
+                        <clipPath id="clipW">
+                            <rect x="30" y="10" width="200" height="100"/>
+                        </clipPath>
+                    </defs>
+                    <!-- グリッド -->
+                    <g stroke="#e8e0d8" stroke-width="0.5">
+                        <!-- 縦線 x=0,5,10,15,20,25,30 -->
+                        <line x1="30" y1="10" x2="30" y2="110"/>
+                        <line x1="63.3" y1="10" x2="63.3" y2="110"/>
+                        <line x1="96.7" y1="10" x2="96.7" y2="110"/>
+                        <line x1="130" y1="10" x2="130" y2="110"/>
+                        <line x1="163.3" y1="10" x2="163.3" y2="110"/>
+                        <line x1="196.7" y1="10" x2="196.7" y2="110"/>
+                        <line x1="230" y1="10" x2="230" y2="110"/>
+                        <!-- 横線 y=0,20,40,60,80 -->
+                        <line x1="30" y1="110" x2="230" y2="110"/>
+                        <line x1="30" y1="87.8" x2="230" y2="87.8"/>
+                        <line x1="30" y1="65.6" x2="230" y2="65.6"/>
+                        <line x1="30" y1="43.3" x2="230" y2="43.3"/>
+                        <line x1="30" y1="21.1" x2="230" y2="21.1"/>
+                    </g>
+                    <!-- 軸 -->
+                    <line x1="28" y1="110" x2="234" y2="110" stroke="#444" stroke-width="1.5"/>
+                    <polygon points="234,110 228,107 228,113" fill="#444"/>
+                    <line x1="30" y1="112" x2="30" y2="6" stroke="#444" stroke-width="1.5"/>
+                    <polygon points="30,6 27,12 33,12" fill="#444"/>
+                    <!-- 軸ラベル -->
+                    <text x="230" y="122" font-size="10" fill="#444" font-style="italic">x（分）</text>
+                    <text x="2" y="10" font-size="10" fill="#444" font-style="italic">y(L)</text>
+                    <text x="26" y="122" font-size="9" fill="#888">0</text>
+                    <!-- x目盛 -->
+                    <g font-size="9" fill="#888" text-anchor="middle">
+                        <text x="63.3" y="122">5</text>
+                        <text x="96.7" y="122">10</text>
+                        <text x="130" y="122">15</text>
+                        <text x="163.3" y="122">20</text>
+                        <text x="196.7" y="122">25</text>
+                        <text x="230" y="122">30</text>
+                    </g>
+                    <!-- y目盛 -->
+                    <g font-size="9" fill="#888" text-anchor="end">
+                        <text x="27" y="91">20</text>
+                        <text x="27" y="68">40</text>
+                        <text x="27" y="46">60</text>
+                        <text x="27" y="23">80</text>
+                    </g>
+                    <!-- y=−3x+80 : x=0→y=80(svgY=21.1), x=26.67→y=0(svgY=110) -->
+                    <!-- scale: svgX=30+x*6.667, svgY=110-y*1.111 -->
+                    <!-- x=0: svgX=30, svgY=110-80*1.111=110-88.9=21.1 -->
+                    <!-- x=26.67: svgX=30+26.67*6.667=207.8, svgY=110 -->
+                    <line x1="30" y1="21.1" x2="207.8" y2="110" stroke="#1565c0" stroke-width="2.5" stroke-linecap="round" clip-path="url(#clipW)"/>
+                    <!-- 点(0,80) -->
+                    <circle cx="30" cy="21.1" r="4" fill="#1565c0" stroke="white" stroke-width="1.5"/>
+                    <!-- y=20の補助線: svgY=110-20*1.111=110-22.2=87.8, x=(80-20)/3=20→svgX=30+20*6.667=163.3 -->
+                    <line x1="30" y1="87.8" x2="163.3" y2="87.8" stroke="#e74c3c" stroke-width="1.2" stroke-dasharray="4,2"/>
+                    <line x1="163.3" y1="87.8" x2="163.3" y2="110" stroke="#e74c3c" stroke-width="1.2" stroke-dasharray="4,2"/>
+                    <circle cx="163.3" cy="87.8" r="4" fill="#e74c3c" stroke="white" stroke-width="1.5"/>
+                    <text x="168" y="85" font-size="9" fill="#e74c3c" font-weight="bold">20分後</text>
+                    <text x="168" y="96" font-size="9" fill="#e74c3c" font-weight="bold">(20,20)</text>
+                </svg>
+            </div>
+            <div class="explain-col">
+                <div class="step-area">
+                    <div class="step-row">
+                        <span class="step-num">①</span>
+                        <span>はじめ 80 L、毎分 3 L 減るので</span>
+                    </div>
+                    <div style="margin-left:32px;">
+                        <div class="step-row">
+                            <span class="math-p">y =</span>
+                            <span class="drop-zone-inline w60" data-ans="−3" onclick="zCl(this)"></span>
+                            <span class="math-p">x +</span>
+                            <span class="drop-zone-inline w60" data-ans="80" onclick="zCl(this)"></span>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <span class="step-num">②</span>
+                        <span><span class="math">y = 20</span> を代入：</span>
+                    </div>
+                    <div style="margin-left:32px;">
+                        <div class="step-row">
+                            <span class="drop-zone-inline w60" data-ans="20" onclick="zCl(this)"></span>
+                            <span class="math"> = −3x + 80</span>
+                        </div>
+                        <div class="step-row">
+                            <span class="math">3x = 80 − 20 =</span>
+                            <span class="drop-zone-inline w60" data-ans="60" onclick="zCl(this)"></span>
+                        </div>
+                        <div class="step-row">
+                            <span class="math">x =</span>
+                            <span class="drop-zone-inline w60" data-ans="20" onclick="zCl(this)"></span>
+                        </div>
+                    </div>
+                    <div class="ans-row">
+                        <span class="ans-label-final">答）</span>
+                        <span class="drop-zone-inline ans-final" data-ans="20 分後" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題2：距離と時間 -->
+    <div class="example-box">
+        <div class="example-title">📖 例題２　歩行距離（兵庫県風）</div>
+        <div class="example-question">
+            家から学校まで 1800 m ある。分速 60 m で歩いて出発した。<br>
+            出発から <span class="math">x</span> 分後の残り距離を <span class="math">y</span> m とする。<br>
+            ① <span class="math">y</span> を <span class="math">x</span> の式で表せ。　② 残り距離が 600 m になるのは何分後か。
+        </div>
+        <div class="step-area">
+            <div class="step-row">
+                <span class="step-num">①</span>
+                <span>はじめ 1800 m、毎分 60 m 近づくので</span>
+            </div>
+            <div style="margin-left:32px;">
+                <div class="step-row">
+                    <span class="math-p">y =</span>
+                    <span class="drop-zone-inline w60" data-ans="−60" onclick="zCl(this)"></span>
+                    <span class="math-p">x +</span>
+                    <span class="drop-zone-inline w80" data-ans="1800" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="step-row">
+                <span class="step-num">②</span>
+                <span><span class="math">y = 600</span> を代入：</span>
+            </div>
+            <div style="margin-left:32px;">
+                <div class="step-row">
+                    <span class="drop-zone-inline w80" data-ans="600" onclick="zCl(this)"></span>
+                    <span class="math"> = −60x + 1800</span>
+                </div>
+                <div class="step-row">
+                    <span class="math">60x = 1800 − 600 =</span>
+                    <span class="drop-zone-inline w80" data-ans="1200" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span class="math">x =</span>
+                    <span class="drop-zone-inline w60" data-ans="20" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <span class="drop-zone-inline ans-final" data-ans="20 分後" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題3：料金 -->
+    <div class="example-box">
+        <div class="example-title">📖 例題３　タクシー料金（料金表から式を求める）</div>
+        <div class="example-question">
+            タクシーの料金は、乗車距離 <span class="math">x</span> km に対して料金 <span class="math">y</span> 円 が一次関数になっているとします。<br>
+            3 km で 1100 円、8 km で 2100 円であるとき、式を求め、5 km のときの料金を答えよ。
+        </div>
+        <div class="step-area">
+            <div class="step-row">
+                <span class="step-num">①</span>
+                <span>2 点 (3, 1100) と (8, 2100) から傾きを求める：</span>
+            </div>
+            <div style="margin-left:32px;">
+                <div class="step-row">
+                    <span class="math-p">a =</span>
+                    <span class="frac-wrap" style="color:#1565c0;">
+                        <span class="frac"><span class="num">2100 − 1100</span><span class="den">8 − 3</span></span>
+                    </span>
+                    <span class="math"> =</span>
+                    <span class="frac-wrap" style="color:#1565c0;">
+                        <span class="frac"><span class="num">1000</span><span class="den">5</span></span>
+                    </span>
+                    <span class="math"> =</span>
+                    <span class="drop-zone-inline w80" data-ans="200" onclick="zCl(this)"></span>
+                </div>
+            </div>
+            <div class="step-row">
+                <span class="step-num">②</span>
+                <span><span class="math-p">y = 200x + b</span> に (3, 1100) を代入：</span>
+            </div>
+            <div style="margin-left:32px;">
+                <div class="step-row">
+                    <span class="math">1100 = 200 × 3 + b → b =</span>
+                    <span class="drop-zone-inline w80" data-ans="500" onclick="zCl(this)"></span>
+                </div>
+                <div class="step-row">
+                    <span class="math-p">→ y = 200x + 500</span>
+                </div>
+            </div>
+            <div class="step-row">
+                <span class="step-num">③</span>
+                <span><span class="math">x = 5</span> を代入：<span class="math">y = 200 × 5 + 500 =</span></span>
+                <span class="drop-zone-inline w80" data-ans="1500" onclick="zCl(this)"></span>
+            </div>
+            <div class="ans-row">
+                <span class="ans-label-final">答）</span>
+                <span class="drop-zone-inline ans-final" data-ans="1500 円" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 練習問題 -->
+    <div class="practice-box">
+        <div class="practice-title">✏️ 練習問題</div>
+
+        <!-- (1) -->
+        <div class="q-item">
+            <span class="q-num">（1）</span>
+            <span class="q-pref">〈大阪府〉</span>
+            <div class="q-text">
+                ろうそくに火をつけると、毎分 0.5 cm の割合で短くなる。
+                最初の長さは 20 cm であった。<br>
+                火をつけてから <span class="math">x</span> 分後のろうそくの長さを <span class="math">y</span> cm とする。<br>
+                ① <span class="math">y</span> を <span class="math">x</span> の式で表せ。<br>
+                ② ろうそくの長さが 8 cm になるのは何分後か。
+            </div>
+            <div class="step-area">
+                <div style="margin-left:60px;">
+                    <div class="step-row">
+                        ① <span class="math-p">y =</span>
+                        <span class="drop-zone-inline w80" data-ans="−0.5" onclick="zCl(this)"></span>
+                        <span class="math-p">x +</span>
+                        <span class="drop-zone-inline w60" data-ans="20" onclick="zCl(this)"></span>
+                    </div>
+                    <div class="step-row">
+                        ② <span class="math">y = 8</span> を代入：
+                        <span class="drop-zone-inline w60" data-ans="8" onclick="zCl(this)"></span>
+                        <span class="math"> = −0.5x + 20</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math">0.5x = 12 → x =</span>
+                        <span class="drop-zone-inline w60" data-ans="24" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span class="drop-zone-inline ans-final" data-ans="① y = −0.5x + 20　② 24 分後" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- (2) -->
+        <div class="q-item">
+            <span class="q-num">（2）</span>
+            <span class="q-pref">〈愛知県〉</span>
+            <div class="q-text">
+                ある駐車場の料金は最初の 30 分が 300 円で、その後 10 分ごとに 100 円加算される。
+                駐車時間を <span class="math">x</span> 分（30 ≦ x）、料金を <span class="math">y</span> 円とするとき（30 分以降）、<br>
+                ① <span class="math">y</span> を <span class="math">x</span> の式で表せ。<br>
+                ② 駐車料金が 800 円になるのは何分のとき（30 分以降）か。
+            </div>
+            <div class="step-area">
+                <div style="margin-left:60px;">
+                    <div class="step-row" style="font-size:13px; color:#555;">
+                        10 分で 100 円 → 1 分で
+                        <span class="frac-wrap" style="color:#555;">
+                            <span class="frac"><span class="num">100</span><span class="den">10</span></span>
+                        </span>
+                        ＝ 10 円/分
+                    </div>
+                    <div class="step-row">
+                        ① x = 30 で y = 300 の点を通り、傾き = 10 → <span class="math-p">y = 10x + b</span>
+                    </div>
+                    <div class="step-row">
+                        代入：<span class="drop-zone-inline w60" data-ans="300" onclick="zCl(this)"></span>
+                        <span class="math"> = 10 × 30 + b → b =</span>
+                        <span class="drop-zone-inline w80" data-ans="−0" onclick="zCl(this)"></span>
+                        <span style="font-size:12px; color:#888; margin-left:4px;">（300−300＝0）</span>
+                    </div>
+                    <div class="step-row">
+                        <span class="math-p">→ y = 10x</span>（x ≧ 30）
+                    </div>
+                    <div class="step-row">
+                        ② <span class="math">y = 800</span> を代入：<span class="math">800 = 10x → x =</span>
+                        <span class="drop-zone-inline w60" data-ans="80" onclick="zCl(this)"></span>
+                    </div>
+                </div>
+                <div class="ans-row">
+                    <span class="ans-label-final">答）</span>
+                    <span class="drop-zone-inline ans-final" data-ans="① y = 10x　② 80 分" onclick="zCl(this)" style="min-width:120px;font-size:14px;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" style="background:#1565c0;" onclick="stCh()">🔄 リセット</button>
+        <button class="main-btn" style="background:#27ae60;" onclick="chAn()">✅ 答え合わせ</button>
+        <button class="main-btn" style="background:#7f8c8d;" onclick="shMo()">👁 お手本を見る</button>
+    </div>
+
+</div>
+
+<audio id="mainAudio" src="hirei27.wav"></audio>
+
+<script>
+    var audio = document.getElementById('mainAudio');
+    var volSlider = document.getElementById('volSlider');
+    var playBtn = document.getElementById('playBtn');
+    function toggleAudio() {
+        if (audio.paused) { audio.play(); updatePlayUI(true); } else { audio.pause(); updatePlayUI(false); }
+    }
+    audio.onended = function() { updatePlayUI(false); };
+    function updatePlayUI(p) {
+        document.getElementById('btnIcon').innerText = p ? "⏸" : "📢";
+        document.getElementById('btnText').innerText = p ? "停止中" : "解説を聴く";
+        playBtn.classList.toggle('playing', p);
+    }
+    volSlider.addEventListener('input', function(e) {
+        audio.volume = e.target.value;
+        document.getElementById('volNum').innerText = Math.round(e.target.value * 100) + "%";
+    });
+
+    var sT = Date.now(), bestTime = null;
+    
+
+
+    // ===== タイマー操作 =====
+    var timerRunning = true;
+    var timerVisible = true;
+    var lastElapsed = 0;
+    function toggleTimer(){}
+    function toggleTimerVisible(){}
+    // ========================
+    function fmtTime(ms) {
+        var t = ms / 1000;
+        return Math.floor(t/60).toString().padStart(2,'0') + ':' + (t%60).toFixed(1).padStart(4,'0');
+    }
+
+    var allAnswers = [];
+    document.querySelectorAll('.drop-zone-inline').forEach(function(z) { allAnswers.push(z.getAttribute('data-ans')); });
+
+    var DISTRACTORS = [
+        '0','1','2','3','4','5','6','7','8','10','12','15','20','24','30','40','50','60','80','100',
+        '200','300','500','600','800','1200','1500','1800',
+        '−0.5','−1','−2','−3','−60','−200'
+    ];
+
+    function buildChoices() {
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            if (z.getAttribute('data-built') === '1') return;
+            z.setAttribute('data-built', '1');
+            var ans = z.getAttribute('data-ans');
+            var pool = [...new Set(allAnswers.filter(function(a){ return a !== ans; }))];
+            pool.sort(function(){ return Math.random()-0.5; });
+            var distractors = pool.slice(0,3);
+            var extra = DISTRACTORS.filter(function(a){ return a!==ans && distractors.indexOf(a)===-1; });
+            extra.sort(function(){ return Math.random()-0.5; });
+            while (distractors.length < 3 && extra.length > 0) distractors.push(extra.shift());
+            var choices = [ans].concat(distractors.slice(0,3));
+            choices.sort(function(){ return Math.random()-0.5; });
+
+            var grp = document.createElement('div');
+            grp.className = 'choice-group';
+            choices.forEach(function(c) {
+                var btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = c;
+                btn.setAttribute('data-choice', c);
+                btn.onclick = function() { selectChoice(z, this, c); };
+                grp.appendChild(btn);
+            });
+            z.parentNode.insertBefore(grp, z.nextSibling);
+        });
+    }
+
+    function selectChoice(zone, btn, val) {
+        btn.parentNode.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        zone.setAttribute('data-filled', val);
+        zone.innerText = val;
+        zone.classList.remove('correct','wrong');
+    }
+
+    function zCl(z) {
+        z.removeAttribute('data-filled'); z.innerText = ''; z.classList.remove('correct','wrong');
+        if (z.nextElementSibling && z.nextElementSibling.classList.contains('choice-group'))
+            z.nextElementSibling.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected','btn-correct','btn-wrong'); });
+    }
+
+    function chAn() {
+        var allCorrect = true;
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            var cur = z.getAttribute('data-filled') || '';
+            var grp = z.nextElementSibling;
+            if (cur === ans) {
+                z.classList.add('correct'); z.classList.remove('wrong');
+                if (grp && grp.classList.contains('choice-group'))
+                    grp.querySelectorAll('.choice-btn').forEach(function(b){ if(b.getAttribute('data-choice')===ans) b.classList.add('btn-correct'); });
+            } else {
+                allCorrect = false;
+                if (grp && grp.classList.contains('choice-group'))
+                    grp.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); b.classList.add('btn-wrong'); });
+                z.innerText = ''; z.removeAttribute('data-filled'); z.classList.remove('wrong');
+                setTimeout(function(){ if(grp) grp.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('btn-wrong'); }); }, 600);
+            }
+        });
+        if (allCorrect) {
+            clearInterval(tI);
+            var elapsed = Date.now() - sT;
+            if (bestTime === null || elapsed < bestTime) {
+                bestTime = elapsed;
+            }
+            startCnf();
+        } else {
+            var wbc = document.querySelector('.word-bank-container');
+            wbc.classList.remove('shake'); void wbc.offsetWidth; wbc.classList.add('shake');
+            setTimeout(function(){ wbc.classList.remove('shake'); }, 500);
+        }
+    }
+
+    function shMo() {
+        clearInterval(tI);
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z) {
+            var ans = z.getAttribute('data-ans');
+            z.setAttribute('data-filled', ans); z.innerText = ans; z.classList.remove('correct','wrong');
+            var grp = z.nextElementSibling;
+            if (grp && grp.classList.contains('choice-group'))
+                grp.querySelectorAll('.choice-btn').forEach(function(b){
+                    b.classList.remove('selected','btn-correct','btn-wrong');
+                    if(b.getAttribute('data-choice')===ans) b.classList.add('selected');
+                });
+        });
+        document.getElementById('wordBank').innerHTML = '<span style="color:#888;font-size:0.9em;">お手本表示中。</span>';
+    }
+
+    function stCh() {
+        clearInterval(tI); sT = Date.now();
+        
+        document.querySelectorAll('.drop-zone-inline').forEach(function(z){ z.innerText=''; z.removeAttribute('data-filled'); z.classList.remove('correct','wrong'); });
+        document.querySelectorAll('.choice-group').forEach(function(g){ g.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected','btn-correct','btn-wrong'); }); });
+        document.getElementById('timerDisplay').innerText='00:00.0';
+    }
+
+    var cvs = document.getElementById("confetti-canvas");
+    var ctx2 = cvs.getContext("2d");
+    var pts = [], cnfRunning = false;
+    function startCnf() {
+        cvs.width=window.innerWidth; cvs.height=window.innerHeight; pts=[];
+        for(var i=0;i<180;i++) pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height-cvs.height,s:Math.random()*9+4,c:'hsl('+Math.floor(Math.random()*360)+',75%,65%)',sp:Math.random()*3+2});
+        cnfRunning=true; updateCnf();
+        setTimeout(function(){cnfRunning=false;ctx2.clearRect(0,0,cvs.width,cvs.height);pts=[];},4000);
+    }
+    function updateCnf() {
+        if(!cnfRunning) return;
+        ctx2.clearRect(0,0,cvs.width,cvs.height);
+        pts.forEach(function(p){p.y+=p.sp;ctx2.fillStyle=p.c;ctx2.fillRect(p.x,p.y,p.s,p.s);if(p.y>cvs.height)p.y=-20;});
+        requestAnimationFrame(updateCnf);
+    }
+
+    buildChoices();
+</script>
+
+<script>
+(function(){
+    var key='hirei27';
+    try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');d.count=(d.count||0)+1;d.lastDate=new Date().toLocaleDateString('ja-JP');localStorage.setItem('study_'+key,JSON.stringify(d));}catch(e){}
+})();
+</script>
+<div id="reviewBar" style="position:fixed;bottom:110px;left:16px;z-index:3000;">
+    <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);display:flex;align-items:center;gap:6px;">
+        <span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span>
+    </button>
+</div>
+<script>
+function toggleReview(){var key='hirei27';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');d.review=!d.review;localStorage.setItem('study_'+key,JSON.stringify(d));updateReviewBtn(d.review);}catch(e){}}
+function updateReviewBtn(r){document.getElementById('reviewIcon').innerText=r?'★':'☆';document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加';document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12';}
+(function(){var key='hirei27';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');updateReviewBtn(d.review||false);}catch(e){}})();
+</script>
+</body>
+</html>

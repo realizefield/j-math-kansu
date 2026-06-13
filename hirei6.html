@@ -89,10 +89,7 @@
 </a>
 
 <div class="sticky-header">
-    <nav class="page-nav"><a href="hirei5.html" class="nav-btn">◀ ⑥ 注意すべきグラフ</a><a href="index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei7.html" class="nav-btn">⑧ 確認（グラフ） ▶</a></nav>
-    <div class="challenge-panel">
-        <div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
-        <div id="recordDisplay" style="font-size:0.8em;">記録なし</div>
+    <nav class="page-nav"><a href="hirei5.html" class="nav-btn">◀ ⑥ 注意すべきグラフ</a><a href="hirei_index.html" class="nav-btn index-btn">📋 目次</a><a href="hirei7.html" class="nav-btn">⑧ 確認（グラフ） ▶</a></nav>
     </div>
     <div class="audio-summary-area">
         <button id="playBtn" class="speaker-btn-large" onclick="toggleAudio()">
@@ -545,7 +542,7 @@
         isR = true; sW = null;
         sT = Date.now(); clearInterval(tI);
         tI = setInterval(function() {
-            document.getElementById('timerDisplay').innerText = fmtTime(Date.now() - sT);
+            // timer disabled
         }, 100);
         var zones = document.querySelectorAll('.drop-zone-inline');
         var allAns = [];
@@ -620,6 +617,19 @@
     }
 
     shMo();
+
+    // 語群を自動表示
+    (function() {
+        var allAns = [].slice.call(document.querySelectorAll('.drop-zone-inline'))
+                       .map(function(z){ return z.getAttribute('data-ans'); }).filter(Boolean);
+        var b = document.getElementById('wordBank');
+        if (b && allAns.length > 0) {
+            b.innerHTML = '';
+            allAns.sort(function(){ return Math.random()-0.5; })
+                  .forEach(function(w){ addToBank(w); });
+        }
+    })();
+
 </script>
 
     <!-- 学習記録スクリプト -->

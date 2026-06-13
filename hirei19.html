@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <title>数学：⑲反比例　整数の問題</title>
 <style>
-:root{--bg-color:#f8f9fa;--drop-zone-bg:#fff9c4;}
-body{font-family:sans-serif;background-color:var(--bg-color);margin:0;padding:0 16px;overflow-x:hidden;box-sizing:border-box;}
+:root{--bg-color:#f8f9fa;--drop-zone-bg:#e1f5fe;}
+body{font-family: 'BIZ UDPGothic', sans-serif;background-color:var(--bg-color);margin:0;padding:0 16px;overflow-x:hidden;box-sizing:border-box;}
 .sticky-header{position:sticky;top:0;background:var(--bg-color);padding:10px 16px;z-index:1000;border-bottom:2px solid #ddd;box-sizing:border-box;}
 .page-nav{max-width:900px;margin:0 auto 10px;display:flex;justify-content:center;align-items:center;gap:8px;}
 .nav-btn{text-decoration:none;background:#7f8c8d;color:white;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:bold;transition:.2s;white-space:nowrap;}
@@ -40,7 +40,7 @@ body{font-family:sans-serif;background-color:var(--bg-color);margin:0;padding:0 
 .exp-box.orange{border-left-color:#e67e22;}.exp-box.orange h4{color:#e67e22;}
 .exp-box.red{border-left-color:#e74c3c;}.exp-box.red h4{color:#e74c3c;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.reveal-btn{background:#2980b9;color:white;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:8px;transition:background .15s;font-family:sans-serif;}
+.reveal-btn{background:#2980b9;color:white;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:8px;transition:background .15s;font-family: 'BIZ UDPGothic', sans-serif;}
 .reveal-btn:hover{background:#1a5276;}
 .step-area{font-size:14.5px;line-height:2.4;}
 .step-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
@@ -50,7 +50,7 @@ body{font-family:sans-serif;background-color:var(--bg-color);margin:0;padding:0 
 .phase-bar.orange{background:#fef5ec;border-left-color:#e67e22;color:#e67e22;}
 .math{font-style:italic;color:#1a5276;font-weight:bold;}
 .drop-zone-inline{display:inline-flex;align-items:center;justify-content:center;min-width:60px;min-height:2em;background:var(--drop-zone-bg);border:1.5px solid #aaa;vertical-align:middle;cursor:pointer;text-align:center;font-weight:bold;color:#c0392b;padding:2px 8px;border-radius:3px;font-size:14px;transition:background .15s;}
-.drop-zone-inline:hover{border-color:#e67e22;background:#fff3cd;}
+.drop-zone-inline:hover{border-color:#e67e22;background:#dbeeff;}
 .drop-zone-inline.correct{background:#d4edda!important;border:2px solid #28a745!important;color:#155724!important;}
 .drop-zone-inline.wrong{background:#f8d7da!important;border:2px solid #dc3545!important;}
 .drop-zone-inline.wide{min-width:90px;}
@@ -65,23 +65,67 @@ body{font-family:sans-serif;background-color:var(--bg-color);margin:0;padding:0 
 .controls{text-align:center;margin-top:30px;padding-bottom:100px;}
 .main-btn{padding:15px 30px;font-size:1.1rem;cursor:pointer;border:none;border-radius:8px;font-weight:bold;color:white;margin:0 8px;}
 #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
-</style>
+
+        /* === 追加スタイル === */
+        .unit-header { text-align: center; margin-bottom: 20px; padding: 14px 16px; background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); border-radius: 10px; border: 2px solid #90caf9; }
+        .unit-title  { font-size: 1.3em; font-weight: 900; color: #0d47a1; margin: 0; }
+        .unit-sub    { font-size: 0.88em; color: #666; margin-top: 4px; }
+        .intro-box { background: #e3f2fd; border: 2px solid #90caf9; border-left: 5px solid #1565c0; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; font-size: 14px; line-height: 2; }
+        .intro-box .intro-title { font-weight: 900; color: #0d47a1; font-size: 14px; margin-bottom: 6px; }
+        .hint-box { background: #f0f7ff; border-radius: 6px; padding: 8px 14px; margin: 6px 0 10px; font-size: 13px; color: #555; line-height: 1.9; }
+        .point-box .ph { font-weight: 900; color: #0d47a1; font-size: 14px; margin-bottom: 6px; }
+
+    
+        /* コンパクトヘッダー */
+        .sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 6px 16px; z-index: 1000; border-bottom: 2px solid #ddd; box-sizing: border-box; }
+        .header-row1 { max-width: 900px; margin: 0 auto 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .page-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .nav-btn { text-decoration: none; background: #7f8c8d; color: white; padding: 4px 10px; border-radius: 16px; font-size: 0.8em; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .nav-btn:hover { background: #34495e; }
+        .nav-btn.index-btn { background: #1a5276; }
+        .nav-btn.disabled { background: #ccc; pointer-events: none; color: #999; }
+        .timer-area { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .timer { font-size: 1.1em; color: #0d47a1; font-family: monospace; font-weight: bold; }
+        .header-row2 { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+        .audio-compact { display: flex; align-items: center; gap: 8px; }
+        .speaker-btn-small { background: #e67e22; color: white; border: none; cursor: pointer; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 0.82em; white-space: nowrap; }
+        .speaker-btn-small.playing { background: #c0392b; }
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+        input[type="range"] { cursor: pointer; width: 90px; }
+    </style>
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
 <div class="sticky-header">
-<nav class="page-nav">
-<a href="hirei18.html" class="nav-btn">&#9664; &#9315; 動点</a>
-<a href="index.html" class="nav-btn index-btn">&#128211; 目次</a>
-<span class="nav-btn disabled">次へ &#9654;</span>
-</nav>
-<div class="lv-banner">&#128213; 発展レベル &#8212; 約数を全部書き出すのがポイント！負の整数も忘れずに。</div>
-<div class="challenge-panel">
-<div>TIME: <span id="timerDisplay" class="timer">00:00.0</span></div>
-<div id="recordDisplay" style="font-size:.8em;">記録なし</div>
+    <div class="header-row1">
+        <nav class="page-nav">
+        <a href="hirei18.html" class="nav-btn">&#9664; &#9315; 動点</a>
+        <a href="hirei_index.html" class="nav-btn index-btn">&#128211; 目次</a>
+        </nav>
+        <div class="audio-compact">
+            <button id="playBtn" class="speaker-btn-small" onclick="toggleAudio()">
+                <span id="btnIcon">📢</span> <span id="btnText">解説を聴く</span>
+            </button>
+            <div class="volume-control">
+                <span style="font-size:0.78em;color:#e67e22;font-weight:bold;">音量</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.01" value="1">
+                <span id="volNum" style="font-size:0.78em;min-width:32px;">100%</span>
+            </div>
+        </div>
+    </div>
+    <div class="header-row2">
+        <div id="wordBankWrap" class="word-bank-wrap">
+            <span style="font-size:0.8em;font-weight:bold;color:#1565c0;margin-right:6px;">【語群】</span>
+            <div id="wordBank" class="word-bank"></div>
+        </div>
+    </div>
 </div>
-<div class="word-bank-container"><div id="wordBank" class="word-bank">「チャレンジ開始」をクリックしてください。</div></div>
-</div>
+
+    <div class="intro-box">
+        <div class="intro-title">💡 整数問題は約数を使う！</div>
+        <p>y = a/x で x, y がともに整数になるのは、<strong>x が a の約数（またはその負数）</strong>のときです。</p>
+        <p>a の約数を全部書き出し（正・負どちらも）、それぞれに対する y を求めましょう。</p>
+    </div>
 
 <div class="container">
 
@@ -206,13 +250,74 @@ function fmtTime(ms){var t=ms/1000;return Math.floor(t/60).toString().padStart(2
 function addToBank(word){var b=document.getElementById('wordBank');var d=document.createElement('div');d.className='drag-item';d.setAttribute('data-val',word);var el=makeFracEl(word);if(el){d.appendChild(el);d.style.padding='4px 10px';d.style.minHeight='2.2em';d.style.display='inline-flex';d.style.alignItems='center';}else{d.innerText=word;}d.onclick=function(){if(sW)sW.classList.remove('selected');if(sW===this){sW=null;return;}sW=this;this.classList.add('selected');};b.appendChild(d);}
 function zCl(z){if(!isR)return;var cur=getZoneVal(z);if(cur!==''){addToBank(cur);clearZoneEl(z);return;}if(sW){var val=sW.getAttribute('data-val')||sW.innerText;setZone(z,val);sW.remove();sW=null;}}
 function stCh(){isR=true;sW=null;sT=Date.now();clearInterval(tI);tI=setInterval(function(){document.getElementById('timerDisplay').innerText=fmtTime(Date.now()-sT);},100);var zones=document.querySelectorAll('.drop-zone-inline');var allAns=[];zones.forEach(function(z){allAns.push(z.getAttribute('data-ans'));clearZoneEl(z);});var b=document.getElementById('wordBank');b.innerHTML='';allAns.sort(function(){return Math.random()-.5;});allAns.forEach(function(w){addToBank(w);});}
-function chAn(){if(!isR)return;var ok=true;document.querySelectorAll('.drop-zone-inline').forEach(function(z){var ans=z.getAttribute('data-ans'),cur=getZoneVal(z);if(cur===ans){z.classList.add('correct');z.classList.remove('wrong');}else{z.classList.add('wrong');z.classList.remove('correct');ok=false;if(cur!==''){addToBank(cur);clearZoneEl(z);}}});if(ok){clearInterval(tI);isR=false;var el=Date.now()-sT;if(bestTime===null||el<bestTime){bestTime=el;document.getElementById('recordDisplay').innerText='🏆 ベスト: '+fmtTime(bestTime);}startCnf();}else{var wbc=document.querySelector('.word-bank-container');wbc.classList.remove('shake');void wbc.offsetWidth;wbc.classList.add('shake');setTimeout(function(){wbc.classList.remove('shake');},500);}}
+function chAn(){if(!isR)return;var ok=true;document.querySelectorAll('.drop-zone-inline').forEach(function(z){var ans=z.getAttribute('data-ans'),cur=getZoneVal(z);if(cur===ans){z.classList.add('correct');z.classList.remove('wrong');}else{z.classList.add('wrong');z.classList.remove('correct');ok=false;if(cur!==''){addToBank(cur);clearZoneEl(z);}}});if(ok){clearInterval(tI);isR=false;var el=Date.now()-sT;if(bestTime===null||el<bestTime){bestTime=el;}startCnf();}else{var wbc=document.querySelector('.word-bank-container');wbc.classList.remove('shake');void wbc.offsetWidth;wbc.classList.add('shake');setTimeout(function(){wbc.classList.remove('shake');},500);}}
 function shMo(){clearInterval(tI);isR=false;sW=null;document.querySelectorAll('.drop-zone-inline').forEach(function(z){setZone(z,z.getAttribute('data-ans'));z.classList.remove('correct','wrong');});document.getElementById('wordBank').innerHTML='<span style="color:#888;font-size:.9em;">お手本表示中。「チャレンジ開始」で練習できます。</span>';document.getElementById('timerDisplay').innerText='00:00.0';}
 var cvs=document.getElementById("confetti-canvas"),ctx2=cvs.getContext("2d"),pts=[],cnfRunning=false;
 function startCnf(){cvs.width=window.innerWidth;cvs.height=window.innerHeight;pts=[];for(var i=0;i<180;i++)pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height-cvs.height,s:Math.random()*9+4,c:'hsl('+Math.floor(Math.random()*360)+',75%,65%)',sp:Math.random()*3+2});cnfRunning=true;updateCnf();setTimeout(function(){cnfRunning=false;ctx2.clearRect(0,0,cvs.width,cvs.height);pts=[];},4000);}
 function updateCnf(){if(!cnfRunning)return;ctx2.clearRect(0,0,cvs.width,cvs.height);pts.forEach(function(p){p.y+=p.sp;ctx2.fillStyle=p.c;ctx2.fillRect(p.x,p.y,p.s,p.s);if(p.y>cvs.height)p.y=-20;});requestAnimationFrame(updateCnf);}
 (function(){var key='hirei19';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');d.count=(d.count||0)+1;d.lastDate=new Date().toLocaleDateString('ja-JP');localStorage.setItem('study_'+key,JSON.stringify(d));}catch(e){}})();
 shMo();
+
+    // ===== タイマー操作（コンパクトヘッダー対応） =====
+    var _timerRunning = false;
+    var _timerVisible = true;
+    var _lastElapsed = 0;
+
+    function toggleTimer() {}
+
+    function toggleTimerVisible() {}
+    // ==========================================
+
+
+    // stCh をラップしてタイマーフラグを更新
+    var _origStCh = stCh;
+    stCh = function() {
+        _timerRunning = true;
+        _lastElapsed = 0;
+        _origStCh();
+    };
+
+    // ページロード時に語群を自動表示
+    (function() {
+        var allAns = [].slice.call(document.querySelectorAll('.drop-zone-inline'))
+                       .map(function(z) { return z.getAttribute('data-ans'); })
+                       .filter(Boolean);
+        var b = document.getElementById('wordBank');
+        if (b && allAns.length > 0) {
+            b.innerHTML = '';
+            allAns.sort(function() { return Math.random() - 0.5; })
+                  .forEach(function(w) { addToBank(w); });
+        }
+        // word-bank-container を表示
+        var wbc = document.querySelector('.word-bank-container');
+        if (wbc) wbc.style.display = '';
+    })();
+
+    // 音声（音声ファイルなしの場合もエラーにならないよう処理）
+    var _audio17 = document.getElementById('mainAudio');
+    function toggleAudio() {
+        if (!_audio17) return;
+        if (_audio17.paused) { _audio17.play(); updatePlayUI(true); }
+        else { _audio17.pause(); updatePlayUI(false); }
+    }
+    function updatePlayUI(p) {
+        var ic = document.getElementById('btnIcon');
+        var bt = document.getElementById('btnText');
+        var pb = document.getElementById('playBtn');
+        if (ic) ic.innerText = p ? '⏸' : '📢';
+        if (bt) bt.innerText = p ? '停止中' : '解説を聴く';
+        if (pb) pb.classList.toggle('playing', p);
+    }
+    if (_audio17) {
+        _audio17.onended = function() { updatePlayUI(false); };
+        var vs = document.getElementById('volSlider');
+        if (vs) vs.addEventListener('input', function(e) {
+            _audio17.volume = e.target.value;
+            var vn = document.getElementById('volNum');
+            if (vn) vn.innerText = Math.round(e.target.value * 100) + '%';
+        });
+    }
+
 </script>
 <div style="position:fixed;bottom:110px;left:16px;z-index:3000;">
 <button id="reviewBtn" onclick="toggleReview()" style="background:#f39c12;color:white;border:none;border-radius:24px;padding:10px 18px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.2);display:flex;align-items:center;gap:6px;"><span id="reviewIcon">☆</span><span id="reviewText">復習リストに追加</span></button>
@@ -222,5 +327,6 @@ function toggleReview(){var key='hirei19';try{var d=JSON.parse(localStorage.getI
 function updateReviewBtn(r){document.getElementById('reviewIcon').innerText=r?'★':'☆';document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加';document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12';}
 (function(){var key='hirei19';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');updateReviewBtn(d.review||false);}catch(e){}})();
 </script>
+<audio id="mainAudio" src=""></audio>
 </body>
 </html>
