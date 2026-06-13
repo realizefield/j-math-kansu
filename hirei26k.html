@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>数学：㉖ 変域 確認問題</title>
+<style>
+:root{--bg:#f8f9fa;--bl:#1565c0;--bll:#e3f2fd;--blb:#90caf9;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'BIZ UDPGothic',sans-serif;background:var(--bg);padding:0 16px 80px;}
+.sh{position:sticky;top:0;background:var(--bg);padding:6px 16px;border-bottom:2px solid #ddd;z-index:1000;}
+.hr1{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.nb{text-decoration:none;background:#7f8c8d;color:white;padding:4px 10px;border-radius:16px;font-size:.8em;font-weight:bold;white-space:nowrap;}
+.nb:hover{background:#34495e;}.nb.idx{background:#1a5276;}
+.ct{max-width:900px;margin:20px auto;}
+.uh{text-align:center;margin-bottom:22px;padding:14px;background:linear-gradient(135deg,var(--bll),#e8f5e9);border-radius:10px;border:2px solid var(--blb);}
+.ut{font-size:1.25em;font-weight:900;color:#0d47a1;}.us{font-size:.88em;color:#666;margin-top:4px;}
+.qb{background:white;border:2px solid var(--blb);border-radius:10px;padding:20px 22px;}
+.qt{font-weight:900;font-size:1.05em;color:var(--bl);border-left:5px solid var(--bl);padding-left:10px;margin-bottom:12px;}
+.qtx{background:#f0f7ff;border-radius:6px;padding:12px 16px;font-size:14.5px;line-height:2;margin-bottom:14px;}
+.hbtn{display:inline-flex;align-items:center;gap:6px;background:#fff3e0;color:#e65100;border:2px solid #ffb74d;border-radius:20px;padding:5px 16px;font-size:.88em;font-weight:bold;cursor:pointer;margin:3px 0;transition:.15s;}
+.hbtn:hover{background:#ffe0b2;}
+.hc{display:none;background:#fffde7;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:10px 14px;margin:4px 0 10px;font-size:13.5px;line-height:2;color:#444;}
+.hc.on{display:block;}
+.hs{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.hn{background:#f9a825;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;flex-shrink:0;margin-top:3px;}
+.chs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.choice-card{background:white;border:2px solid var(--blb);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14px;font-weight:bold;color:var(--bl);display:flex;align-items:center;gap:10px;transition:.15s;}
+.cc:hover{background:var(--bll);border-color:var(--bl);}
+.choice-card.sel{background:#fff9c4;border-color:#f9a825;color:#333;}
+.choice-card.ok{background:#c8e6c9!important;border-color:#2e7d32!important;color:#1b5e20!important;}
+.choice-card.ng{background:#ffcdd2!important;border-color:#c62828!important;color:#b71c1c!important;}
+.clbl{background:var(--bl);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;}
+.choice-card.ok .clbl{background:#2e7d32;}.choice-card.ng .clbl{background:#c62828;}
+.abtn{width:100%;margin-top:14px;padding:13px;background:var(--bl);color:white;border:none;border-radius:8px;font-size:1em;font-weight:bold;cursor:pointer;}
+.abtn:hover{background:#0d47a1;}
+.rm{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:14px;font-weight:bold;display:none;}
+.rm.ok{background:#c8e6c9;color:#1b5e20;display:block;}
+.rm.ng{background:#ffcdd2;color:#b71c1c;display:block;}
+.gp{background:white;border:1.5px solid #ccc;border-radius:8px;padding:8px;text-align:center;}
+.gt{font-size:11px;font-weight:bold;color:var(--bl);margin-bottom:4px;}
+.gr{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin:10px 0;}
+.ec{flex:1;min-width:180px;font-size:14px;line-height:2;}
+.fw{display:inline-flex;align-items:center;gap:2px;vertical-align:middle;}
+.fr{display:inline-flex;flex-direction:column;align-items:center;font-size:.85em;line-height:1.1;}
+.fr .n{border-bottom:1.5px solid currentColor;padding:0 4px;font-weight:bold;text-align:center;}
+.fr .d{padding:0 4px;font-weight:bold;text-align:center;}
+.m{font-style:italic;color:#1a5276;font-weight:bold;}
+.mr{font-style:italic;color:#c0392b;font-weight:bold;}
+#cc{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+
+</style>
+</head>
+<body>
+<canvas id="cc"></canvas>
+<div class="sh"><div class="hr1">
+    <a href="hirei26.html" class="nb">◀ 単元に戻る</a>
+    <a href="hirei_index.html" class="nb idx">📋 目次</a>
+    <a href="hirei27k.html" class="nb">次の確認問題 ▶</a>
+</div></div>
+<div class="ct">
+    <div class="uh"><div class="ut">㉖　確認問題</div><div class="us">変域　|　x の変域から y の変域を求める</div></div>
+    <div class="qb">
+        <div class="qt">問題</div>
+        <div class="qtx">一次関数 <span class="m">y = −2x + 3</span> について、<span class="m">−1 ≦ x ≦ 2</span> のとき、<span class="m">y</span> の変域を求めよ。</div>
+        <div class="gr"><div class="gp">
+        <div class="gt">y = −2x + 3（−1 ≦ x ≦ 2）</div>
+        <svg width="220" height="220" viewBox="-110 -110 220 220">
+        <defs><clipPath id="c26"><rect x="-108" y="-108" width="216" height="216"/></clipPath></defs>
+<line x1="-100" y1="-110" x2="-100" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="-75" y1="-110" x2="-75" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="-50" y1="-110" x2="-50" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="-25" y1="-110" x2="-25" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="0" y1="-110" x2="0" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="25" y1="-110" x2="25" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="50" y1="-110" x2="50" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="75" y1="-110" x2="75" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="100" y1="-110" x2="100" y2="110" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="-100" x2="110" y2="-100" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="-75" x2="110" y2="-75" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="-50" x2="110" y2="-50" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="-25" x2="110" y2="-25" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="0" x2="110" y2="0" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="25" x2="110" y2="25" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="50" x2="110" y2="50" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="75" x2="110" y2="75" stroke="#e8e0d8" stroke-width=".5"/><line x1="-110" y1="100" x2="110" y2="100" stroke="#e8e0d8" stroke-width=".5"/>
+<line x1="-115" y1="0" x2="115" y2="0" stroke="#444" stroke-width="1.5"/>
+<polygon points="115,0 109,-3 109,3" fill="#444"/>
+<line x1="0" y1="115" x2="0" y2="-115" stroke="#444" stroke-width="1.5"/>
+<polygon points="0,-115 -3,-109 3,-109" fill="#444"/>
+<text x="110" y="13" font-size="11" fill="#444" font-style="italic">x</text>
+<text x="5" y="-108" font-size="11" fill="#444" font-style="italic">y</text>
+<text x="4" y="13" font-size="9" fill="#888">O</text>
+<text x="-100" y="13" font-size="9" fill="#888" text-anchor="middle">-4</text><text x="-75" y="13" font-size="9" fill="#888" text-anchor="middle">-3</text><text x="-50" y="13" font-size="9" fill="#888" text-anchor="middle">-2</text><text x="-25" y="13" font-size="9" fill="#888" text-anchor="middle">-1</text><text x="25" y="13" font-size="9" fill="#888" text-anchor="middle">1</text><text x="50" y="13" font-size="9" fill="#888" text-anchor="middle">2</text><text x="75" y="13" font-size="9" fill="#888" text-anchor="middle">3</text><text x="100" y="13" font-size="9" fill="#888" text-anchor="middle">4</text><text x="-4" y="104" font-size="9" fill="#888" text-anchor="end">-4</text><text x="-4" y="79" font-size="9" fill="#888" text-anchor="end">-3</text><text x="-4" y="54" font-size="9" fill="#888" text-anchor="end">-2</text><text x="-4" y="29" font-size="9" fill="#888" text-anchor="end">-1</text><text x="-4" y="-21" font-size="9" fill="#888" text-anchor="end">1</text><text x="-4" y="-46" font-size="9" fill="#888" text-anchor="end">2</text><text x="-4" y="-71" font-size="9" fill="#888" text-anchor="end">3</text><text x="-4" y="-96" font-size="9" fill="#888" text-anchor="end">4</text>
+        <!-- 全体を薄く -->
+        <line x1="-16.25" y1="-107.5" x2="91.25" y2="107.5" stroke="#90caf9" stroke-width="1.5" stroke-dasharray="6,4" clip-path="url(#c26)"/>
+        <!-- 変域部分を太く -->
+        <line x1="-25" y1="-100" x2="50" y2="25" stroke="#1565c0" stroke-width="3" clip-path="url(#c26)"/>
+        <!-- 端点 -->
+        <circle cx="-25" cy="-100" r="5" fill="#e74c3c" stroke="white" stroke-width="2"/>
+        <text x="-45" y="-100" font-size="9" fill="#e74c3c">(−1, 5)●</text>
+        <circle cx="50" cy="25" r="5" fill="#e74c3c" stroke="white" stroke-width="2"/>
+        <text x="53" y="34" font-size="9" fill="#e74c3c">(2, −1)●</text>
+        <!-- x=-1,x=2の垂線 -->
+        <line x1="-25" y1="0" x2="-25" y2="-100" stroke="#f9a825" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="50" y1="0" x2="50" y2="25" stroke="#f9a825" stroke-width="1" stroke-dasharray="3,3"/>
+        </svg></div>
+    <div class="ec">
+        <p>青い太線が変域 <span class="m">−1 ≦ x ≦ 2</span> の範囲</p>
+        <p>x の両端で y の値を調べます。</p>
+    </div></div>
+        <button class="hbtn" onclick="sh('h1')">💡 ヒント１：端点の y を求める</button>
+        <div class="hc" id="h1"><div class="hs"><span class="hn">1</span><span>x = −1 のとき：y = −2×(−1) + 3 = 2 + 3 = <strong>5</strong></span></div><div class="hs"><span class="hn">2</span><span>x = 2　のとき：y = −2×2 + 3 = −4 + 3 = <strong>−1</strong></span></div></div>
+        <button class="hbtn" onclick="sh('h2')">💡 ヒント２：大小を確認する</button>
+        <div class="hc" id="h2"><div class="hs"><span class="hn">1</span><span>傾き <span class="m">a = −2 &lt; 0</span>（右下がり）なので…</span></div><div class="hs"><span class="hn">2</span><span>x が大きいほど y は <strong>小さく</strong> なります。</span></div><div class="hs"><span class="hn">3</span><span>→ x = −1 で y 最大、x = 2 で y 最小</span></div></div>
+        <button class="hbtn" onclick="sh('h3')">💡 ヒント３：変域を不等号で表す</button>
+        <div class="hc" id="h3"><div class="hs"><span class="hn">1</span><span>y の最小値 = −1、最大値 = 5 なので…</span></div><div class="hs"><span class="hn">2</span><span>不等号を使って変域を表します。</span></div></div>
+
+        <div style="margin-top:14px;font-size:13px;font-weight:bold;color:var(--bl);">▼ 答えを選んでください</div>
+        <div class="chs">
+            <div class="choice-card" data-val="−1 ≦ y ≦ 5" onclick="sel(this,'−1 ≦ y ≦ 5')"><span class="clbl">ア</span><span>−1 ≦ y ≦ 5</span></div>
+            <div class="choice-card" data-val="1 ≦ y ≦ 5" onclick="sel(this,'1 ≦ y ≦ 5')"><span class="clbl">イ</span><span>1 ≦ y ≦ 5</span></div>
+            <div class="choice-card" data-val="−1 ≦ y ≦ 3" onclick="sel(this,'−1 ≦ y ≦ 3')"><span class="clbl">ウ</span><span>−1 ≦ y ≦ 3</span></div>
+            <div class="choice-card" data-val="−5 ≦ y ≦ 1" onclick="sel(this,'−5 ≦ y ≦ 1')"><span class="clbl">エ</span><span>−5 ≦ y ≦ 1</span></div>
+        </div>
+        <button class="abtn" onclick="chk()">✅ 答え合わせ</button>
+        <div class="rm" id="rm"></div>
+    </div>
+    <div style="text-align:center;margin-top:20px;">
+        <a href="hirei26.html" style="color:var(--bl);font-weight:bold;text-decoration:none;font-size:.95em;">
+            📖 単元の解説に戻って復習する
+        </a>
+    </div>
+</div>
+<script>
+var sel_v=null;
+function sh(id){var e=document.getElementById(id);if(e)e.classList.toggle('on');}
+function sel(el,v){
+    document.querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('sel');});
+    el.classList.add('sel');sel_v=v;
+    document.getElementById('rm').className='rm';
+}
+var ANS="−1 ≦ y ≦ 5";
+function chk(){
+    if(!sel_v){alert('選択肢を選んでください。');return;}
+    document.querySelectorAll('.choice-card').forEach(function(c){
+        if(c.getAttribute('data-val')===ANS)c.classList.add('ok');
+        else if(c.classList.contains('sel'))c.classList.add('ng');
+    });
+    var rm=document.getElementById('rm');
+    if(sel_v===ANS){rm.className='rm ok';rm.innerText='🎉 正解！ よくできました！';sCnf();}
+    else{
+        rm.className='rm ng';rm.innerText='❌ 不正解。ヒントをもう一度確認しましょう。';
+        sel_v=null;
+        setTimeout(function(){document.querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('sel','ng');});},1500);
+    }
+}
+var cv=document.getElementById('cc'),cx=cv.getContext('2d'),pp=[],cr=false;
+function sCnf(){
+    cv.width=window.innerWidth;cv.height=window.innerHeight;pp=[];
+    for(var i=0;i<200;i++)pp.push({x:Math.random()*cv.width,y:Math.random()*cv.height-cv.height,
+        s:Math.random()*9+4,c:'hsl('+Math.floor(Math.random()*360)+',75%,65%)',v:Math.random()*3+2});
+    cr=true;uCnf();
+    setTimeout(function(){cr=false;cx.clearRect(0,0,cv.width,cv.height);pp=[];},5000);
+}
+function uCnf(){
+    if(!cr)return;cx.clearRect(0,0,cv.width,cv.height);
+    pp.forEach(function(p){p.y+=p.v;cx.fillStyle=p.c;cx.fillRect(p.x,p.y,p.s,p.s);if(p.y>cv.height)p.y=-20;});
+    requestAnimationFrame(uCnf);
+}
+</script>
+</body></html>
