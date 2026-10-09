@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学：⑧正比例の式(1) 【4択・STEP版】</title>
+<style>
+:root{--primary:#1a5276;--blue:#1565c0;--orange:#e67e22;--ok:#16a34a;--ok-bg:#dcfce7;--ng:#dc2626;--ng-bg:#fee2e2;--bg:#f8f9fa;--card:#fff;--text:#1e293b;--sub:#64748b;}
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;padding:0 12px 80px;font-family:'BIZ UDPGothic','BIZ UDP Gothic','Meiryo',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;}
+.top{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:2px solid #ddd;padding:8px 4px;}
+.nav{max-width:900px;margin:0 auto;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.nav a{text-decoration:none;background:#7f8c8d;color:#fff;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:700;white-space:nowrap;}
+.nav a.idx{background:var(--primary);}
+.wrap{max-width:900px;margin:16px auto;}
+.title{background:var(--primary);color:#fff;border-radius:12px;padding:14px 18px;margin-bottom:14px;}
+.title h1{margin:0;font-size:1.25em;}
+.title small{opacity:.85;}
+.score{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#eaf0fb;border:1.5px solid #aed6f1;color:var(--primary);border-radius:10px;padding:8px 14px;margin-bottom:14px;font-weight:700;flex-wrap:wrap;}
+.score button{font:inherit;font-size:.85em;background:#fff;border:1.5px solid var(--primary);color:var(--primary);border-radius:20px;padding:4px 14px;cursor:pointer;}
+.howto{background:#eaf4fb;border:2px solid #90caf9;border-left:5px solid var(--blue);border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:.92em;}
+.howto b{color:var(--primary);}
+.card{background:var(--card);border:2px solid #90caf9;border-radius:12px;padding:16px 18px;margin-bottom:18px;}
+.card.done-ok{border-color:var(--ok);}
+.card.done-ng{border-color:var(--ng);}
+.tag{display:inline-block;background:var(--orange);color:#fff;font-weight:700;font-size:.8em;border-radius:6px;padding:1px 10px;margin-bottom:6px;}
+.q{background:#fef9ec;border-radius:8px;padding:10px 14px;font-size:1.05em;margin-bottom:12px;}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.btn{font:inherit;font-weight:700;border:none;border-radius:24px;padding:9px 18px;cursor:pointer;color:#fff;box-shadow:0 2px 5px rgba(0,0,0,.15);}
+.btn:disabled{background:#cbd5e1!important;color:#64748b;cursor:default;box-shadow:none;}
+.btn.step{background:var(--blue);}
+.btn.hint{background:#f59e0b;}
+.btn.exp{background:#7c3aed;}
+.btn.retry{background:#475569;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.choice{font:inherit;font-size:1.1em;font-weight:700;text-align:left;background:#fff;border:2px solid #90caf9;color:var(--primary);border-radius:10px;padding:12px 14px;cursor:pointer;min-height:56px;display:flex;align-items:center;gap:10px;}
+.choice:hover:not(:disabled){background:#eff6ff;}
+.choice .no{flex:0 0 auto;background:var(--blue);color:#fff;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:.85em;}
+.choice.ok{background:var(--ok-bg);border-color:var(--ok);}
+.choice.ok .no{background:var(--ok);}
+.choice.ng{background:var(--ng-bg);border-color:var(--ng);}
+.choice.ng .no{background:var(--ng);}
+.choice:disabled{cursor:default;}
+.math{font-size:1.05em;white-space:nowrap;}
+.math i{font-family:'Times New Roman','Noto Serif JP',serif;font-size:1.08em;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;line-height:1.15;font-size:.9em;}
+.frac span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px;}
+.frac span:last-child{padding:0 3px;}
+.steps{margin-bottom:10px;}
+.stepbox{background:#f0f6ff;border:1.5px solid #90caf9;border-left:5px solid var(--blue);border-radius:8px;padding:8px 14px;margin-bottom:8px;animation:pop .25s ease;}
+.stepbox .lab{display:inline-block;background:var(--blue);color:#fff;font-size:.78em;font-weight:700;border-radius:5px;padding:0 8px;margin-right:8px;}
+.stepbox .calc{display:none;margin-top:4px;padding-left:4px;color:var(--primary);font-weight:700;}
+.show-all .stepbox .calc{display:block;}
+.result{border-radius:10px;padding:10px 14px;margin-bottom:10px;font-weight:700;}
+.result.ok{background:var(--ok-bg);border:2px solid var(--ok);color:#166534;}
+.result.ng{background:var(--ng-bg);border:2px solid var(--ng);color:#991b1b;}
+.ansbox{background:#fff;border:3px solid var(--ok);border-radius:10px;padding:10px 14px;text-align:center;font-size:1.2em;font-weight:700;color:#166534;margin-top:6px;}
+@keyframes pop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+#hintOverlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:20px;}
+#hintOverlay.on{display:flex;}
+.bubble{background:#fffbeb;border:3px solid #f59e0b;border-radius:16px;padding:16px 20px;max-width:440px;font-size:1.05em;font-weight:700;color:#92400e;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .2s ease;}
+.bubble .h{font-size:.85em;color:#b45309;margin-bottom:6px;}
+.bubble .close{margin-top:10px;font-size:.8em;color:#a16207;font-weight:400;text-align:right;}
+.final{text-align:center;margin:18px 0;}
+@media (max-width:560px){.choices{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="top"><nav class="nav">
+  <a href="hirei7.html">◀ ⑦ 確認（グラフ）</a>
+  <a href="kansu_index.html" class="idx">📋 目次</a>
+  <a href="hirei9.html">⑨ 正比例の式(2) ▶</a>
+</nav></div>
+
+<div class="wrap">
+  <div class="title"><h1>⑧ 正比例の式(1)</h1><small>答えを4つの中から選ぼう（STEPとヒントつき）</small></div>
+
+  <div class="score"><span id="scoreText">一発正解　0 / 0 問</span><button type="button" id="resetAll">最初からやり直す</button></div>
+
+  <div class="howto">
+    <b>📌 使い方</b>　①問題を読む　②<b>STEP</b>を押すと解き方が1つずつ出ます（答えは出ません）　③困ったら<b>ヒント</b>　④答えを選ぼう。
+    正解なら「解説」で全部の解き方を確認、まちがえたら自動で全部の解説と答えが出ます。
+  </div>
+
+  <div id="list"></div>
+  <div class="final" id="finalMsg"></div>
+</div>
+
+<div id="hintOverlay"><div class="bubble"><div class="h">💡 ヒント</div><div id="hintText"></div><div class="close">（どこかをタップすると閉じます）</div></div></div>
+
+<script>
+/* ===== 問題データ（他の講に使うときは、この配列だけ差し替えます） =====
+   tag:見出し / q:問題文 / hint:ヒント / correct:正解 / wrongs:誤答3つ / pos:正解を置く位置(0〜3)
+   steps[].how:STEPボタンで出す解き方（答えは書かない） / steps[].calc:解説ボタンで出す途中計算と結果
+   数式中の {3/2} は分数、x y a は自動で斜体になります */
+var PROBLEMS = [
+ {
+  "tag": "例題",
+  "q": "y は x に比例し，x = 3 のとき，y = 9 である。y を x の式で表せ。",
+  "hint": "y = ax とおいて x と y を代入。a = y ÷ x で比例定数が出ます。",
+  "correct": "y = 3x",
+  "wrongs": [
+   "y = 27x",
+   "y = {1/3}x",
+   "y = 12x"
+  ],
+  "pos": 2,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = 3、y = 9 を y = ax に代入する。",
+    "calc": "9 = a × 3"
+   },
+   {
+    "how": "a を求める。両辺を 3 でわる（a = y ÷ x）。",
+    "calc": "a = 9 ÷ 3 = 3"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = 3x"
+   }
+  ],
+  "ans": "y = 3x"
+ },
+ {
+  "tag": "練習(1)〈三重県〉",
+  "q": "y は x に比例し，x = 3 のとき，y = 6 である。y を x の式で表せ。",
+  "hint": "y = ax とおいて x と y を代入。a = y ÷ x で比例定数が出ます。",
+  "correct": "y = 2x",
+  "wrongs": [
+   "y = 18x",
+   "y = {1/2}x",
+   "y = 9x"
+  ],
+  "pos": 0,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = 3、y = 6 を y = ax に代入する。",
+    "calc": "6 = a × 3"
+   },
+   {
+    "how": "a を求める。両辺を 3 でわる（a = y ÷ x）。",
+    "calc": "a = 6 ÷ 3 = 2"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = 2x"
+   }
+  ],
+  "ans": "y = 2x"
+ },
+ {
+  "tag": "練習(2)〈茨城県〉",
+  "q": "y は x に比例し，x = 5 のとき，y = 30 である。y を x の式で表せ。",
+  "hint": "y = ax とおいて x と y を代入。a = y ÷ x で比例定数が出ます。",
+  "correct": "y = 6x",
+  "wrongs": [
+   "y = 150x",
+   "y = {1/6}x",
+   "y = 35x"
+  ],
+  "pos": 3,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = 5、y = 30 を y = ax に代入する。",
+    "calc": "30 = a × 5"
+   },
+   {
+    "how": "a を求める。両辺を 5 でわる（a = y ÷ x）。",
+    "calc": "a = 30 ÷ 5 = 6"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = 6x"
+   }
+  ],
+  "ans": "y = 6x"
+ },
+ {
+  "tag": "練習(3)〈神奈川県〉",
+  "q": "y は x に比例し，x = 4 のとき，y = −8 である。y を x の式で表せ。",
+  "hint": "a = y ÷ x。マイナスの数をわるときは符号に注意しましょう。",
+  "correct": "y = −2x",
+  "wrongs": [
+   "y = 2x",
+   "y = −32x",
+   "y = −{1/2}x"
+  ],
+  "pos": 1,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = 4、y = −8 を y = ax に代入する。",
+    "calc": "−8 = a × 4"
+   },
+   {
+    "how": "a を求める。両辺を 4 でわる（a = y ÷ x）。",
+    "calc": "a = −8 ÷ 4 = −2"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = −2x"
+   }
+  ],
+  "ans": "y = −2x"
+ },
+ {
+  "tag": "練習(4)〈大阪府〉",
+  "q": "y は x に比例し，x = 6 のとき，y = 9 である。y を x の式で表せ。",
+  "hint": "わり切れないときは分数のまま。約分を忘れずに。",
+  "correct": "y = {3/2}x",
+  "wrongs": [
+   "y = {2/3}x",
+   "y = 54x",
+   "y = 15x"
+  ],
+  "pos": 2,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = 6、y = 9 を y = ax に代入する。",
+    "calc": "9 = a × 6"
+   },
+   {
+    "how": "a を求める。両辺を 6 でわる（a = y ÷ x）。",
+    "calc": "a = 9 ÷ 6 = {3/2}"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = {3/2}x"
+   }
+  ],
+  "ans": "y = {3/2}x"
+ },
+ {
+  "tag": "練習(5)",
+  "q": "y は x に比例し，x = −2 のとき，y = 10 である。y を x の式で表せ。",
+  "hint": "x がマイナスのとき、わる数もマイナスです。(＋)÷(−)＝(−)。",
+  "correct": "y = −5x",
+  "wrongs": [
+   "y = 5x",
+   "y = −20x",
+   "y = −{1/5}x"
+  ],
+  "pos": 0,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = −2、y = 10 を y = ax に代入する。",
+    "calc": "10 = a × (−2)"
+   },
+   {
+    "how": "a を求める。両辺を −2 でわる（a = y ÷ x）。",
+    "calc": "a = 10 ÷ (−2) = −5"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = −5x"
+   }
+  ],
+  "ans": "y = −5x"
+ },
+ {
+  "tag": "練習(6)",
+  "q": "y は x に比例し，x = 10 のとき，y = 4 である。y を x の式で表せ。",
+  "hint": "a = 4 ÷ 10 は、分数にして約分しましょう。",
+  "correct": "y = {2/5}x",
+  "wrongs": [
+   "y = {5/2}x",
+   "y = 40x",
+   "y = 14x"
+  ],
+  "pos": 3,
+  "steps": [
+   {
+    "how": "y は x に比例するので、y = ax とおく。",
+    "calc": "y = ax"
+   },
+   {
+    "how": "x = 10、y = 4 を y = ax に代入する。",
+    "calc": "4 = a × 10"
+   },
+   {
+    "how": "a を求める。両辺を 10 でわる（a = y ÷ x）。",
+    "calc": "a = 4 ÷ 10 = {2/5}"
+   },
+   {
+    "how": "求めた a を y = ax にもどして、式を完成させる。",
+    "calc": "y = {2/5}x"
+   }
+  ],
+  "ans": "y = {2/5}x"
+ }
+];
+
+var CIRCLED = ['①','②','③','④'];
+function fmt(s){
+  s = String(s).replace(/[a-z]/g, function(c){ return '<i>'+c+'</i>'; });
+  return s.replace(/\{(\d+)\/(\d+)\}/g, function(_, n, d){
+    return '<span class="frac"><span>'+n+'</span><span>'+d+'</span></span>';
+  });
+}
+var state = [];
+var scoreBox = document.getElementById('scoreText');
+
+function layout(p, shift){
+  var arr = p.wrongs.slice();
+  var pos = (p.pos + shift) % 4;
+  arr.splice(pos, 0, p.correct);
+  return arr;
+}
+function newState(){ return {shown:0, chosen:null, mode:'play', first:null, shift:0}; }
+
+function render(){
+  var list = document.getElementById('list');
+  list.innerHTML = '';
+  PROBLEMS.forEach(function(p, i){
+    var st = state[i];
+    var card = document.createElement('div');
+    card.className = 'card' + (st.mode==='ok' ? ' done-ok' : '') + (st.mode==='ng' ? ' done-ng' : '');
+    var showAll = (st.mode==='ng') || (st.mode==='exp');
+    var h = '<span class="tag">'+p.tag+'</span><div class="q">'+fmt(p.q)+'</div>';
+
+    var locked = (st.mode!=='play');
+    h += '<div class="tools">';
+    h += '<button type="button" class="btn step" data-act="step" data-i="'+i+'"'
+       + ((locked || st.shown>=p.steps.length) ? ' disabled' : '') + '>'
+       + (locked ? '👣 STEP' : (st.shown>=p.steps.length ? '👣 全STEP表示ずみ' : '👣 STEP '+(st.shown+1)+' を見る')) + '</button>';
+    h += '<button type="button" class="btn hint" data-act="hint" data-i="'+i+'"'+(locked?' disabled':'')+'>💡 ヒント</button>';
+    h += '</div>';
+
+    var order = layout(p, st.shift);
+    h += '<div class="choices">';
+    order.forEach(function(c, k){
+      var cls = 'choice';
+      if (st.mode!=='play'){
+        if (c===p.correct) cls += ' ok';
+        else if (st.chosen===k) cls += ' ng';
+      } else if (st.chosen===k) { cls += ' ng'; }
+      h += '<button type="button" class="'+cls+'" data-act="pick" data-i="'+i+'" data-k="'+k+'"'+(locked?' disabled':'')+'>'
+         + '<span class="no">'+CIRCLED[k]+'</span><span class="math">'+fmt(c)+'</span></button>';
+    });
+    h += '</div>';
+
+    if (st.mode==='ok'){
+      h += '<div class="result ok">⭕ 正解です！' + (st.first ? '（一発正解 🎉）' : '') + '</div>';
+      h += '<div class="tools"><button type="button" class="btn exp" data-act="exp" data-i="'+i+'">📖 解説を見る</button></div>';
+    }
+    if (st.mode==='ng'){
+      h += '<div class="result ng">❌ おしい！ 全部の解説と答えを出しました。解き方を確認しましょう。</div>';
+    }
+
+    var n = showAll ? p.steps.length : st.shown;
+    if (n>0){
+      h += '<div class="steps'+(showAll?' show-all':'')+'">';
+      for (var s=0; s<n; s++){
+        h += '<div class="stepbox"><span class="lab">STEP '+(s+1)+'</span>'+fmt(p.steps[s].how)
+           + '<div class="calc">→ <span class="math">'+fmt(p.steps[s].calc)+'</span></div></div>';
+      }
+      h += '</div>';
+    }
+    if (showAll){
+      h += '<div class="ansbox">答え　'+CIRCLED[order.indexOf(p.correct)]+'　<span class="math">'+fmt(p.ans)+'</span></div>';
+      h += '<div class="tools" style="margin-top:10px"><button type="button" class="btn retry" data-act="retry" data-i="'+i+'">🔁 もう一度ちょうせん</button></div>';
+    }
+    card.innerHTML = h;
+    list.appendChild(card);
+  });
+  updateScore();
+}
+
+function updateScore(){
+  var done = 0, firstOk = 0;
+  state.forEach(function(st){
+    if (st.mode!=='play'){ done++; }
+    if (st.first===true) firstOk++;
+  });
+  scoreBox.textContent = '一発正解　'+firstOk+' / '+PROBLEMS.length+' 問';
+  var fm = document.getElementById('finalMsg');
+  var allDone = state.every(function(st){ return st.mode==='ok' || st.mode==='exp'; });
+  fm.textContent = allDone ? ('🎉 全問おわり！ 一発正解は '+firstOk+' / '+PROBLEMS.length+' 問でした。') : '';
+}
+
+function openHint(i){
+  document.getElementById('hintText').innerHTML = fmt(PROBLEMS[i].hint);
+  document.getElementById('hintOverlay').classList.add('on');
+}
+/* ヒントは画面のどこをタップしても閉じる（中をタップしても閉じる） */
+document.getElementById('hintOverlay').addEventListener('click', function(){
+  this.classList.remove('on');
+});
+
+document.getElementById('list').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-act]');
+  if (!b || b.disabled) return;
+  var i = +b.getAttribute('data-i'), st = state[i], p = PROBLEMS[i], act = b.getAttribute('data-act');
+  if (act==='step'){
+    if (st.shown < p.steps.length) st.shown++;
+  } else if (act==='hint'){
+    openHint(i); return;
+  } else if (act==='pick'){
+    var k = +b.getAttribute('data-k');
+    var order = layout(p, st.shift);
+    st.chosen = k;
+    var ok = (order[k]===p.correct);
+    if (st.first===null) st.first = ok;
+    st.mode = ok ? 'ok' : 'ng';
+  } else if (act==='exp'){
+    st.mode = 'exp';
+  } else if (act==='retry'){
+    st.mode = 'play'; st.chosen = null; st.shown = 0; st.shift = (st.shift+1) % 4;
+  }
+  render();
+});
+
+document.getElementById('resetAll').addEventListener('click', function(){
+  state = PROBLEMS.map(newState); render(); window.scrollTo(0,0);
+});
+
+state = PROBLEMS.map(newState);
+render();
+</script>
+</body>
+</html>
