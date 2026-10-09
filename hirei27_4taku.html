@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学：㉗ 一次関数の利用 【4択・STEP版】</title>
+<style>
+:root{--primary:#1a5276;--blue:#1565c0;--orange:#e67e22;--ok:#16a34a;--ok-bg:#dcfce7;--ng:#dc2626;--ng-bg:#fee2e2;--bg:#f8f9fa;--card:#fff;--text:#1e293b;--sub:#64748b;}
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;padding:0 12px 80px;font-family:'BIZ UDPGothic','BIZ UDP Gothic','Meiryo',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;}
+.top{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:2px solid #ddd;padding:8px 4px;}
+.nav{max-width:900px;margin:0 auto;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.nav a{text-decoration:none;background:#7f8c8d;color:#fff;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:700;white-space:nowrap;}
+.nav a.idx{background:var(--primary);}
+.wrap{max-width:900px;margin:16px auto;}
+.title{background:var(--primary);color:#fff;border-radius:12px;padding:14px 18px;margin-bottom:14px;}
+.title h1{margin:0;font-size:1.25em;}
+.title small{opacity:.85;}
+.score{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#eaf0fb;border:1.5px solid #aed6f1;color:var(--primary);border-radius:10px;padding:8px 14px;margin-bottom:14px;font-weight:700;flex-wrap:wrap;}
+.score button{font:inherit;font-size:.85em;background:#fff;border:1.5px solid var(--primary);color:var(--primary);border-radius:20px;padding:4px 14px;cursor:pointer;}
+.howto{background:#eaf4fb;border:2px solid #90caf9;border-left:5px solid var(--blue);border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:.92em;}
+.howto b{color:var(--primary);}
+.card{background:var(--card);border:2px solid #90caf9;border-radius:12px;padding:16px 18px;margin-bottom:18px;}
+.card.done-ok{border-color:var(--ok);}
+.card.done-ng{border-color:var(--ng);}
+.tag{display:inline-block;background:var(--orange);color:#fff;font-weight:700;font-size:.8em;border-radius:6px;padding:1px 10px;margin-bottom:6px;}
+.q{background:#fef9ec;border-radius:8px;padding:10px 14px;font-size:1.05em;margin-bottom:12px;}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.btn{font:inherit;font-weight:700;border:none;border-radius:24px;padding:9px 18px;cursor:pointer;color:#fff;box-shadow:0 2px 5px rgba(0,0,0,.15);}
+.btn:disabled{background:#cbd5e1!important;color:#64748b;cursor:default;box-shadow:none;}
+.btn.step{background:var(--blue);}
+.btn.hint{background:#f59e0b;}
+.btn.exp{background:#7c3aed;}
+.btn.retry{background:#475569;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.choice{font:inherit;font-size:1.1em;font-weight:700;text-align:left;background:#fff;border:2px solid #90caf9;color:var(--primary);border-radius:10px;padding:12px 14px;cursor:pointer;min-height:56px;display:flex;align-items:center;gap:10px;}
+.choice:hover:not(:disabled){background:#eff6ff;}
+.choice .no{flex:0 0 auto;background:var(--blue);color:#fff;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:.85em;}
+.choice.ok{background:var(--ok-bg);border-color:var(--ok);}
+.choice.ok .no{background:var(--ok);}
+.choice.ng{background:var(--ng-bg);border-color:var(--ng);}
+.choice.ng .no{background:var(--ng);}
+.choice:disabled{cursor:default;}
+.math{font-size:1.05em;white-space:normal;overflow-wrap:anywhere;}
+.stepbox .calc{overflow-wrap:anywhere;}
+.math i{font-family:'Times New Roman','Noto Serif JP',serif;font-size:1.08em;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;line-height:1.15;font-size:.9em;}
+.frac span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px;}
+.frac span:last-child{padding:0 3px;}
+.steps{margin-bottom:10px;}
+.stepbox{background:#f0f6ff;border:1.5px solid #90caf9;border-left:5px solid var(--blue);border-radius:8px;padding:8px 14px;margin-bottom:8px;animation:pop .25s ease;}
+.stepbox .lab{display:inline-block;background:var(--blue);color:#fff;font-size:.78em;font-weight:700;border-radius:5px;padding:0 8px;margin-right:8px;}
+.stepbox .calc{display:none;margin-top:4px;padding-left:4px;color:var(--primary);font-weight:700;}
+.show-all .stepbox .calc{display:block;}
+.result{border-radius:10px;padding:10px 14px;margin-bottom:10px;font-weight:700;}
+.result.ok{background:var(--ok-bg);border:2px solid var(--ok);color:#166534;}
+.result.ng{background:var(--ng-bg);border:2px solid var(--ng);color:#991b1b;}
+.ansbox{background:#fff;border:3px solid var(--ok);border-radius:10px;padding:10px 14px;text-align:center;font-size:1.2em;font-weight:700;color:#166534;margin-top:6px;}
+@keyframes pop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+#hintOverlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:20px;}
+#hintOverlay.on{display:flex;}
+.bubble{background:#fffbeb;border:3px solid #f59e0b;border-radius:16px;padding:16px 20px;max-width:440px;font-size:1.05em;font-weight:700;color:#92400e;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .2s ease;}
+.bubble .h{font-size:.85em;color:#b45309;margin-bottom:6px;}
+.bubble .close{margin-top:10px;font-size:.8em;color:#a16207;font-weight:400;text-align:right;}
+.final{text-align:center;margin:18px 0;}
+.nav a.old{background:#fff;color:#64748b;border:1.5px solid #cbd5e1;}
+.point{background:#fffbeb;border:2px solid #fcd34d;border-left:5px solid #f59e0b;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:.95em;}
+.point b{color:#b45309;}
+table.tbl{border-collapse:collapse;margin:0 0 12px;font-size:1.05em;}
+table.tbl th,table.tbl td{border:1.5px solid #90caf9;padding:4px 12px;text-align:center;min-width:44px;}
+table.tbl th{background:#eaf4fb;color:var(--primary);}
+.gwrap{text-align:center;margin:0 0 12px;}
+.gwrap svg{max-width:260px;width:100%;height:auto;background:#fff;border:1.5px solid #90caf9;border-radius:8px;}
+@media (max-width:560px){.choices{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="top"><nav class="nav">
+  <a href="hirei26_4taku.html">◀ ㉖ 変域</a>
+  <a href="kansu_index.html" class="idx">📋 目次</a>
+  <a href="hirei28_4taku.html">㉘ 図形と一次関数 ▶</a>
+  <a href="hirei27.html" class="old">従来の穴埋め版</a>
+</nav></div>
+
+<div class="wrap">
+  <div class="title"><h1>㉗ 一次関数の利用</h1><small>文章題を一次関数で表す（答えを4つの中から選ぼう・STEPとヒントつき）</small></div>
+
+  <div class="score"><span id="scoreText">一発正解　0 / 0 問</span><button type="button" id="resetAll">最初からやり直す</button></div>
+
+  <div class="howto">
+    <b>📌 使い方</b>　①問題を読む　②<b>STEP</b>を押すと解き方が1つずつ出ます（答えは出ません）　③困ったら<b>ヒント</b>　④答えを選ぼう。
+    正解なら「解説」で全部の解き方を確認、まちがえたら自動で全部の解説と答えが出ます。
+  </div>
+
+  <div class="point"><b>📌 ポイント</b>　文章題：はじめの量 ＝ 切片、1 あたりの変化 ＝ 傾き（減るときはマイナス）。「○になるのは？」は y に代入して x を求める。</div>
+
+  <div id="list"></div>
+  <div class="final" id="finalMsg"></div>
+</div>
+
+<div id="hintOverlay"><div class="bubble"><div class="h">💡 ヒント</div><div id="hintText"></div><div class="close">（どこかをタップすると閉じます）</div></div></div>
+
+<script>
+/* ===== 問題データ（他の講に使うときは、この配列だけ差し替えます） =====
+   tag:見出し / q:問題文 / hint:ヒント / correct:正解 / wrongs:誤答3つ / pos:正解を置く位置(0〜3)
+   steps[].how:STEPボタンで出す解き方（答えは書かない） / steps[].calc:解説ボタンで出す途中計算と結果
+   数式中の {3/2} は分数、x y a は自動で斜体になります */
+var PROBLEMS = [
+ {
+  "tag": "例題①",
+  "q": "水槽に水が 80 L 入っている。毎分 3 L の割合で水を抜いていく。水を抜き始めてから x 分後の水量を y L とするとき、y を x の式で表せ。",
+  "hint": "「はじめの量」が切片、「1分あたりの変化」が傾き（減るのでマイナス）。",
+  "correct": "y = −3x + 80",
+  "wrongs": [
+   "y = 3x + 80",
+   "y = 80x − 3",
+   "y = −80x + 3"
+  ],
+  "pos": 0,
+  "steps": [
+   {
+    "how": "はじめの量（x = 0 のときの y）が切片。",
+    "calc": "切片 ＝ 80"
+   },
+   {
+    "how": "1 分あたりの変化が傾き。減っていくのでマイナスをつける。",
+    "calc": "傾き ＝ −3"
+   },
+   {
+    "how": "y = ax + b に入れる。",
+    "calc": "y = −3x + 80"
+   }
+  ],
+  "ans": "y = −3x + 80"
+ },
+ {
+  "tag": "例題②",
+  "q": "（①の水槽で）水量が 20 L になるのは、水を抜き始めてから何分後か。",
+  "hint": "①の式の y に 20 を入れて、x を求めます。",
+  "correct": "20 分後",
+  "wrongs": [
+   "60 分後",
+   "100 分後",
+   "180 分後"
+  ],
+  "pos": 1,
+  "steps": [
+   {
+    "how": "①の式の y に 20 を代入して、x の方程式にする。",
+    "calc": "20 ＝ −3x + 80"
+   },
+   {
+    "how": "数だけを右辺に移して整理する。",
+    "calc": "3x ＝ 80 − 20 ＝ 60"
+   },
+   {
+    "how": "x の係数でわる。",
+    "calc": "x ＝ 20　→　20 分後"
+   }
+  ],
+  "ans": "20 分後"
+ },
+ {
+  "tag": "練習(1)①",
+  "q": "家から学校まで 1800 m ある。分速 60 m で歩いて出発した。出発から x 分後の残りの距離を y m とするとき、y を x の式で表せ。",
+  "hint": "歩くと残りの距離は減ります。はじめは 1800 m。",
+  "correct": "y = −60x + 1800",
+  "wrongs": [
+   "y = 60x + 1800",
+   "y = 60x − 1800",
+   "y = −1800x + 60"
+  ],
+  "pos": 2,
+  "steps": [
+   {
+    "how": "出発した時（x = 0）の残り距離が切片。",
+    "calc": "切片 ＝ 1800"
+   },
+   {
+    "how": "1 分あたり減る距離が傾き（減るのでマイナス）。",
+    "calc": "傾き ＝ −60"
+   },
+   {
+    "how": "y = ax + b に入れる。",
+    "calc": "y = −60x + 1800"
+   }
+  ],
+  "ans": "y = −60x + 1800"
+ },
+ {
+  "tag": "練習(1)②",
+  "q": "（①と同じ状況で）残りの距離が 600 m になるのは、出発から何分後か。",
+  "hint": "①の式の y に 600 を入れて、x を求めます。",
+  "correct": "20 分後",
+  "wrongs": [
+   "10 分後",
+   "30 分後",
+   "1200 分後"
+  ],
+  "pos": 3,
+  "steps": [
+   {
+    "how": "①の式の y に 600 を代入する。",
+    "calc": "600 ＝ −60x + 1800"
+   },
+   {
+    "how": "x の項だけを左辺に集めて整理する。",
+    "calc": "60x ＝ 1800 − 600 ＝ 1200"
+   },
+   {
+    "how": "x の係数でわって x を求める。",
+    "calc": "x ＝ 20　→　20 分後"
+   }
+  ],
+  "ans": "20 分後"
+ },
+ {
+  "tag": "練習(2)①",
+  "q": "タクシーの料金 y 円は、乗車距離 x km の一次関数になっている。3 km で 1100 円、8 km で 2100 円のとき、y を x の式で表せ。",
+  "hint": "2 点 (3, 1100)、(8, 2100) を通る直線の式を求めます。",
+  "correct": "y = 200x + 500",
+  "wrongs": [
+   "y = 500x + 200",
+   "y = 200x − 500",
+   "y = 275x + 275"
+  ],
+  "pos": 2,
+  "steps": [
+   {
+    "how": "傾き ＝ （料金の増加）÷（距離の増加）で求める。",
+    "calc": "a ＝ (2100 − 1100) ÷ (8 − 3) ＝ 1000 ÷ 5 ＝ 200"
+   },
+   {
+    "how": "y = ax + b に 1 点を代入して b を求める。",
+    "calc": "1100 ＝ 200 × 3 ＋ b　より　b ＝ 500"
+   },
+   {
+    "how": "a と b を y = ax + b に入れる。",
+    "calc": "y = 200x + 500"
+   }
+  ],
+  "ans": "y = 200x + 500"
+ },
+ {
+  "tag": "練習(2)②",
+  "q": "（①のタクシーで）5 km のときの料金はいくらか。",
+  "hint": "①の式の x に 5 を入れます。",
+  "correct": "1500 円",
+  "wrongs": [
+   "1000 円",
+   "1300 円",
+   "1700 円"
+  ],
+  "pos": 0,
+  "steps": [
+   {
+    "how": "①の式の x に 5 を代入する。",
+    "calc": "y ＝ 200 × 5 ＋ 500"
+   },
+   {
+    "how": "かけ算を先に計算する。",
+    "calc": "y ＝ 1000 ＋ 500"
+   },
+   {
+    "how": "単位をつけて答える。",
+    "calc": "1500 円"
+   }
+  ],
+  "ans": "1500 円"
+ },
+ {
+  "tag": "練習(3)①",
+  "q": "ろうそくに火をつけると、毎分 0.5 cm の割合で短くなる。最初の長さは 20 cm であった。火をつけてから x 分後の長さを y cm とするとき、y を x の式で表せ。",
+  "hint": "最初の長さが切片、1 分あたり短くなる長さが傾き（マイナス）。",
+  "correct": "y = −0.5x + 20",
+  "wrongs": [
+   "y = 0.5x + 20",
+   "y = 20x − 0.5",
+   "y = −20x + 0.5"
+  ],
+  "pos": 1,
+  "steps": [
+   {
+    "how": "最初の長さが切片。",
+    "calc": "切片 ＝ 20"
+   },
+   {
+    "how": "1 分あたり短くなる長さが傾き。短くなるのでマイナスをつける。",
+    "calc": "傾き ＝ −0.5"
+   },
+   {
+    "how": "y = ax + b に入れる。",
+    "calc": "y = −0.5x + 20"
+   }
+  ],
+  "ans": "y = −0.5x + 20"
+ },
+ {
+  "tag": "練習(3)②",
+  "q": "（①と同じ状況で）ろうそくの長さが 8 cm になるのは、火をつけてから何分後か。",
+  "hint": "①の式の y に 8 を入れて、x を求めます。",
+  "correct": "24 分後",
+  "wrongs": [
+   "12 分後",
+   "16 分後",
+   "40 分後"
+  ],
+  "pos": 3,
+  "steps": [
+   {
+    "how": "①の式の y に 8 を代入する。",
+    "calc": "8 ＝ −0.5x + 20"
+   },
+   {
+    "how": "整理して、x の項を求める。",
+    "calc": "0.5x ＝ 20 − 8 ＝ 12"
+   },
+   {
+    "how": "x の係数 0.5 でわる。",
+    "calc": "x ＝ 12 ÷ 0.5 ＝ 24　→　24 分後"
+   }
+  ],
+  "ans": "24 分後"
+ },
+ {
+  "tag": "練習(4)①",
+  "q": "ある駐車場の料金は、最初の 30 分が 300 円で、その後は 10 分ごとに 100 円が加算される。駐車時間を x 分（30 ≦ x）、料金を y 円とするとき、y を x の式で表せ。",
+  "hint": "30 分をこえた分は「（x − 30）分」。10 分あたり 100 円は 1 分あたり 10 円。",
+  "correct": "y = 10x",
+  "wrongs": [
+   "y = 10x + 300",
+   "y = 100x + 300",
+   "y = 10x − 300"
+  ],
+  "pos": 0,
+  "steps": [
+   {
+    "how": "30 分をこえた時間は（x − 30）分。10 分で 100 円なので、1 分あたりの加算は 10 円。",
+    "calc": "加算分 ＝ 10 × (x − 30)"
+   },
+   {
+    "how": "最初の 300 円に加算分をたす。",
+    "calc": "y ＝ 300 ＋ 10(x − 30)"
+   },
+   {
+    "how": "かっこをはずして整理する。",
+    "calc": "y ＝ 300 ＋ 10x − 300 ＝ 10x"
+   }
+  ],
+  "ans": "y = 10x"
+ },
+ {
+  "tag": "練習(4)②",
+  "q": "（①の駐車場で）90 分駐車したときの料金はいくらか。",
+  "hint": "①の式の x に 90 を入れます。",
+  "correct": "900 円",
+  "wrongs": [
+   "600 円",
+   "1000 円",
+   "1200 円"
+  ],
+  "pos": 2,
+  "steps": [
+   {
+    "how": "①の式の x に 90 を代入する。",
+    "calc": "y ＝ 10 × 90"
+   },
+   {
+    "how": "計算する。",
+    "calc": "y ＝ 900"
+   },
+   {
+    "how": "単位をつけて答える。",
+    "calc": "900 円"
+   }
+  ],
+  "ans": "900 円"
+ }
+];
+
+var CIRCLED = ['①','②','③','④'];
+function fmt(s){
+  s = String(s).replace(/[xyab]/g, function(c){ return '<i>'+c+'</i>'; }).replace(/\n/g, '<br>');
+  return s.replace(/\{(\d+)\/(\d+)\}/g, function(_, n, d){
+    return '<span class="frac"><span>'+n+'</span><span>'+d+'</span></span>';
+  });
+}
+function tableHtml(tb){
+  function cells(arr){ return arr.map(function(v){ return '<td>'+String(v).replace('-','−')+'</td>'; }).join(''); }
+  return '<table class="tbl"><tr><th>'+fmt('x')+'</th>'+cells(tb.x)+'</tr><tr><th>'+fmt('y')+'</th>'+cells(tb.y)+'</tr></table>';
+}
+function graphSvg(g){
+  var O=130, U=24, N=5, a=g.a[0]/g.a[1], b=g.b[0]/g.b[1], s='';
+  function X(x){ return O+x*U; } function Y(y){ return O-y*U; }
+  for (var i=-N;i<=N;i++){
+    s += '<line x1="'+X(i)+'" y1="'+Y(-N)+'" x2="'+X(i)+'" y2="'+Y(N)+'" stroke="#dbeafe" stroke-width="1"/>';
+    s += '<line x1="'+X(-N)+'" y1="'+Y(i)+'" x2="'+X(N)+'" y2="'+Y(i)+'" stroke="#dbeafe" stroke-width="1"/>';
+  }
+  s += '<line x1="'+X(-N-0.4)+'" y1="'+Y(0)+'" x2="'+X(N+0.4)+'" y2="'+Y(0)+'" stroke="#334155" stroke-width="1.6"/>';
+  s += '<line x1="'+X(0)+'" y1="'+Y(-N-0.4)+'" x2="'+X(0)+'" y2="'+Y(N+0.4)+'" stroke="#334155" stroke-width="1.6"/>';
+  s += '<text x="'+(X(N)+10)+'" y="'+(Y(0)+16)+'" font-size="13" font-style="italic" fill="#334155">x</text>';
+  s += '<text x="'+(X(0)+8)+'" y="'+(Y(N)-4)+'" font-size="13" font-style="italic" fill="#334155">y</text>';
+  s += '<text x="'+(X(0)-12)+'" y="'+(Y(0)+13)+'" font-size="10" fill="#64748b">O</text>';
+  for (var k=-4;k<=4;k++){ if(!k) continue;
+    var lab = String(k).replace('-','−');
+    s += '<text x="'+X(k)+'" y="'+(Y(0)+13)+'" font-size="9" text-anchor="middle" fill="#64748b">'+lab+'</text>';
+    s += '<text x="'+(X(0)-5)+'" y="'+(Y(k)+3)+'" font-size="9" text-anchor="end" fill="#64748b">'+lab+'</text>';
+  }
+  var pts=[]; for (var x=-N; x<=N+1e-9; x+=0.05){ var y=a*x+b; if (y>=-N-1e-9 && y<=N+1e-9) pts.push(X(x).toFixed(1)+','+Y(y).toFixed(1)); }
+  s += '<polyline points="'+pts.join(' ')+'" fill="none" stroke="#e11d48" stroke-width="2.4"/>';
+  (g.pts||[]).forEach(function(p){ s += '<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="4.5" fill="#1565c0" stroke="#fff" stroke-width="1.5"/>'; });
+  return '<div class="gwrap"><svg viewBox="0 0 260 260" role="img" aria-label="一次関数のグラフ">'+s+'</svg></div>';
+}
+var state = [];
+var scoreBox = document.getElementById('scoreText');
+
+function layout(p, shift){
+  var arr = p.wrongs.slice();
+  var pos = (p.pos + shift) % 4;
+  arr.splice(pos, 0, p.correct);
+  return arr;
+}
+function newState(){ return {shown:0, chosen:null, mode:'play', first:null, shift:0}; }
+
+function render(){
+  var list = document.getElementById('list');
+  list.innerHTML = '';
+  PROBLEMS.forEach(function(p, i){
+    var st = state[i];
+    var card = document.createElement('div');
+    card.className = 'card' + (st.mode==='ok' ? ' done-ok' : '') + (st.mode==='ng' ? ' done-ng' : '');
+    var showAll = (st.mode==='ng') || (st.mode==='exp');
+    var h = '<span class="tag">'+p.tag+'</span><div class="q">'+fmt(p.q)+'</div>'
+          + (p.table ? tableHtml(p.table) : '') + (p.graph ? graphSvg(p.graph) : '');
+
+    var locked = (st.mode!=='play');
+    h += '<div class="tools">';
+    h += '<button type="button" class="btn step" data-act="step" data-i="'+i+'"'
+       + ((locked || st.shown>=p.steps.length) ? ' disabled' : '') + '>'
+       + (locked ? '👣 STEP' : (st.shown>=p.steps.length ? '👣 全STEP表示ずみ' : '👣 STEP '+(st.shown+1)+' を見る')) + '</button>';
+    h += '<button type="button" class="btn hint" data-act="hint" data-i="'+i+'"'+(locked?' disabled':'')+'>💡 ヒント</button>';
+    h += '</div>';
+
+    var order = layout(p, st.shift);
+    h += '<div class="choices">';
+    order.forEach(function(c, k){
+      var cls = 'choice';
+      if (st.mode!=='play'){
+        if (c===p.correct) cls += ' ok';
+        else if (st.chosen===k) cls += ' ng';
+      } else if (st.chosen===k) { cls += ' ng'; }
+      h += '<button type="button" class="'+cls+'" data-act="pick" data-i="'+i+'" data-k="'+k+'"'+(locked?' disabled':'')+'>'
+         + '<span class="no">'+CIRCLED[k]+'</span><span class="math">'+fmt(c)+'</span></button>';
+    });
+    h += '</div>';
+
+    if (st.mode==='ok'){
+      h += '<div class="result ok">⭕ 正解です！' + (st.first ? '（一発正解 🎉）' : '') + '</div>';
+      h += '<div class="tools"><button type="button" class="btn exp" data-act="exp" data-i="'+i+'">📖 解説を見る</button></div>';
+    }
+    if (st.mode==='ng'){
+      h += '<div class="result ng">❌ おしい！ 全部の解説と答えを出しました。解き方を確認しましょう。</div>';
+    }
+
+    var n = showAll ? p.steps.length : st.shown;
+    if (n>0){
+      h += '<div class="steps'+(showAll?' show-all':'')+'">';
+      for (var s=0; s<n; s++){
+        h += '<div class="stepbox"><span class="lab">STEP '+(s+1)+'</span>'+fmt(p.steps[s].how)
+           + '<div class="calc">→ <span class="math">'+fmt(p.steps[s].calc)+'</span></div></div>';
+      }
+      h += '</div>';
+    }
+    if (showAll){
+      h += '<div class="ansbox">答え　'+CIRCLED[order.indexOf(p.correct)]+'　<span class="math">'+fmt(p.ans)+'</span></div>';
+      h += '<div class="tools" style="margin-top:10px"><button type="button" class="btn retry" data-act="retry" data-i="'+i+'">🔁 もう一度ちょうせん</button></div>';
+    }
+    card.innerHTML = h;
+    list.appendChild(card);
+  });
+  updateScore();
+}
+
+function updateScore(){
+  var done = 0, firstOk = 0;
+  state.forEach(function(st){
+    if (st.mode!=='play'){ done++; }
+    if (st.first===true) firstOk++;
+  });
+  scoreBox.textContent = '一発正解　'+firstOk+' / '+PROBLEMS.length+' 問';
+  var fm = document.getElementById('finalMsg');
+  var allDone = state.every(function(st){ return st.mode==='ok' || st.mode==='exp'; });
+  fm.textContent = allDone ? ('🎉 全問おわり！ 一発正解は '+firstOk+' / '+PROBLEMS.length+' 問でした。') : '';
+}
+
+function openHint(i){
+  document.getElementById('hintText').innerHTML = fmt(PROBLEMS[i].hint);
+  document.getElementById('hintOverlay').classList.add('on');
+}
+/* ヒントは画面のどこをタップしても閉じる（中をタップしても閉じる） */
+document.getElementById('hintOverlay').addEventListener('click', function(){
+  this.classList.remove('on');
+});
+
+document.getElementById('list').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-act]');
+  if (!b || b.disabled) return;
+  var i = +b.getAttribute('data-i'), st = state[i], p = PROBLEMS[i], act = b.getAttribute('data-act');
+  if (act==='step'){
+    if (st.shown < p.steps.length) st.shown++;
+  } else if (act==='hint'){
+    openHint(i); return;
+  } else if (act==='pick'){
+    var k = +b.getAttribute('data-k');
+    var order = layout(p, st.shift);
+    st.chosen = k;
+    var ok = (order[k]===p.correct);
+    if (st.first===null) st.first = ok;
+    st.mode = ok ? 'ok' : 'ng';
+  } else if (act==='exp'){
+    st.mode = 'exp';
+  } else if (act==='retry'){
+    st.mode = 'play'; st.chosen = null; st.shown = 0; st.shift = (st.shift+1) % 4;
+  }
+  render();
+});
+
+document.getElementById('resetAll').addEventListener('click', function(){
+  state = PROBLEMS.map(newState); render(); window.scrollTo(0,0);
+});
+
+state = PROBLEMS.map(newState);
+render();
+</script>
+</body>
+</html>
