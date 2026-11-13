@@ -110,6 +110,18 @@
         .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
         .line-float-btn:hover { transform: scale(1.1); }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -168,7 +180,7 @@
         <div class="q-row">
             <div class="q-badge">1</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button>
                     <span class="math">y = −3x + 5</span> の<strong>傾き</strong>を答えよ。
                 </div>
                 <div class="q-ans">
@@ -181,7 +193,7 @@
         <div class="q-row">
             <div class="q-badge">2</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button>
                     <span class="math">y = −3x + 5</span> の<strong>切片</strong>を答えよ。
                 </div>
                 <div class="q-ans">
@@ -194,7 +206,7 @@
         <div class="q-row">
             <div class="q-badge">3</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button>
                     次の式のうち <span class="math">y</span> が <span class="math">x</span> の一次関数であるものはどれか。<br>
                     ア <span class="math">y = 5x</span>　　イ <span class="math">y = x²</span>　　ウ <span class="math">y = 8</span>　　エ <span class="math">y = <span style="font-style:normal;">3/x</span></span>
                 </div>
@@ -208,7 +220,7 @@
         <div class="q-row">
             <div class="q-badge">4</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button>
                     一次関数 <span class="math">y = 4x − 3</span> について、<span class="math">x</span> が 1 から 3 まで増加するときの<strong>変化の割合</strong>を答えよ。
                 </div>
                 <div class="hint-box">▶ 一次関数の変化の割合は、どの範囲でも常に傾き <span class="math-p">a</span> と等しい。</div>
@@ -228,7 +240,7 @@
         <div class="q-row">
             <div class="q-badge">5</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button>
                     <span class="math">y = −x + 3</span> のグラフは右上がりか、右下がりか。
                 </div>
                 <div class="q-ans">
@@ -240,7 +252,7 @@
         <div class="q-row">
             <div class="q-badge">6</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h6')">💡 ヒント</button>
                     右のグラフの一次関数の式を求めよ。<br>
                     <span style="font-size:13px; color:#666;">（グラフは (0, −1) を通り、傾きが 2 の直線）</span>
                 </div>
@@ -315,7 +327,7 @@
         <div class="q-row">
             <div class="q-badge">7</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h7')">💡 ヒント</button>
                     傾きが <span class="math">3</span>、点 <span class="math">(2, 7)</span> を通る一次関数の式を求めよ。
                 </div>
                 <div class="hint-box">▶ y = 3x + b に (2, 7) を代入 → b を求める。</div>
@@ -335,7 +347,7 @@
         <div class="q-row">
             <div class="q-badge">8</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h8')">💡 ヒント</button>
                     2 点 <span class="math">(0, 2)</span>、<span class="math">(3, 8)</span> を通る一次関数の式を求めよ。
                 </div>
                 <div class="hint-box">▶ 傾き ＝
@@ -375,7 +387,7 @@
         <div class="q-row">
             <div class="q-badge">9</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h9')">💡 ヒント</button>
                     一次関数 <span class="math">y = 2x + 1</span> において、<span class="math">1 ≦ x ≦ 3</span> のとき、<span class="math">y</span> の<strong>変域</strong>を求めよ。
                 </div>
                 <div class="hint-box">▶ 傾き＞0（右上がり）なので、x が最小のとき y も最小、x が最大のとき y も最大になる。</div>
@@ -407,7 +419,7 @@
         <div class="q-row">
             <div class="q-badge">10</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h10')">💡 ヒント</button>
                     2 直線 <span class="math">y = x + 1</span> と <span class="math">y = −x + 5</span> の交点の座標を求めよ。
                 </div>
                 <div class="graph-row">
@@ -494,7 +506,7 @@
         <div class="q-row">
             <div class="q-badge">11</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h11')">💡 ヒント</button>
                     3 点 A(0, 6)、B(−2, 0)、C(4, 0) を頂点とする三角形の面積を求めよ。
                 </div>
                 <div class="hint-box">▶ B・C が x 軸上 → 底辺 BC、高さ ＝ A の y 座標。</div>
@@ -528,7 +540,7 @@
         <div class="q-row">
             <div class="q-badge">12</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h12')">💡 ヒント</button>
                     水が 20 L 入った水槽から、毎分 2 L ずつ水を抜く。<br>
                     <span class="math">x</span> 分後の水の量を <span class="math">y</span> L として、<span class="math">y</span> を <span class="math">x</span> の式で表せ。
                 </div>
@@ -543,7 +555,7 @@
         <div class="q-row">
             <div class="q-badge">13</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h13')">💡 ヒント</button>
                     問12で、水が 0 L になるのは出発から何分後か。
                 </div>
                 <div class="hint-box">▶ y = 0 を代入して x を求める。</div>
@@ -563,7 +575,7 @@
         <div class="q-row">
             <div class="q-badge">14</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h14')">💡 ヒント</button>
                     長方形 OABC で OA = 4 cm、OC = 3 cm。<br>
                     点 P が O を出発して辺 OA 上を動く。<br>
                     OP = <span class="math">x</span> cm のとき、△OCP の面積 <span class="math">y</span> cm² を <span class="math">x</span> の式で表せ。<br>
@@ -596,7 +608,7 @@
         <div class="q-row">
             <div class="q-badge">15</div>
             <div class="q-body">
-                <div class="q-text">
+                <div class="q-text"><button class="hint-btn" onclick="showHint('h15')">💡 ヒント</button>
                     問14で、△OCP の面積が 3 cm² になるのは OP = 何 cm のときか。
                 </div>
                 <div class="hint-box">▶ y = 3/2 × x に y = 3 を代入する。</div>
@@ -830,6 +842,34 @@
 function toggleReview(){ var key='hirei30'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.review=!d.review; localStorage.setItem('study_'+key,JSON.stringify(d)); updateReviewBtn(d.review); }catch(e){} }
 function updateReviewBtn(r){ document.getElementById('reviewIcon').innerText=r?'★':'☆'; document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加'; document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12'; }
 (function(){ var key='hirei30'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"<b>y＝ax＋b</b> と見比べます。x の前の数が<span class=\"kw\">傾き a</span> です。（マイナスも一緒に読みます）",
+  'h2':"<b>y＝ax＋b</b> と見比べます。数だけの部分が<span class=\"kw\">切片 b</span> です。（符号に注意）",
+  'h3':"一次関数は <b>y＝ax＋b</b>（a≠0）の形です。<br>x²（2乗）、分母にある x、x がない式（y＝8 など）は、一次関数ではありません。",
+  'h4':"変化の割合は、一次関数ではどの範囲でも<span class=\"kw\">傾き a と同じ</span> です。",
+  'h5':"傾き a の符号を見ます。<br>a＞0 なら<b>右上がり</b>、a＜0 なら<b>右下がり</b>です。x の前の数に注目しましょう。",
+  'h6':"グラフが (0, −1) を通る → <span class=\"kw\">切片 b</span> がわかります。<br>傾きは 2。y＝ax＋b に当てはめます。",
+  'h7':"傾きが 3 なので <b>y＝3x＋b</b> とおき、点 (2, 7) の x、y を入れて b を求めます。",
+  'h8':"点 (0, 2) は y 軸上なので、切片はすぐ分かります。<br>傾き＝<span class=\"kw\">（y の差）÷（x の差）</span> を、2点 (0, 2)、(3, 8) から求めます。",
+  'h9':"x の両端 1 と 3 を式に入れて、y の値を求めます。<br>傾きが正（右上がり）なので、小さい方を左に書きます。",
+  'h10':"交点では、2つの式の y が同じです。<br>x＋1＝−x＋5 を解いて x を求め、どちらかの式に入れて y を求めます。",
+  'h11':"B、C が x 軸上にあるので、<b>底辺 BC＝（C の x）−（B の x）</b>、高さは A の y 座標です。<br>面積＝底辺×高さ÷2。",
+  'h12':"はじめの水量 20 L が<span class=\"kw\">切片</span>、毎分 2 L 減るので<span class=\"kw\">傾き</span>は<b>−2</b> です。",
+  'h13':"問12で求めた式に、<b>y＝0</b> を入れて、x を求めます。",
+  'h14':"△OCP の底辺は OC＝3 cm、高さは OP＝x cm です。<br>面積＝底辺×高さ÷2 で式をつくります。",
+  'h15':"問14で求めた式に、<b>y＝3</b> を入れて、x を求めます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>
