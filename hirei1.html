@@ -137,6 +137,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -331,7 +343,7 @@
         <div class="section-title">4. 練習問題：点の座標を答えよう</div>
         <div class="practice-area">
             <div class="graph-wrap">
-                <div class="graph-title">各点の座標は？</div>
+                <div class="graph-title">各点の座標は？<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
                 <svg width="240" height="240" viewBox="-120 -120 240 240">
                     <g stroke="#e0dbd0" stroke-width="0.5">
                         <line x1="-110" y1="-100" x2="-110" y2="100"/><line x1="-90" y1="-100" x2="-90" y2="100"/>
@@ -632,5 +644,19 @@
     })();
     </script>
 
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"点の座標は <b>(x, y)</b> の順です。<br>原点から、まず<b>横（x軸の方向）</b>に何目盛り、次に<b>縦（y軸の方向）</b>に何目盛りかを数えます。<br>右と上は＋、左と下は−です。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

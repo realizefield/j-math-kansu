@@ -134,6 +134,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -187,7 +199,7 @@
 
     <!-- ===== 例題 ===== -->
     <div class="example-box">
-        <div class="example-title">📖 例題</div>
+        <div class="example-title">📖 例題<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
         <p class="q-lead">次の表は，y が x に比例する関係を示している。</p>
 
         <div class="tbl-wrap">
@@ -204,7 +216,7 @@
         </div>
 
         <!-- (1) -->
-        <div class="sub-q">（1）y を x の式で表せ。</div>
+        <div class="sub-q">（1）y を x の式で表せ。<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
         <div class="step-area">
             <div class="step-row">
                 <span class="step-label">解）</span>
@@ -244,7 +256,7 @@
         </div>
 
         <!-- (2) -->
-        <div class="sub-q">（2）ア，イの値をそれぞれ求めよ。</div>
+        <div class="sub-q">（2）ア，イの値をそれぞれ求めよ。<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
         <div class="step-area">
             <div class="phase-bar">ア　x = 3 を代入</div>
             <div style="margin-left:50px;">
@@ -290,7 +302,7 @@
 
         <!-- (1) -->
         <div class="q-item">
-            <span class="q-num">（1）</span>
+            <span class="q-num">（1）<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></span>
             <div class="q-lead">次の表は，y が x に比例する関係を示している。</div>
             <div class="tbl-wrap">
                 <table class="prop-table">
@@ -304,7 +316,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="sub-q">① y を x の式で表せ。</div>
+            <div class="sub-q">① y を x の式で表せ。<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></div>
             <div class="step-area">
                 <div class="step-row">
                     <span class="step-label">解）</span>
@@ -337,7 +349,7 @@
                     <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="3x" onclick="zCl(this)"></span></div>
                 </div>
             </div>
-            <div class="sub-q">② ア，イの値をそれぞれ求めよ。</div>
+            <div class="sub-q">② ア，イの値をそれぞれ求めよ。<button class="hint-btn" onclick="showHint('h6')">💡 ヒント</button></div>
             <div class="step-area">
                 <div class="phase-bar">ア　x = 5 を代入</div>
                 <div style="margin-left:50px;">
@@ -379,7 +391,7 @@
 
         <!-- (2) -->
         <div class="q-item">
-            <span class="q-num">（2）</span>
+            <span class="q-num">（2）<button class="hint-btn" onclick="showHint('h7')">💡 ヒント</button></span>
             <div class="q-lead">次の表は，y が x に比例する関係を示している。</div>
             <div class="tbl-wrap">
                 <table class="prop-table">
@@ -393,7 +405,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="sub-q">① y を x の式で表せ。</div>
+            <div class="sub-q">① y を x の式で表せ。<button class="hint-btn" onclick="showHint('h8')">💡 ヒント</button></div>
             <div class="step-area">
                 <div class="step-row">
                     <span class="step-label">解）</span>
@@ -426,7 +438,7 @@
                     <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="-3/2 x" onclick="zCl(this)"></span></div>
                 </div>
             </div>
-            <div class="sub-q">② ア，イの値をそれぞれ求めよ。</div>
+            <div class="sub-q">② ア，イの値をそれぞれ求めよ。<button class="hint-btn" onclick="showHint('h9')">💡 ヒント</button></div>
             <div class="step-area">
                 <div class="phase-bar">ア　x = 6 を代入</div>
                 <div style="margin-left:50px;">
@@ -472,7 +484,7 @@
 
         <!-- (3) -->
         <div class="q-item">
-            <span class="q-num">（3）</span>
+            <span class="q-num">（3）<button class="hint-btn" onclick="showHint('h10')">💡 ヒント</button></span>
             <div class="q-lead">次の表は，y が x に比例する関係を示している。</div>
             <div class="tbl-wrap">
                 <table class="prop-table">
@@ -486,7 +498,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="sub-q">① y を x の式で表せ。</div>
+            <div class="sub-q">① y を x の式で表せ。<button class="hint-btn" onclick="showHint('h11')">💡 ヒント</button></div>
             <div class="step-area">
                 <div class="step-row">
                     <span class="step-label">解）</span>
@@ -519,7 +531,7 @@
                     <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="-3x" onclick="zCl(this)"></span></div>
                 </div>
             </div>
-            <div class="sub-q">② ア，イの値をそれぞれ求めよ。</div>
+            <div class="sub-q">② ア，イの値をそれぞれ求めよ。<button class="hint-btn" onclick="showHint('h12')">💡 ヒント</button></div>
             <div class="step-area">
                 <div class="phase-bar">ア　x = −5 を代入</div>
                 <div style="margin-left:50px;">
@@ -854,5 +866,30 @@
     })();
     </script>
 
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"表の中に、x も y も分かっているペアがあります。（x＝1、y＝−2）<br>y＝ax に入れて a を求め、式にします。<br>ア・イは、その式に値を入れて求めます。",
+  'h2':"表から、x と y が両方わかっているペア（x＝1、y＝−2 など）を見つけて、y＝ax に入れます。0 と 0 のペアは使えません。",
+  'h3':"<b>ア</b>：x＝3 のときの y → 式に x＝3 を入れます。<br><b>イ</b>：y＝−8 のときの x → 式に y＝−8 を入れて、x を求めます。",
+  'h4':"<b>① ②</b>の順に解きます。まず表から、x も y も分かっているペアを探し、y＝ax に入れて a を求めます。",
+  'h5':"表から、x と y が両方わかっているペア（x＝2、y＝6 など）を見つけて、y＝ax に入れます。0 と 0 のペアは使えません。",
+  'h6':"<b>ア</b>：x＝5 のときの y → ①の式に x＝5 を入れます。<br><b>イ</b>：y＝−9 のときの x → ①の式に y＝−9 を入れて、x を求めます。",
+  'h7':"まず表から、x も y も分かっているペア（x＝4、y＝−6 など）を探し、y＝ax に入れて a を求めます。",
+  'h8':"表から、x と y が両方わかっているペア（x＝4、y＝−6 など）を見つけて、y＝ax に入れます。",
+  'h9':"<b>ア</b>：x＝6 のときの y → ①の式に x＝6 を入れます。<br><b>イ</b>：y＝12 のときの x → ①の式に y＝12 を入れて、x を求めます。",
+  'h10':"まず表から、x も y も分かっているペア（x＝−3、y＝9 など）を探し、y＝ax に入れて a を求めます。",
+  'h11':"表から、x と y が両方わかっているペア（x＝−3、y＝9 など）を見つけて、y＝ax に入れます。a はマイナスになります。",
+  'h12':"<b>ア</b>：x＝−5 のときの y → ①の式に x＝−5 を入れます。<br><b>イ</b>：y＝6 のときの x → ①の式に y＝6 を入れて、x を求めます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

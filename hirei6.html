@@ -79,6 +79,18 @@
         .frac .den { padding: 0 2px; font-weight: bold; }
         .frac-x { font-style: italic; font-weight: bold; font-size: 1em; }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -114,7 +126,7 @@
 
         <!-- 問(1) y = 1/2 x -->
         <div class="q-card">
-            <div class="q-title"><span class="badge">1</span>（1）</div>
+            <div class="q-title"><span class="badge">1</span>（1）<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
             <div class="graph-wrap">
                 <svg width="200" height="200" viewBox="-70 -70 140 140">
                     <g stroke="#e0e0e0" stroke-width="0.6">
@@ -161,7 +173,7 @@
 
         <!-- 問(2) y = 3x -->
         <div class="q-card">
-            <div class="q-title"><span class="badge">2</span>（2）</div>
+            <div class="q-title"><span class="badge">2</span>（2）<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
             <div class="graph-wrap">
                 <svg width="200" height="200" viewBox="-70 -70 140 140">
                     <g stroke="#e0e0e0" stroke-width="0.6">
@@ -208,7 +220,7 @@
 
         <!-- 問(3) y = x -->
         <div class="q-card">
-            <div class="q-title"><span class="badge">3</span>（3）　※ y = 1x とは書かない</div>
+            <div class="q-title"><span class="badge">3</span>（3）　※ y = 1x とは書かない<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
             <div class="graph-wrap">
                 <svg width="200" height="200" viewBox="-70 -70 140 140">
                     <g stroke="#e0e0e0" stroke-width="0.6">
@@ -255,7 +267,7 @@
 
         <!-- 問(4) y = -1/2 x -->
         <div class="q-card">
-            <div class="q-title"><span class="badge">4</span>（4）</div>
+            <div class="q-title"><span class="badge">4</span>（4）<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></div>
             <div class="graph-wrap">
                 <svg width="200" height="200" viewBox="-70 -70 140 140">
                     <g stroke="#e0e0e0" stroke-width="0.6">
@@ -302,7 +314,7 @@
 
         <!-- 問(5) y = -2/3 x -->
         <div class="q-card">
-            <div class="q-title"><span class="badge">5</span>（5）</div>
+            <div class="q-title"><span class="badge">5</span>（5）<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></div>
             <div class="graph-wrap">
                 <svg width="200" height="200" viewBox="-70 -70 140 140">
                     <g stroke="#e0e0e0" stroke-width="0.6">
@@ -350,7 +362,7 @@
 
         <!-- 問(6) y = -x -->
         <div class="q-card">
-            <div class="q-title"><span class="badge">6</span>（6）</div>
+            <div class="q-title"><span class="badge">6</span>（6）<button class="hint-btn" onclick="showHint('h6')">💡 ヒント</button></div>
             <div class="graph-wrap">
                 <svg width="200" height="200" viewBox="-70 -70 140 140">
                     <g stroke="#e0e0e0" stroke-width="0.6">
@@ -674,5 +686,24 @@
     })();
     </script>
 
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"グラフが通る点のうち、<b>x も y も整数でぴったり重なる点</b>を1つ読み取ります。（例：点(2, 1)）<br>その x と y を y＝ax に入れて、a を求めます。",
+  'h2':"グラフが通る点のうち、<b>x も y も整数でぴったり重なる点</b>を1つ読み取ります。（例：点(1, 3)）<br>その x と y を y＝ax に入れて、a を求めます。",
+  'h3':"グラフが通る点のうち、<b>x も y も整数でぴったり重なる点</b>を1つ読み取ります。（例：点(2, 2)）<br>その x と y を y＝ax に入れて、a を求めます。<br>a＝1 のときは、y＝1x とは書かず、y＝x と書きます。",
+  'h4':"グラフが通る点のうち、<b>x も y も整数でぴったり重なる点</b>を1つ読み取ります。（例：点(2, −1)）<br>その x と y を y＝ax に入れて、a を求めます。",
+  'h5':"グラフが通る点のうち、<b>x も y も整数でぴったり重なる点</b>を1つ読み取ります。（例：点(3, −2)）<br>その x と y を y＝ax に入れて、a を求めます。",
+  'h6':"グラフが通る点のうち、<b>x も y も整数でぴったり重なる点</b>を1つ読み取ります。（例：点(1, −1)）<br>その x と y を y＝ax に入れて、a を求めます。<br>a＝−1 のときは、y＝−1x とは書かず、y＝−x と書きます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

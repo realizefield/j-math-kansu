@@ -130,6 +130,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -176,7 +188,7 @@
     <!-- ===== (1) ===== -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">1</span><span class="q-title">（1）y を x の式で表せ。</span></div>
+            <div class="q-num"><span class="badge">1</span><span class="q-title">（1）y を x の式で表せ。</span><button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
             <span class="q-pref">〈長崎県〉</span>
         </div>
         <div class="q-text">
@@ -219,7 +231,7 @@
     <!-- ===== (2) ===== -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">2</span><span class="q-title">（2）y の値を求めよ。</span></div>
+            <div class="q-num"><span class="badge">2</span><span class="q-title">（2）y の値を求めよ。</span><button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
             <span class="q-pref">〈鹿児島県〉</span>
         </div>
         <div class="q-text">
@@ -279,7 +291,7 @@
     <!-- ===== (3) ===== -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">3</span><span class="q-title">（3）グラフ上の点を選べ。</span></div>
+            <div class="q-num"><span class="badge">3</span><span class="q-title">（3）グラフ上の点を選べ。</span><button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
             <span class="q-pref">〈福島県〉</span>
         </div>
         <div class="q-text">
@@ -332,7 +344,7 @@
     <!-- ===== (4) ===== -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">4</span><span class="q-title">（4）表の空欄を求めよ。</span></div>
+            <div class="q-num"><span class="badge">4</span><span class="q-title">（4）表の空欄を求めよ。</span><button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></div>
             <span class="q-pref">〈青森県〉</span>
         </div>
         <div class="q-text">
@@ -709,5 +721,22 @@
     })();
     </script>
 
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"比例の式は <b>y＝ax</b>。x＝2、y＝6 を入れて a を求めます。",
+  'h2':"<b>STEP 1</b>　y＝ax に x＝−3、y＝6 を入れて a を求めます。<br><b>STEP 2</b>　その式に x＝9 を入れて、y を求めます。",
+  'h3':"y＝2x の x に、ア〜エの点の x の値を入れます。<br>出てきた y が、その点の y 座標と<b>同じになる点</b>が、グラフ上の点です。",
+  'h4':"表の中で、x も y も分かっているペア（x＝−2、y＝3）を y＝ax に入れて、a を求めます。<br>□ は y＝4 のときの x。式に y＝4 を入れて、x を求めます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

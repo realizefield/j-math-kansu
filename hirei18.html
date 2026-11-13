@@ -91,6 +91,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -133,7 +145,7 @@
 
 <!-- ══ 例題 ══ -->
 <div class="reidai-box">
-    <div class="reidai-title">📖 例題</div>
+    <div class="reidai-title">📖 例題<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
     <div class="q-text">
         右の図のような長方形 ABCD の辺 BC 上を点 P が B を出発して C まで進む。<br>
         点 P が B を出発してから x cm 進んだときの三角形 ABP の面積を y cm² として，次の各問いに答えよ。<br>
@@ -262,7 +274,7 @@
 
 <!-- ══ 類題 ══ -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題</div>
+    <div class="ruidai-title">✏️ 類題<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
     <div class="q-text">
         辺 AB が 4 cm，辺 BC が 8 cm の長方形 ABCD がある。点 P は，辺 BC 上を点 B から点 C まで，毎秒 2 cm の速さで動く。<br>
         点 P が出発してから x 秒後の三角形 ABP の面積を y cm² とするとき，次の各問いに答えよ。<br><br>
@@ -302,7 +314,7 @@
 
         <div style="flex:1; min-width:200px;">
             <div class="step-area">
-                <div class="phase-bar">（1）y を x の式で表せ。</div>
+                <div class="phase-bar">（1）y を x の式で表せ。<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
                 <div class="step-row">
                     <span class="step-label">解）</span>
                     <span>x 秒後の BP =</span>
@@ -332,7 +344,7 @@
                     <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="4x" onclick="zCl(this)"></span></div>
                 </div>
 
-                <div class="phase-bar green">（2）x の変域を求めよ。</div>
+                <div class="phase-bar green">（2）x の変域を求めよ。<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></div>
                 <div style="margin-left:50px;">
                     <div class="step-row">
                         <span>BC = 8 cm，速さ = 2 cm/s　→　かかる時間 =</span>
@@ -353,7 +365,7 @@
                     </div>
                 </div>
 
-                <div class="phase-bar orange">（3）x と y の関係をグラフに表せ。</div>
+                <div class="phase-bar orange">（3）x と y の関係をグラフに表せ。<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></div>
                 <div style="margin-left:10px; margin-bottom:14px;">
                     <!-- y=4x, x∈(0,4], y∈(0,16] -->
                     <!-- グラフ: x軸0〜4（1単位=40px）, y軸0〜16（1単位=9px） -->
@@ -601,5 +613,23 @@ function updateReviewBtn(r) {
 (function(){ var key='hirei18'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
 </script>
 <audio id="mainAudio" src=""></audio>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"三角形の面積＝<b>底辺×高さ÷2</b>。底辺は BP＝x cm、高さは AB です。<br>(1) 式をつくります。<br>(2) 点 P は B から C まで動きます。x の両端を式に入れて、y の範囲も求めます。<br>(3) x の変域に注意して、直線をひきます。<br>(4) 式に y＝25 を入れて、x を求めます。",
+  'h2':"三角形 ABP の面積＝<b>底辺 BP×高さ AB÷2</b>。<br>点 P は毎秒 2 cm で動くので、x 秒後の BP は <b>2x cm</b> です。",
+  'h3':"BP＝2x cm、AB＝4 cm を使って、三角形の面積（底辺×高さ÷2）を計算します。",
+  'h4':"BC を進む時間は、<b>道のり÷速さ</b> で求めます。<br>点 P は出発してから、この時間までしか動きません。",
+  'h5':"(1) の式に、x の変域の両端を入れて、2つの点をとります。<br>その2点を結ぶ直線をひきます。<b>変域の外には線をのばしません</b>。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

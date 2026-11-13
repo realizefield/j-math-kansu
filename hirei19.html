@@ -92,6 +92,18 @@ body{font-family: 'BIZ UDPGothic', sans-serif;background-color:var(--bg-color);m
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -137,7 +149,7 @@ y = <span style="display:inline-flex;align-items:center;vertical-align:middle;">
 
 <!-- 例題 -->
 <div class="reidai-box">
-<div class="reidai-title">&#128218; 例題</div>
+<div class="reidai-title">&#128218; 例題<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
 <div class="q-text">関数 y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">18</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> について，x 座標と y 座標がともに正の整数となる点は何個あるか。</div>
 <div id="ex-s0" class="exp-box" style="display:none"><h4>STEP 1　考え方</h4>xy = 18 より，x と y がともに正の整数 &#x2192; <strong>x は 18 の正の約数</strong><br>（たとえば x = 5 なら y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">18</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">5</span></span></span> = 3.6 で整数にならない）</div>
 <div id="ex-s1" class="exp-box blue" style="display:none"><h4>STEP 2　18 の正の約数を全部書く</h4>
@@ -149,7 +161,7 @@ y = <span style="display:inline-flex;align-items:center;vertical-align:middle;">
 
 <!-- 練習(1) -->
 <div class="renshu-box">
-<div class="renshu-title">&#9999;&#65039; 練習（1）</div>
+<div class="renshu-title">&#9999;&#65039; 練習（1）<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
 <div class="q-text">関数 y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">24</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> について，x 座標と y 座標がともに正の整数となる点は何個あるか。</div>
 <div class="step-area">
 <div class="phase-bar">STEP 1　24 の正の約数を全部書く</div>
@@ -162,7 +174,7 @@ y = <span style="display:inline-flex;align-items:center;vertical-align:middle;">
 
 <!-- 練習(2) -->
 <div class="renshu-box">
-<div class="renshu-title">&#9999;&#65039; 練習（2）<span class="q-pref">〈東京都〉</span></div>
+<div class="renshu-title">&#9999;&#65039; 練習（2）<span class="q-pref">〈東京都〉</span><button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
 <div class="q-text">関数 y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">10</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> のグラフ上にある x 座標と y 座標がともに正の整数である点は何個あるか。</div>
 <div class="step-area">
 <div class="phase-bar">STEP 1　10 の正の約数</div>
@@ -177,11 +189,11 @@ y = <span style="display:inline-flex;align-items:center;vertical-align:middle;">
 
 <!-- 確認テスト -->
 <div class="kakunin-box">
-<div class="kakunin-title">&#128221; 確認テスト</div>
+<div class="kakunin-title">&#128221; 確認テスト<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></div>
 
 <!-- (1) -->
 <div style="margin-bottom:28px;padding-bottom:24px;border-bottom:1px dashed #e0c060;">
-<div class="q-text"><span class="q-pref">〈九州学院高校〉</span><br>点 P(4, 2) を通る反比例のグラフ上にある点のうち，x も y もともに整数である点は全部で何個あるか。</div>
+<div class="q-text"><span class="q-pref">〈九州学院高校〉</span><br>点 P(4, 2) を通る反比例のグラフ上にある点のうち，x も y もともに整数である点は全部で何個あるか。<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></div>
 <div class="step-area">
 <div class="phase-bar">STEP 1　式を求める</div>
 <div class="step-row"><span class="step-label">解）</span><span class="math">xy = a</span><span>に P(4, 2) を代入：a =</span><span class="drop-zone-inline sm" data-ans="4" onclick="zCl(this)"></span><span class="math">×</span><span class="drop-zone-inline sm" data-ans="2" onclick="zCl(this)"></span><span class="math">=</span><span class="drop-zone-inline sm" data-ans="8" onclick="zCl(this)"></span></div>
@@ -197,7 +209,7 @@ y = <span style="display:inline-flex;align-items:center;vertical-align:middle;">
 
 <!-- (2) -->
 <div style="margin-bottom:28px;padding-bottom:24px;border-bottom:1px dashed #e0c060;">
-<div class="q-text"><span class="q-pref">〈徳島県〉</span><br>y は x に反比例し，x = &#8722;3/5 のとき y = &#8722;20 である。この関数のグラフ上にあって，x 座標と y 座標がともに整数である点は全部で何個あるか。</div>
+<div class="q-text"><span class="q-pref">〈徳島県〉</span><br>y は x に反比例し，x = &#8722;3/5 のとき y = &#8722;20 である。この関数のグラフ上にあって，x 座標と y 座標がともに整数である点は全部で何個あるか。<button class="hint-btn" onclick="showHint('h6')">💡 ヒント</button></div>
 <div class="step-area">
 <div class="phase-bar">STEP 1　式を求める</div>
 <div class="step-row"><span class="step-label">解）</span><span class="math">a = xy = (&#8722;</span><span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #333;padding:0 2px;font-weight:bold;">3</span><span style="padding:0 2px;font-weight:bold;">5</span></span></span><span class="math">) × (&#8722;20) =</span><span class="drop-zone-inline sm" data-ans="12" onclick="zCl(this)"></span></div>
@@ -213,7 +225,7 @@ y = <span style="display:inline-flex;align-items:center;vertical-align:middle;">
 
 <!-- (3) -->
 <div>
-<div class="q-text"><span class="q-pref">〈岡山県〉</span><br>縦が x cm，横が y cm の長方形の面積が 30 cm² である。<br>（1）y を x の式で表せ。<br>（2）x の値が，y の値がともに自然数になるような x の値は，全部で何個あるか。</div>
+<div class="q-text"><span class="q-pref">〈岡山県〉</span><br>縦が x cm，横が y cm の長方形の面積が 30 cm² である。<br>（1）y を x の式で表せ。<br>（2）x の値が，y の値がともに自然数になるような x の値は，全部で何個あるか。<button class="hint-btn" onclick="showHint('h7')">💡 ヒント</button></div>
 <div class="step-area">
 <div class="phase-bar">（1）y を x の式で表す</div>
 <div class="step-row"><span class="step-label">解）</span><span>縦 × 横 = 面積 より</span><span class="math">xy =</span><span class="drop-zone-inline sm" data-ans="30" onclick="zCl(this)"></span></div>
@@ -328,5 +340,25 @@ function updateReviewBtn(r){document.getElementById('reviewIcon').innerText=r?'�
 (function(){var key='hirei19';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');updateReviewBtn(d.review||false);}catch(e){}})();
 </script>
 <audio id="mainAudio" src=""></audio>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"<span class=\"kw\">xy＝18</span> になります。x も y も正の整数なので、x は 18 の<b>正の約数</b>です。<br>18 の約数を小さい順にすべて書き出し、(x, y) の組を考えます。",
+  'h2':"<span class=\"kw\">xy＝24</span> です。x は 24 の<b>正の約数</b>。<br>1, 2, 3, … と順に、24 をわりきれる数を探します。",
+  'h3':"<span class=\"kw\">xy＝10</span> です。x は 10 の<b>正の約数</b>。<br>1, 2, 3, … と順に、10 をわりきれる数を探します。",
+  'h4':"x も y も整数 → x は a の約数。ただし、<b>正の数だけでなく、負の数も</b>考えます。",
+  'h5':"点 P(4, 2) を通るので、xy＝a に x＝4、y＝2 を入れて a を求めます。<br>整数の点は、a の約数（正・負の両方）です。正の組と同じ数だけ、負の組もあります。",
+  'h6':"a＝xy。x＝−3/5、y＝−20 をかけて a を求めます。（分数をかけると整数になります）<br>x、y が整数になるのは、x が a の約数（正・負）のときです。",
+  'h7':"縦×横＝面積 より、xy＝30。<br>(2) 自然数なので、<b>正の数だけ</b>です。30 の正の約数を全部書き出します。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

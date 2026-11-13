@@ -156,6 +156,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -615,7 +627,7 @@
 
         <!-- 確認問題 -->
         <div style="background:#fafafa; border:1.5px solid #ddd; border-radius:10px; padding:18px 20px;">
-            <p style="font-weight:bold; color:#1a5276; margin:0 0 14px; font-size:15px;">📝 確認しよう</p>
+            <p style="font-weight:bold; color:#1a5276; margin:0 0 14px; font-size:15px;">📝 確認しよう<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></p>
             <p style="font-size:14.5px; margin-bottom:16px; background:#f0f6ff; padding:10px 14px; border-radius:6px;">
                 y = <span style="display:inline-flex;align-items:center;vertical-align:middle;gap:1px;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">a</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> のグラフが 点(3, 4) を通るとき，y を x の式で表せ。
             </p>
@@ -931,6 +943,20 @@ function updateReviewBtn(isReview) {
         updateReviewBtn(data.review || false);
     } catch(e) {}
 })();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"反比例の式は y＝a÷x。グラフが通る点の x と y を、<span class=\"kw\">xy＝a</span> に入れます。<br>点(3, 4) なら、x＝3、y＝4 をかけて a を求めます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>
