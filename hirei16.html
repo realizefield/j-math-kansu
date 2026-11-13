@@ -125,6 +125,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -171,7 +183,7 @@
      例題 1　グラフ上の点と原点対称な点
 ════════════════════════════════════════ -->
 <div class="reidai-box">
-    <div class="reidai-title">📖 例題 1</div>
+    <div class="reidai-title">📖 例題 1<button class="hint-btn" onclick="showHint('b1')">💡 ヒント</button></div>
     <span class="q-pref">〈青森県〉</span>
     <div class="q-text" style="clear:both;">
         右の図で，① は y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">6</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> のグラフである。<br>
@@ -271,7 +283,7 @@
 
 <!-- 類題 1-1 -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 1-1</div>
+    <div class="ruidai-title">✏️ 類題 1-1<button class="hint-btn" onclick="showHint('b2')">💡 ヒント</button></div>
     <div class="q-text">
         y = <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">12</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> のグラフ上の点 A の x 座標は −3 である。<br>
         原点 O について，点 A と対称な点 B の座標を求めよ。
@@ -318,7 +330,7 @@
 
 <!-- 類題 1-2 -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 1-2</div>
+    <div class="ruidai-title">✏️ 類題 1-2<button class="hint-btn" onclick="showHint('b3')">💡 ヒント</button></div>
     <div class="q-text">
         y = −<span style="font-weight:bold;color:#1a5276;margin-right:1px;">−</span><span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">8</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span> のグラフ上の点 P の x 座標は 4 である。<br>
         原点 O について，点 P と対称な点 Q の座標を求めよ。
@@ -369,7 +381,7 @@
      例題 2　比例と反比例の交点
 ════════════════════════════════════════ -->
 <div class="reidai-box">
-    <div class="reidai-title">📖 例題 2</div>
+    <div class="reidai-title">📖 例題 2<button class="hint-btn" onclick="showHint('b4')">💡 ヒント</button></div>
     <span class="q-pref">〈宮城県〉</span>
     <div class="q-text" style="clear:both;">
         右の図のように，原点と点 A(4, 2) を通る比例のグラフが，<br>
@@ -461,7 +473,7 @@
 
 <!-- 類題 2-1 -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 2-1</div>
+    <div class="ruidai-title">✏️ 類題 2-1<button class="hint-btn" onclick="showHint('b5')">💡 ヒント</button></div>
     <div class="q-text">
         原点と点 A(3, 6) を通る比例のグラフが，反比例のグラフと 2 点で交わっている。<br>
         交点の 1 つを点 B とし，その x 座標が −1 のとき，<br>
@@ -565,7 +577,7 @@
 
 <!-- 類題 2-2 -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 2-2</div>
+    <div class="ruidai-title">✏️ 類題 2-2<button class="hint-btn" onclick="showHint('b6')">💡 ヒント</button></div>
     <span class="q-pref">〈宮城県〉</span>
     <div class="q-text" style="clear:both;">
         右の図のように，原点と点 A(4, 2) を通る比例のグラフが，反比例のグラフと 2 点で交わっている。<br>
@@ -696,7 +708,7 @@
 <!-- 類題 2-3 -->
 <div class="container" style="margin-top:0; border-top:none; border-radius:0 0 12px 12px; padding-top:0;">
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 2-3</div>
+    <div class="ruidai-title">✏️ 類題 2-3<button class="hint-btn" onclick="showHint('b7')">💡 ヒント</button></div>
     <div class="q-text">
         右の図のように，y = 3x のグラフと y =
         <span style="display:inline-flex;align-items:center;vertical-align:middle;"><span style="display:inline-flex;flex-direction:column;align-items:center;font-size:0.82em;line-height:1.1;"><span style="border-bottom:1.5px solid #1a5276;padding:0 3px;font-weight:bold;color:#1a5276;">a</span><span style="padding:0 3px;font-weight:bold;color:#1a5276;">x</span></span></span>
@@ -768,7 +780,7 @@
         <div style="flex:1; min-width:180px;">
             <div class="step-area">
                 <!-- (1) 点Aの座標 -->
-                <div class="phase-bar">（1）点 A の座標を求めよ。</div>
+                <div class="phase-bar">（1）点 A の座標を求めよ。<button class="hint-btn" onclick="showHint('b7a')">💡 ヒント</button></div>
                 <div class="step-row">
                     <span class="step-label">解）</span>
                     <span class="math">y = 3x</span><span>に x =</span>
@@ -789,7 +801,7 @@
                 </div>
 
                 <!-- (2) aの値 -->
-                <div class="phase-bar green">（2）a の値を求めよ。</div>
+                <div class="phase-bar green">（2）a の値を求めよ。<button class="hint-btn" onclick="showHint('b7b')">💡 ヒント</button></div>
                 <div class="step-row">
                     <span class="step-label">解）</span>
                     <span><span class="math">xy = a</span>　に A（−3, −9）を代入</span>
@@ -810,7 +822,7 @@
                 </div>
 
                 <!-- (3) 点Bの座標 -->
-                <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">（3）点 B の座標を求めよ。</div>
+                <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">（3）点 B の座標を求めよ。<button class="hint-btn" onclick="showHint('b7c')">💡 ヒント</button></div>
                 <div class="step-row">
                     <span class="step-label">解）</span>
                     <span>y = 3x と y =</span>
@@ -1129,6 +1141,29 @@ function updateReviewBtn(isReview) {
         updateReviewBtn(data.review||false);
     } catch(e) {}
 })();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'b1':"① 点 A は y＝6÷x のグラフ上の点です。x＝−2 を式に入れて、y 座標を求めます。<br>② 原点について対称な点は、<span class=\"kw\">x 座標も y 座標も符号を反対</span>にした点です。",
+  'b2':"y＝12÷x に x＝−3 を入れて、点 A の y 座標を求めます。<br>原点について対称な点 B は、x 座標も y 座標も <span class=\"kw\">符号を反対</span> にします。",
+  'b3':"y＝−8÷x に x＝4 を入れて、点 P の y 座標を求めます。（マイナスに注意）<br>原点について対称な点 Q は、x 座標も y 座標も <span class=\"kw\">符号を反対</span> にします。",
+  'b4':"① 比例の式 <b>y＝ax</b> に、通る点 A の座標を入れて a を求めます。<br>② 点 B は比例のグラフ上の点。x＝−2 を比例の式に入れて、y 座標を求めます。<br>③ 点 B は反比例のグラフ上の点でもあるので、<span class=\"kw\">a＝x×y</span> で反比例の式が決まります。",
+  'b5':"① 比例の式 <b>y＝ax</b> に A(3, 6) を入れて a を求めます。<br>② 点 B は比例のグラフ上で x＝−1。y 座標を求めます。<br>③ 反比例の式は <span class=\"kw\">xy＝a</span>。B の x と y をかけます。",
+  'b6':"① 比例の式 <b>y＝ax</b> に A(4, 2) を入れて a を求めます。<br>② 点 B は比例のグラフ上で x＝−2。y 座標を求めます。<br>③ 反比例の式は <span class=\"kw\">xy＝a</span>。B の x と y をかけます。",
+  'b7':"y＝3x と y＝a÷x の2つのグラフが、2点 A、B で交わっています。<br>点 A は y＝3x のグラフ上の点です。",
+  'b7a':"A は y＝3x のグラフ上の点です。x＝−3 を入れて、y 座標を求めます。",
+  'b7b':"A は y＝a÷x のグラフ上の点でもあります。<br>(1) で求めた A の座標を <span class=\"kw\">xy＝a</span> に入れます。（a＝x×y）",
+  'b7c':"y＝3x と y＝a÷x を<b>連立</b>して、3x＝a÷x をつくります。<br>両辺に x をかけて x² を求めます。x は＋と−の2つ。<br>点 A とちがう方（x＝−3 でない方）が B です。<br>（A と B は原点について対称、と考えても求められます）"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>

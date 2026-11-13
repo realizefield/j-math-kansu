@@ -89,6 +89,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -146,7 +158,7 @@
 
 <!-- ══ 例題1 ══ -->
 <div class="reidai-box">
-    <div class="section-title">📖 例題 1</div>
+    <div class="section-title">📖 例題 1<button class="hint-btn" onclick="showHint('c1')">💡 ヒント</button></div>
     <div class="q-text">
         y は x に反比例し，x = −3 のとき y = −12 である。<br>
         （1）y を x の式で表せ。<br>
@@ -183,7 +195,7 @@
 
 <!-- ══ 類題1 ══ -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 1</div>
+    <div class="ruidai-title">✏️ 類題 1<button class="hint-btn" onclick="showHint('c1')">💡 ヒント</button></div>
     <div class="q-text">
         y は x に反比例し，x = −3 のとき y = −12 である。次の各問いに答えよ。<br>
         （1）y を x の式で表せ。<br>
@@ -192,7 +204,7 @@
         （4）x の変域が −3 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
     </div>
     <div class="step-area">
-        <div class="phase-bar">（1）y を x の式で表す</div>
+        <div class="phase-bar">（1）y を x の式で表す<button class="hint-btn" onclick="showHint('c1a')">💡 ヒント</button></div>
         <div class="step-row">
             <span class="step-label">解）</span>
             <span class="math">xy = a</span>
@@ -208,7 +220,7 @@
             <div class="ans-frame">y = <span class="drop-zone-inline wide" data-ans="36/x" onclick="zCl(this)"></span></div>
         </div>
 
-        <div class="phase-bar green">（2）x = −1 のとき</div>
+        <div class="phase-bar green">（2）x = −1 のとき<button class="hint-btn" onclick="showHint('c1b')">💡 ヒント</button></div>
         <div style="margin-left:50px;">
             <div class="step-row">
                 <span class="math">y =</span>
@@ -222,7 +234,7 @@
             <div class="ans-frame">y = <span class="drop-zone-inline sm" data-ans="-36" onclick="zCl(this)"></span></div>
         </div>
 
-        <div class="phase-bar orange">（3）y = −2 のとき</div>
+        <div class="phase-bar orange">（3）y = −2 のとき<button class="hint-btn" onclick="showHint('c1c')">💡 ヒント</button></div>
         <div style="margin-left:50px;">
             <div class="step-row">
                 <span class="math">xy = 36</span><span>に y = −2 を代入：</span>
@@ -238,7 +250,7 @@
             <div class="ans-frame">x = <span class="drop-zone-inline sm" data-ans="-18" onclick="zCl(this)"></span></div>
         </div>
 
-        <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">（4）変域を求める</div>
+        <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">（4）変域を求める<button class="hint-btn" onclick="showHint('c1d')">💡 ヒント</button></div>
         <div style="margin-left:50px;">
             <div class="step-row">
                 <span>x =</span>
@@ -268,7 +280,7 @@
 
 <!-- ══ 例題2 ══ -->
 <div class="reidai-box" style="margin-top:8px;">
-    <div class="section-title">📖 例題 2　〈入試問題〉</div>
+    <div class="section-title">📖 例題 2　〈入試問題〉<button class="hint-btn" onclick="showHint('c2')">💡 ヒント</button></div>
     <div class="q-text">
         y は x に反比例し，x = 2 のとき y = 4 である。<br>
         x の変域が −2 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
@@ -294,13 +306,13 @@
 
 <!-- ══ 類題2 ══ -->
 <div class="ruidai-box">
-    <div class="ruidai-title">✏️ 類題 2</div>
+    <div class="ruidai-title">✏️ 類題 2<button class="hint-btn" onclick="showHint('c2')">💡 ヒント</button></div>
     <div class="q-text">
         y は x に反比例し，x = 2 のとき y = 4 である。<br>
         x の変域が −2 ≦ x ≦ −1 のとき，y の変域を不等号を使って表せ。
     </div>
     <div class="step-area">
-        <div class="phase-bar">STEP 1　式を求める</div>
+        <div class="phase-bar">STEP 1　式を求める<button class="hint-btn" onclick="showHint('c2a')">💡 ヒント</button></div>
         <div class="step-row">
             <span class="step-label">解）</span>
             <span class="math">a =</span>
@@ -312,7 +324,7 @@
             <span>　よって y =</span>
             <span class="drop-zone-inline wide" data-ans="8/x" onclick="zCl(this)"></span>
         </div>
-        <div class="phase-bar green">STEP 2　x の両端を代入</div>
+        <div class="phase-bar green">STEP 2　x の両端を代入<button class="hint-btn" onclick="showHint('c2b')">💡 ヒント</button></div>
         <div style="margin-left:50px;">
             <div class="step-row">
                 <span>x =</span>
@@ -327,7 +339,7 @@
                 <span class="drop-zone-inline sm" data-ans="-8" onclick="zCl(this)"></span>
             </div>
         </div>
-        <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">STEP 3　変域を不等号で表す</div>
+        <div class="phase-bar" style="background:#fdf2f2;border-left-color:#e74c3c;color:#e74c3c;">STEP 3　変域を不等号で表す<button class="hint-btn" onclick="showHint('c2c')">💡 ヒント</button></div>
         <div style="margin-left:50px;">
             <div class="step-row">
                 <span>x が増えると y は</span>
@@ -547,5 +559,27 @@ function updateReviewBtn(r) {
 (function(){ var key='hirei17'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
 </script>
 <audio id="mainAudio" src=""></audio>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'c1':"反比例なので <span class=\"kw\">xy＝a</span>。<br>(1) x＝−3、y＝−12 をかけて a を求め、式にします。<br>(2)(3) 求めた式に、x や y の値を入れます。<br>(4) 変域は、x の両端を式に入れて y の範囲を調べます。",
+  'c1a':"xy＝a に x＝−3、y＝−12 を入れて a を求め、y＝a÷x の式にします。",
+  'c1b':"(1) の式 y＝a÷x に、x＝−1 を入れて y を求めます。",
+  'c1c':"xy＝a に y＝−2 を入れます。<br>x×(−2)＝a → x＝a÷(−2)。<br>わる数がマイナスになることに注意しましょう。",
+  'c1d':"x の両端 x＝−3 と x＝−1 を、(1) の式に入れて y を求めます。<br>出てきた2つの y の値の <span class=\"kw\">小さい方を左、大きい方を右</span> に書いて、不等号で表します。",
+  'c2':"① x＝2、y＝4 をかけて a を求め、式にします。<br>② x の両端（−2 と −1）を式に入れて、y の値を求めます。<br>③ 2つの y の値を比べて、<span class=\"kw\">小さい方を左、大きい方を右</span> に書きます。",
+  'c2a':"xy＝a に x＝2、y＝4 を入れて a を求め、y＝a÷x の式にします。",
+  'c2b':"求めた式に、x の両端 x＝−2 と x＝−1 を入れて、それぞれの y を求めます。",
+  'c2c':"2つの y の値の大小を比べます。マイナスの数は、<b>数字が大きいほど小さい</b>ことに注意。<br><span class=\"kw\">小さい方 ≦ y ≦ 大きい方</span> の形に書きます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

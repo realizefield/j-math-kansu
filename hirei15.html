@@ -121,6 +121,18 @@
         .speaker-btn-small.playing { background: #c0392b; }
         .volume-control { display: flex; align-items: center; gap: 6px; }
         input[type="range"] { cursor: pointer; width: 90px; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -166,7 +178,7 @@
     <!-- (1) 長野県：表から式＋アを求める -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">1</span>（1）y を x の式で表せ。また，アの値を求めよ。</div>
+            <div class="q-num"><span class="badge">1</span>（1）y を x の式で表せ。また，アの値を求めよ。<button class="hint-btn" onclick="showHint('a1')">💡 ヒント</button></div>
             <span class="q-pref">〈長野県〉</span>
         </div>
         <div class="q-text">下の表は y が x に反比例する関係を示している。y を x の式で表せ。また，アの値を求めよ。
@@ -229,7 +241,7 @@
     <!-- (2) 表から式を求める（長野県） -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">2</span>（2）y を x の式で表せ。</div>
+            <div class="q-num"><span class="badge">2</span>（2）y を x の式で表せ。<button class="hint-btn" onclick="showHint('a2')">💡 ヒント</button></div>
             <span class="q-pref">〈長野県〉</span>
         </div>
         <div class="q-text">下の表は y が x に反比例する関係を示している。y を x の式で表せ。</div>
@@ -292,12 +304,12 @@
     <!-- (2) x=6, y=-2 → 3問 -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">3</span>（3）次の問いに答えよ。</div>
+            <div class="q-num"><span class="badge">3</span>（3）次の問いに答えよ。<button class="hint-btn" onclick="showHint('a3')">💡 ヒント</button></div>
             <span class="q-pref">〈福岡県〉</span>
         </div>
         <div class="q-text">y は x に反比例し，x = 6 のとき y = −2 という。</div>
 
-        <div class="sub-q">1) y を x の式で表せ。</div>
+        <div class="sub-q">1) y を x の式で表せ。<button class="hint-btn" onclick="showHint('a3a')">💡 ヒント</button></div>
         <div class="step-area">
             <div class="step-row">
                 <span class="step-label">解）</span>
@@ -314,7 +326,7 @@
             </div>
         </div>
 
-        <div class="sub-q">2) x = 3 のときの y の値を求めよ。</div>
+        <div class="sub-q">2) x = 3 のときの y の値を求めよ。<button class="hint-btn" onclick="showHint('a3b')">💡 ヒント</button></div>
         <div class="step-area">
             <div class="step-row">
                 <span class="step-label">解）</span>
@@ -340,7 +352,7 @@
             </div>
         </div>
 
-        <div class="sub-q">3) y = −8 のときの x の値を求めよ。</div>
+        <div class="sub-q">3) y = −8 のときの x の値を求めよ。<button class="hint-btn" onclick="showHint('a3c')">💡 ヒント</button></div>
         <div class="step-area">
             <div class="step-row">
                 <span class="step-label">解）</span>
@@ -375,7 +387,7 @@
     <!-- (2) 表問題：x=-4,y=6 → ア・イ（高知県） -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">4</span>（4）表の ア・イ の値を求めよ。</div>
+            <div class="q-num"><span class="badge">4</span>（4）表の ア・イ の値を求めよ。<button class="hint-btn" onclick="showHint('a4')">💡 ヒント</button></div>
             <span class="q-pref">〈高知県〉</span>
         </div>
         <div class="q-text">y が x に反比例し，x と y の値が下の表のように対応しているとき，表中の k の値を求めなさい。</div>
@@ -430,7 +442,7 @@
     <!-- (3) 表から x=3のときy（福岡県） -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">5</span>（5）x = 3 のときの y の値を求めよ。</div>
+            <div class="q-num"><span class="badge">5</span>（5）x = 3 のときの y の値を求めよ。<button class="hint-btn" onclick="showHint('a5')">💡 ヒント</button></div>
             <span class="q-pref">〈福岡県〉</span>
         </div>
         <div class="q-text">次の表は y が x に反比例する関係を表したものである。x = 3 のときの y の値を求めよ。</div>
@@ -479,7 +491,7 @@
     <!-- (4) 表問題：x=-4,y=6 ア・イ求める -->
     <div class="q-card">
         <div class="q-header">
-            <div class="q-num"><span class="badge">6</span>（6）ア・イの値をそれぞれ求めよ。</div>
+            <div class="q-num"><span class="badge">6</span>（6）ア・イの値をそれぞれ求めよ。<button class="hint-btn" onclick="showHint('a6')">💡 ヒント</button></div>
         </div>
         <div class="q-text">y は x に反比例している。次の表について答えよ。</div>
         <div class="tbl-wrap">
@@ -808,6 +820,28 @@ function updateReviewBtn(isReview) {
         updateReviewBtn(data.review||false);
     } catch(e) {}
 })();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'a1':"反比例の式は <b>y＝a÷x</b>、つまり <span class=\"kw\">xy＝a</span> です。<br>① 表の中で、x も y も分かっているペア（x＝2、y＝−6）を<b>かけて</b> a を求めます。<br>② y＝a÷x の式にします。<br>③ アは y＝3 のとき。xy＝a に y＝3 を入れて、x を求めます。",
+  'a2':"反比例の式は <b>y＝a÷x</b>、つまり <span class=\"kw\">xy＝a</span> です。<br>① 表の x と y の分かっているペア（x＝2、y＝−6）をかけて a を求めます。<br>② y＝a÷x の式にします。<br>③ アは y＝3 のときの x。xy＝a に入れて求めます。",
+  'a3':"x＝6、y＝−2 のペアをかけて a を求めると、1)・2)・3) が解けます。",
+  'a3a':"xy＝a に x＝6、y＝−2 を入れて a を求めます。（a＝6×(−2)）<br>そのあと y＝a÷x の形に書きます。",
+  'a3b':"1) で求めた式 y＝a÷x に、x＝3 を入れて y を求めます。",
+  'a3c':"xy＝a に y＝−8 を入れます。<br>x×(−8)＝a → x＝a÷(−8)。<br>わる数がマイナスになることに注意しましょう。",
+  'a4':"表の中で、x も y も分かっているペア（x＝−2、y＝6）をかけて a を求めます。<br>k は x＝3 のときの y の値です。xy＝a に x＝3 を入れて、y を求めます。",
+  'a5':"表の x＝−2、y＝6 のペアをかけて a を求めます。<br>次に、xy＝a に x＝3 を入れて、y を求めます。",
+  'a6':"x＝−4、y＝6 のペアをかけて a を求めます。<br>ア：x＝3 のときの y　→　xy＝a に x＝3 を入れます。<br>イ：y＝−3/2 のときの x　→　xy＝a に y＝−3/2 を入れて、x を求めます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>
