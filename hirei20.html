@@ -134,6 +134,18 @@
         .intro-box p { margin: 0 0 6px 0; }
         .intro-title { font-weight: 900; color: #1565c0; font-size: 15px; margin-bottom: 10px; }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 
 <div class="sticky-header">
@@ -254,7 +266,7 @@
 
     <!-- 例題1 -->
     <div class="example-box">
-        <div class="example-title">📖 例題１　一次関数かどうか判断する</div>
+        <div class="example-title">📖 例題１　一次関数かどうか判断する<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
         <div class="example-question">
             次の式のうち、<span class="math">y</span> が <span class="math">x</span> の一次関数であるものをすべて選べ。<br>
             ①　<span class="math">y = 3x + 2</span>　　
@@ -294,7 +306,7 @@
 
     <!-- 例題2 -->
     <div class="example-box">
-        <div class="example-title">📖 例題２　傾きと切片を読み取る</div>
+        <div class="example-title">📖 例題２　傾きと切片を読み取る<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
         <div class="example-question">
             一次関数 <span class="math">y = −2x + 7</span> の傾きと切片を答えよ。
         </div>
@@ -322,7 +334,7 @@
 
     <!-- 例題3 -->
     <div class="example-box">
-        <div class="example-title">📖 例題３　変化の割合を求める</div>
+        <div class="example-title">📖 例題３　変化の割合を求める<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
         <div class="example-question">
             一次関数 <span class="math">y = 3x − 1</span> において、<span class="math">x</span> が 2 から 5 まで増加するときの変化の割合を求めよ。
         </div>
@@ -401,7 +413,7 @@
         <div class="practice-title">✏️ 練習問題</div>
 
         <div class="q-item">
-            <span class="q-num">（1）</span>
+            <span class="q-num">（1）<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></span>
             <div class="q-text">
                 次の式のうち、<span class="math">y</span> が <span class="math">x</span> の一次関数であるものはどれか。<br>
                 ア　<span class="math">y = x + 6</span>　　
@@ -431,7 +443,7 @@
         </div>
 
         <div class="q-item">
-            <span class="q-num">（2）</span>
+            <span class="q-num">（2）<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></span>
             <div class="q-text">
                 一次関数 <span class="math">y = 5x − 3</span> の傾きと切片を答えよ。
             </div>
@@ -454,7 +466,7 @@
         </div>
 
         <div class="q-item">
-            <span class="q-num">（3）</span>
+            <span class="q-num">（3）<button class="hint-btn" onclick="showHint('h6')">💡 ヒント</button></span>
             <span class="q-pref">〈基礎〉</span>
             <div class="q-text">
                 一次関数 <span class="math">y = −3x + 4</span> について、<span class="math">x</span> が 1 から 4 まで増加するときの変化の割合を求めよ。
@@ -513,7 +525,7 @@
         </div>
 
         <div class="q-item">
-            <span class="q-num">（4）</span>
+            <span class="q-num">（4）<button class="hint-btn" onclick="showHint('h7')">💡 ヒント</button></span>
             <span class="q-pref">〈神奈川県〉</span>
             <div class="q-text">
                 一次関数 <span class="math">y = ax + 1</span> において、<span class="math">x</span> が 0 から 3 まで増加するとき変化の割合が 4 であった。<span class="math">a</span> の値を求めよ。
@@ -824,5 +836,25 @@ function updateReviewBtn(isReview) {
 })();
 </script>
 
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"一次関数は <b>y＝ax＋b</b>（a≠0）の形です。<br>1つずつ、「x が1乗だけか」「a が 0 でないか」を確かめます。<br>x² や、分母に x がある式、x がない式（y＝4 など）は一次関数ではありません。",
+  'h2':"<b>y＝ax＋b</b> と見比べます。<br>x の前の数が<span class=\"kw\">傾き a</span>、数だけの部分が<span class=\"kw\">切片 b</span> です。（マイナスも一緒に読みます）",
+  'h3':"変化の割合＝<b>y の増加量÷x の増加量</b> です。<br>x＝2 と x＝5 を式に入れて y を求め、増加量を比べます。",
+  'h4':"一次関数は <b>y＝ax＋b</b>（a≠0）の形です。<br>1つずつ、「x が1乗だけか」「a が 0 でないか」を確かめます。<br>x² や、分母に x がある式、x がない式（y＝4 など）は一次関数ではありません。",
+  'h5':"<b>y＝ax＋b</b> と見比べます。<br>x の前の数が<span class=\"kw\">傾き a</span>、数だけの部分が<span class=\"kw\">切片 b</span> です。（マイナスも一緒に読みます）",
+  'h6':"変化の割合＝<b>y の増加量÷x の増加量</b> です。<br>x＝1 と x＝4 を式に入れて y を求め、増加量を比べます。",
+  'h7':"一次関数の変化の割合は、どの範囲でも<span class=\"kw\">傾き a と同じ</span>です。<br>変化の割合が 4 とわかっているので、a がそのまま決まります。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
+</script>
 </body>
 </html>

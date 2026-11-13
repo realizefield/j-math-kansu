@@ -102,6 +102,18 @@
         .choice-btn.btn-correct { background: #d4edda; color: #155724; border-color: #28a745; }
         .choice-btn.btn-wrong { background: #f8d7da; color: #721c24; border-color: #dc3545; }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -154,7 +166,7 @@
 
     <!-- 例題1 -->
     <div class="example-box">
-        <div class="example-title">📖 例題１　傾き 2、点 (1, 5) を通る</div>
+        <div class="example-title">📖 例題１　傾き 2、点 (1, 5) を通る<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
         <div class="example-question">
             傾きが 2 で、点 (1, 5) を通る一次関数の式を求めよ。
         </div>
@@ -191,7 +203,7 @@
 
     <!-- 例題2 -->
     <div class="example-box">
-        <div class="example-title">📖 例題２　傾き −3、点 (2, 1) を通る</div>
+        <div class="example-title">📖 例題２　傾き −3、点 (2, 1) を通る<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
         <div class="example-question">
             傾きが −3 で、点 (2, 1) を通る一次関数の式を求めよ。
         </div>
@@ -228,7 +240,7 @@
 
     <!-- 例題3：分数の傾き -->
     <div class="example-box">
-        <div class="example-title">📖 例題３　傾きが分数の場合</div>
+        <div class="example-title">📖 例題３　傾きが分数の場合<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
         <div class="example-question">
             傾きが
             <span class="frac-wrap" style="color:#1a5276;">
@@ -287,7 +299,7 @@
 
         <!-- (1) -->
         <div class="q-item">
-            <span class="q-num">（1）</span>
+            <span class="q-num">（1）<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></span>
             <span class="q-pref">〈青森県〉</span>
             <div class="q-text">
                 傾きが 3 で、点 (2, 7) を通る一次関数の式を求めよ。
@@ -313,7 +325,7 @@
 
         <!-- (2) -->
         <div class="q-item">
-            <span class="q-num">（2）</span>
+            <span class="q-num">（2）<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></span>
             <span class="q-pref">〈静岡県〉</span>
             <div class="q-text">
                 傾きが −2 で、点 (−1, 4) を通る一次関数の式を求めよ。
@@ -342,7 +354,7 @@
 
         <!-- (3) -->
         <div class="q-item">
-            <span class="q-num">（3）</span>
+            <span class="q-num">（3）<button class="hint-btn" onclick="showHint('h6')">💡 ヒント</button></span>
             <span class="q-pref">〈長野県〉</span>
             <div class="q-text">
                 変化の割合が 4 で、<span class="math">x = 2</span> のとき <span class="math">y = 10</span> である一次関数の式を求めよ。
@@ -372,7 +384,7 @@
 
         <!-- (4) -->
         <div class="q-item">
-            <span class="q-num">（4）</span>
+            <span class="q-num">（4）<button class="hint-btn" onclick="showHint('h7')">💡 ヒント</button></span>
             <span class="q-pref">〈京都府〉</span>
             <div class="q-text">
                 傾きが −1 で、点 (3, −5) を通る一次関数の式を求めよ。
@@ -655,6 +667,26 @@ function updateReviewBtn(isReview) {
         updateReviewBtn(data.review || false);
     } catch(e) {}
 })();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"傾きが分かっているので、<b>y＝2x＋b</b> とおきます。<br>通る点 (1, 5) の x、y を入れて、b を求めます。",
+  'h2':"傾きが分かっているので、<b>y＝−3x＋b</b> とおきます。<br>通る点 (2, 1) の x、y を入れて、b を求めます。",
+  'h3':"傾きが分かっているので、<b>y＝(1/2)x＋b</b> とおきます。（傾きは分数です）<br>通る点 (4, 3) の x、y を入れて、b を求めます。<br>分数のかけ算に注意しましょう。",
+  'h4':"傾きが分かっているので、<b>y＝3x＋b</b> とおきます。<br>通る点 (2, 7) の x、y を入れて、b を求めます。",
+  'h5':"傾きが分かっているので、<b>y＝−2x＋b</b> とおきます。<br>通る点 (−1, 4) の x、y を入れて、b を求めます。<br>（−2）×（−1）の符号に注意。",
+  'h6':"<b>変化の割合＝傾き</b> なので、a＝4。<br>y＝4x＋b に、x＝2、y＝10 を入れて b を求めます。",
+  'h7':"傾きが分かっているので、<b>y＝−1x＋b</b> とおきます。<br>通る点 (3, −5) の x、y を入れて、b を求めます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>

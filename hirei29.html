@@ -107,6 +107,18 @@
         .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
         .line-float-btn:hover { transform: scale(1.1); }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -166,7 +178,7 @@
 
     <!-- 例題1：三角形の辺上を1辺だけ動く（シンプル版） -->
     <div class="example-box">
-        <div class="example-title">📖 例題１　三角形の 1 辺上を動く点（基本）</div>
+        <div class="example-title">📖 例題１　三角形の 1 辺上を動く点（基本）<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
         <div class="example-question">
             右の図のように、△ABC で AB = 6 cm、高さ AC = 4 cm とする。<br>
             点 P が A を出発して辺 AB 上を B まで動く。<br>
@@ -278,7 +290,7 @@
 
     <!-- 例題2：長方形の2辺を動く（場合分け） -->
     <div class="example-box">
-        <div class="example-title">📖 例題２　長方形の 2 辺を動く点（場合分け）</div>
+        <div class="example-title">📖 例題２　長方形の 2 辺を動く点（場合分け）<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
         <div class="example-question">
             右の長方形 OABC で OA = 5 cm、OC = 3 cm とする。<br>
             点 P が O を出発し、辺 OA → AB の順に毎秒 1 cm で動く。<br>
@@ -500,7 +512,7 @@
 
     <!-- 例題3：x=○のときの面積 -->
     <div class="example-box">
-        <div class="example-title">📖 例題３　「面積が○のとき x は何秒か」</div>
+        <div class="example-title">📖 例題３　「面積が○のとき x は何秒か」<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
         <div class="example-question">
             例題２の長方形 OABC（OA=5, OC=3）で、△OCP の面積が 6 cm² になるのは出発から何秒後か。
         </div>
@@ -549,7 +561,7 @@
         <div class="practice-title">✏️ 練習問題</div>
 
         <div class="q-item">
-            <span class="q-num">（1）</span>
+            <span class="q-num">（1）<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></span>
             <span class="q-pref">〈埼玉県〉</span>
             <div class="q-text">
                 右の長方形 OABC で OA = 4 cm、OC = 3 cm とする。<br>
@@ -607,7 +619,7 @@
         </div>
 
         <div class="q-item">
-            <span class="q-num">（2）</span>
+            <span class="q-num">（2）<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></span>
             <span class="q-pref">〈大阪府〉</span>
             <div class="q-text">
                 △ABC で AB = 8 cm、BC = 6 cm、∠B = 90° とする。<br>
@@ -816,6 +828,24 @@
 function toggleReview(){ var key='hirei29'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); d.review=!d.review; localStorage.setItem('study_'+key,JSON.stringify(d)); updateReviewBtn(d.review); }catch(e){} }
 function updateReviewBtn(r){ document.getElementById('reviewIcon').innerText=r?'★':'☆'; document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加'; document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12'; }
 (function(){ var key='hirei29'; try{ var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}'); updateReviewBtn(d.review||false); }catch(e){} })();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"△APC は、底辺 AP＝x cm、高さ AC＝4 cm の三角形です。<br>面積＝底辺×高さ÷2 で式をつくります。<br>変域は、P が A から B まで動く範囲です。",
+  'h2':"<b>① P が OA 上</b>：底辺 OC、高さ OP＝x。<br><b>② P が AB 上</b>：高さは OA で<b>一定</b>になります。",
+  'h3':"フェーズ①の式に y＝6 を入れて x を求めます。<br>フェーズ②は y が一定なので、6 にはなりません。",
+  'h4':"① P が OA 上：底辺 OC、高さ OP＝x。<br>② P が AB 上：高さは OA で一定。<br>③ y＝4.5 になるのが、どちらの範囲かを考えます。",
+  'h5':"△BPC は、底辺 BC＝6、高さ BP＝x の三角形です。<br>① 面積＝底辺×高さ÷2。<br>② P は B から A まで動きます。<br>③ y＝18 を式に入れます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>

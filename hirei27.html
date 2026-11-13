@@ -103,6 +103,18 @@
         .line-float-btn { position: fixed; bottom: 30px; right: 30px; background: var(--line-green); color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; transition: 0.2s; }
         .line-float-btn:hover { transform: scale(1.1); }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        /* ヒントボタン・ポップアップ */
+        .hint-btn { background:#f39c12; color:#fff; border:none; cursor:pointer; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-left:10px; transition:.2s; vertical-align:middle; font-family:inherit; }
+        .hint-btn:hover { background:#e67e22; transform:scale(1.05); }
+        .hint-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border:3px solid #f39c12; border-radius:12px; padding:20px 24px; z-index:5000; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+        .hint-popup.show { display:block; }
+        .hint-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.3); z-index:4999; }
+        .hint-overlay.show { display:block; }
+        .hint-popup-title { font-weight:900; color:#e67e22; font-size:15px; margin-bottom:10px; }
+        .hint-popup-body { font-size:14px; line-height:2; color:#333; }
+        .hint-popup-body .kw { color:#e74c3c; font-weight:bold; }
+        .hint-close { background:#e74c3c; color:#fff; border:none; cursor:pointer; padding:6px 20px; border-radius:20px; font-weight:bold; margin-top:14px; display:block; width:100%; font-size:14px; font-family:inherit; }
     </style>
 </head>
 <body>
@@ -156,7 +168,7 @@
 
     <!-- 例題1：水量 -->
     <div class="example-box">
-        <div class="example-title">📖 例題１　水槽の水量（定番問題）</div>
+        <div class="example-title">📖 例題１　水槽の水量（定番問題）<button class="hint-btn" onclick="showHint('h1')">💡 ヒント</button></div>
         <div class="example-question">
             水槽に水が 80 L 入っている。毎分 3 L の割合で水を抜いていく。<br>
             水を抜き始めてから <span class="math">x</span> 分後の水量を <span class="math">y</span> L とするとき、次の問いに答えよ。<br>
@@ -274,7 +286,7 @@
 
     <!-- 例題2：距離と時間 -->
     <div class="example-box">
-        <div class="example-title">📖 例題２　歩行距離（兵庫県風）</div>
+        <div class="example-title">📖 例題２　歩行距離（兵庫県風）<button class="hint-btn" onclick="showHint('h2')">💡 ヒント</button></div>
         <div class="example-question">
             家から学校まで 1800 m ある。分速 60 m で歩いて出発した。<br>
             出発から <span class="math">x</span> 分後の残り距離を <span class="math">y</span> m とする。<br>
@@ -320,7 +332,7 @@
 
     <!-- 例題3：料金 -->
     <div class="example-box">
-        <div class="example-title">📖 例題３　タクシー料金（料金表から式を求める）</div>
+        <div class="example-title">📖 例題３　タクシー料金（料金表から式を求める）<button class="hint-btn" onclick="showHint('h3')">💡 ヒント</button></div>
         <div class="example-question">
             タクシーの料金は、乗車距離 <span class="math">x</span> km に対して料金 <span class="math">y</span> 円 が一次関数になっているとします。<br>
             3 km で 1100 円、8 km で 2100 円であるとき、式を求め、5 km のときの料金を答えよ。
@@ -375,7 +387,7 @@
 
         <!-- (1) -->
         <div class="q-item">
-            <span class="q-num">（1）</span>
+            <span class="q-num">（1）<button class="hint-btn" onclick="showHint('h4')">💡 ヒント</button></span>
             <span class="q-pref">〈大阪府〉</span>
             <div class="q-text">
                 ろうそくに火をつけると、毎分 0.5 cm の割合で短くなる。
@@ -411,7 +423,7 @@
 
         <!-- (2) -->
         <div class="q-item">
-            <span class="q-num">（2）</span>
+            <span class="q-num">（2）<button class="hint-btn" onclick="showHint('h5')">💡 ヒント</button></span>
             <span class="q-pref">〈愛知県〉</span>
             <div class="q-text">
                 ある駐車場の料金は最初の 30 分が 300 円で、その後 10 分ごとに 100 円加算される。
@@ -637,6 +649,24 @@
 function toggleReview(){var key='hirei27';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');d.review=!d.review;localStorage.setItem('study_'+key,JSON.stringify(d));updateReviewBtn(d.review);}catch(e){}}
 function updateReviewBtn(r){document.getElementById('reviewIcon').innerText=r?'★':'☆';document.getElementById('reviewText').innerText=r?'復習リストに追加済み':'復習リストに追加';document.getElementById('reviewBtn').style.background=r?'#e74c3c':'#f39c12';}
 (function(){var key='hirei27';try{var d=JSON.parse(localStorage.getItem('study_'+key)||'{"count":0,"review":false}');updateReviewBtn(d.review||false);}catch(e){}})();
+</script>
+<div class="hint-overlay" id="hintOverlay" onclick="closeHint()"></div>
+<div class="hint-popup" id="hintPopup">
+    <div class="hint-popup-title">💡 ヒント</div>
+    <div class="hint-popup-body" id="hintBody"></div>
+    <button class="hint-close" onclick="closeHint()">とじる</button>
+</div>
+<script>
+var HINTS = {
+  'h1':"はじめの水量が<b>切片 b</b>、1分あたりの変化が<b>傾き a</b>。水が減るので傾きは<b>マイナス</b>です。<br>② は y＝20 を式に入れて、x を求めます。",
+  'h2':"はじめの距離が切片、毎分近づく距離が傾き（残りは減るのでマイナス）。<br>② は y＝600 を式に入れて、x を求めます。",
+  'h3':"① 2点 (3, 1100)、(8, 2100) から<b>傾き＝（y の差）÷（x の差）</b>。<br>② 1点を y＝ax＋b に入れて b を求めます。<br>③ 式に x＝5 を入れます。",
+  'h4':"はじめの長さ 20 cm が切片、毎分 0.5 cm 短くなるので傾きは<b>−0.5</b>。<br>② は y＝8 を式に入れて、x を求めます。",
+  'h5':"10分で100円 → 1分あたり何円かを求めると、傾きになります。<br>x＝30 のとき 300 円なので、その点を入れて b を求めます。<br>② は y＝800 を入れます。"
+};
+function showHint(key){document.getElementById('hintBody').innerHTML=HINTS[key];document.getElementById('hintPopup').classList.add('show');document.getElementById('hintOverlay').classList.add('show');}
+function closeHint(){document.getElementById('hintPopup').classList.remove('show');document.getElementById('hintOverlay').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHint();});
 </script>
 </body>
 </html>
