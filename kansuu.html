@@ -2798,7 +2798,7 @@ function lineHintText(n,d){
 }
 function lineWidget(cfg){
   var R=cfg.R||5, S=360, u=S/(2*R+2), c=S/2, NSV='http://www.w3.org/2000/svg';
-  var PR=cfg.probs, pi=0, stage=0, cur=[0,0], hnd=[-1,1], pt=null, conv=false, dragging=false, live=true, hintOpen=false, finished=false;
+  var PR=cfg.probs, pi=0, stage=0, cur=[0,0], hnd=[-1,1], pt=null, conv=false, dragging=false, live=true, hintOpen=false, finished=false, icPending=false, icPt=null;
   var wrap=document.createElement('div'); wrap.className='place';
   var h=document.createElement('div'); h.className='place-title'; h.innerHTML='✋ '+cfg.title; wrap.appendChild(h);
   var it=document.createElement('div'); it.className='place-intro'; it.innerHTML=fmt(cfg.intro); wrap.appendChild(it);
@@ -2829,24 +2829,30 @@ function lineWidget(cfg){
   function X(x){return c+x*u;} function Y(y){return c-y*u;}
   function lbl(x,y,txt,col,anchor,fs){ var t=el('text',{x:x,y:y,'font-size':fs||13,'font-weight':'bold',fill:col,stroke:'#fff','stroke-width':3,'paint-order':'stroke','text-anchor':anchor||'start'}); t.textContent=txt; return t; }
   var lineEl=null, labEl=null;
-  function setLine(hx,hy){
+  function setLine(hx,hy,b0){
+    var bb=b0||0;
     if(!lineEl){
       lineEl=el('line',{'stroke':'#7a8a99','stroke-width':2.6,'stroke-dasharray':'7 5','stroke-linecap':'round'});
       lineEl.style.transition='stroke .7s, stroke-width .7s'; gLine.appendChild(lineEl);
     }
     var x1,y1,x2,y2;
-    if(hx===0){ x1=0;x2=0;y1=-R-1;y2=R+1; } else { var s=hy/hx; x1=-R-1;x2=R+1;y1=s*x1;y2=s*x2; }
+    if(hx===0){ x1=0;x2=0;y1=-R-1;y2=R+1; } else { var s=(hy-bb)/hx; x1=-R-1;x2=R+1;y1=bb+s*x1;y2=bb+s*x2; }
     lineEl.setAttribute('x1',X(x1)); lineEl.setAttribute('y1',Y(y1)); lineEl.setAttribute('x2',X(x2)); lineEl.setAttribute('y2',Y(y2));
   }
   function P(){ return PR[pi]; }
+  function eqTxt(p){ return (p.b!==undefined)?p.disp:eqY(p.n,p.d); }
   function draw(){
     gPt.innerHTML=''; gGuide.innerHTML=''; gCur.innerHTML='';
     pad.style.display=(conv||stage>=2||finished)?'none':'';
     convBox.style.display=conv?'':'none';
     if(conv){ liveRow.innerHTML='まず、式を「分数 × x」の形に直します。'; return; }
+    if(icPt){
+      gPt.appendChild(el('circle',{cx:X(icPt[0]),cy:Y(icPt[1]),r:(stage>=2?8:6.5),fill:(stage>=2?'#d4561f':'#1f8a4c'),stroke:'#fff','stroke-width':1.8}));
+      gPt.appendChild(lbl(X(icPt[0])+9,Y(icPt[1])-9,'('+N(icPt[0])+', '+N(icPt[1])+')',(stage>=2?'#a63c12':'#14503f'),'start',12));
+    }
     if(pt){
-      gPt.appendChild(el('circle',{cx:X(pt[0]),cy:Y(pt[1]),r:6.5,fill:'#1f8a4c',stroke:'#fff','stroke-width':1.8}));
-      gPt.appendChild(lbl(X(pt[0])+9,Y(pt[1])-9,'('+N(pt[0])+', '+N(pt[1])+')','#14503f','start',12));
+      gPt.appendChild(el('circle',{cx:X(pt[0]),cy:Y(pt[1]),r:(stage>=2?8:6.5),fill:(stage>=2?'#d4561f':'#1f8a4c'),stroke:'#fff','stroke-width':1.8}));
+      gPt.appendChild(lbl(X(pt[0])+9,Y(pt[1])-9,'('+N(pt[0])+', '+N(pt[1])+')',(stage>=2?'#a63c12':'#14503f'),'start',12));
     }
     if(stage===0 && !finished){
       if(live && (cur[0]!==0||cur[1]!==0)){
@@ -2862,20 +2868,30 @@ function lineWidget(cfg){
       gCur.appendChild(el('circle',{cx:X(hnd[0]),cy:Y(hnd[1]),r:8,fill:'#2a6fb0',stroke:'#fff','stroke-width':2.2}));
       liveRow.innerHTML='いまの線：原点と <b>'+ptTxt(hnd)+'</b> を結ぶ直線';
     } else if(stage===2){
-      liveRow.innerHTML='<b>'+fmt(eqY(P().n,P().d))+'</b> のグラフが、かけました！';
+      liveRow.innerHTML='<b>'+fmt(eqTxt(P()))+'</b> のグラフが、かけました！';
     }
   }
   function eqShow(p){ return p.disp?p.disp:eqY(p.n,p.d); }
   function showQ(){
     var p=P(), eq=fmt(eqShow(p)), hc=!!p.disp, k0=hc?1:0;
     var body, hintHtml;
-    if(conv){
+    if(p.b!==undefined){
+      var bs=(p.b<0?'地下'+(-p.b)+'階':(p.b===0?'0階':p.b+'階'));
+      var dnu=(p.n>0?'上に ':'下に ')+Math.abs(p.n);
+      if(icPending){
+        body='<b>'+eq+'</b> のグラフをかきます。<br><b>STEP 1　出発する階（切片）に点をうつ</b>：切片は <b>'+N(p.b)+'</b>。y軸の上の、<b>'+bs+'</b>の点 <b>(0, '+N(p.b)+')</b> に点を置きましょう。';
+        hintHtml='y ＝ ax ＋ b の <b>b（切片）</b>が、出発する階です。y軸（たての線）の上で、<b>'+bs+'</b>の高さに点を置きます。';
+      } else {
+        body='<b>'+eq+'</b> のグラフをかきます。<br><b>STEP 2　もう1つ点をうつ</b>：出発点 (0, '+N(p.b)+') から、<b>必ず右へ '+p.d+'</b>、そこから<b>'+dnu+'</b> 進んだ点 <b>('+p.d+', '+N(p.b+p.n)+')</b> に点を置きましょう。<br><span class="place-hint">合っていれば、点の色が変わり、2つの点を通る直線が自動で現れます。</span>';
+        hintHtml='傾き {'+N(p.n)+'/'+p.d+'} は「<b>右へ '+p.d+'、'+dnu+'</b>」。出発点から、右へ進むことを忘れずに。';
+      }
+    } else if(conv){
       body='<b>'+eq+'</b> のグラフをかきます。<br><b>STEP 1　式を直す</b>：<b>'+eq+'</b> を、<b>y ＝ {□/□}x</b> の形に直しましょう。<b>分母は必ずプラス</b>です。';
       body=fmt(body);
       hintHtml=p.convHint||'';
     } else {
       var s1=(pi<2)?('原点から <b>右に '+p.d+'、'+(p.n>0?'上に ':'下に ')+Math.abs(p.n)+'</b> 進んだ点 <b>('+p.d+', '+N(p.n)+')</b> に点を置きましょう。'):('グラフ上の、<b>x も y も整数</b>の点（原点以外）を1つ置きましょう。');
-      if(stage===0) body='<b>'+eq+'</b>'+(hc?' ＝ <b>'+fmt(eqFr(p.n,p.d).replace('y ＝ ',''))+'</b>':'')+' のグラフをかきます。<br><b>STEP '+(1+k0)+'　点をうつ</b>：'+s1;
+      if(stage===0) body='<b>'+eq+'</b>'+(hc?' ＝ <b>'+fmt(eqFr(p.n,p.d).replace('y ＝ ',''))+'</b>':'')+' のグラフをかきます。<br><b>STEP '+(1+k0)+'　点をうつ</b>：'+s1+(cfg.auto?'<br><span class="place-hint">合っていれば、点の色が変わり、原点を通る直線が自動で現れます。</span>':'');
       else body='<b>'+eq+'</b> のグラフをかきます。<br><b>STEP '+(2+k0)+'　線を引く</b>：原点と点 <b>'+ptTxt(pt)+'</b> を結ぶ直線を引きましょう。<span class="place-hint">青い点を動かすと、原点を通る直線が動きます。</span>';
       hintHtml=lineHintText(p.n,p.d);
     }
@@ -2894,13 +2910,43 @@ function lineWidget(cfg){
     var n=[Math.max(-R,Math.min(R,t[0]+dx)),Math.max(-R,Math.min(R,t[1]+dy))];
     if(stage===0) cur=n; else hnd=n; draw();
   }
+  function solve(p,auto){
+    stage=2; draw(); pad.style.display='none';
+    var go=function(){
+      lineEl.style.stroke='#d4561f'; lineEl.style.strokeWidth='3.6'; lineEl.setAttribute('stroke-dasharray','none');
+    };
+    if(auto) setTimeout(go,60); else go();
+    if(labEl) labEl.remove();
+    var bq=p.b||0, sl=p.n/p.d, xl=-R+1; while(xl<R-1 && Math.abs(bq+sl*xl)>R-0.8) xl+=0.5; labEl=lbl(X(xl)-4,Y(bq+sl*xl)+((p.n>0)?22:-10),eqTxt(p).replace(/\{(\d+)\/(\d+)\}/g,'$1/$2'),'#d4561f','end',14); gLine.appendChild(labEl);
+    var last=(pi===PR.length-1);
+    launchConfetti(last?170:110);
+    say('<b>🎉 正解です！</b>'+(auto?((p.b!==undefined)?' 点の色が変わって、2つの点を通る直線が現れました。':' 点の色が変わって、原点とこの点を通る直線が現れました。'):' 線の色が変わりました。')+'<br>'+fmt(eqTxt(p))+' のグラフは、<b>'+((p.b!==undefined)?'出発点 (0, '+N(p.b)+') と ('+p.d+', '+N(p.b+p.n)+')':'原点と ('+p.d+', '+N(p.n)+')')+'</b> を結んだ直線です。'+(last?'<br><b>全問クリア！ すばらしい！</b>':''),true);
+    showQ();
+    nx.style.display='';
+    if(last){ finished=true; pad.style.display='none'; nx.className='btn sub'; nx.textContent='もう一度やる ↺'; nx.onclick=function(){ pi=0; reset(); pad.style.display=''; }; }
+    else { nx.className='btn'; nx.textContent='次の問題 ▶'; nx.onclick=function(){ pi++; hintOpen=false; reset(); }; }
+  }
   function judge(){
     var p=P();
+    if(stage===0 && p.b!==undefined){
+      var ax=cur[0], ay=cur[1];
+      if(icPending){
+        if(ax===0&&ay===p.b){ icPt=[0,p.b]; icPending=false; launchConfetti(30); showQ(); draw(); say('<b>🎉 出発点がうてました！</b> つぎは、そこから右へ進んだ点を、もう1つうちます。',true); return; }
+        say('<b>おしい！</b> いまの点は <b>'+ptTxt(cur)+'</b> です。切片は <b>'+N(p.b)+'</b> なので、<b>y軸の上</b>（x ＝ 0）で、<b>y ＝ '+N(p.b)+'</b> の高さの点 <b>(0, '+N(p.b)+')</b> です。',false); shake(); return;
+      }
+      if(ax===0){ say('<b>おしい！</b> 出発点と同じ x の位置です。出発点から、<b>右へ進んだ</b>点を置きましょう。',false); shake(); return; }
+      if(p.n*ax===p.d*(ay-p.b)){ pt=[ax,ay]; stage=1; hnd=[ax,ay]; fb.className='place-fb'; fb.innerHTML=''; setLine(ax,ay,p.b); solve(p,true); return; }
+      var mb='<b>おしい！</b> いまの点は <b>'+ptTxt(cur)+'</b> です。<br>傾きは {'+N(p.n)+'/'+p.d+'}。出発点 (0, '+N(p.b)+') から、<b>右へ '+p.d+'</b> 進むごとに、'+(p.n>0?'上':'下')+'へ '+Math.abs(p.n)+' 変わります。';
+      if((p.n*ax)%p.d===0) mb+='<br>x ＝ '+N(ax)+' のとき、y ＝ <b>'+N(p.b+p.n*ax/p.d)+'</b> のはずです。';
+      else mb+='<br>x が <b>'+p.d+' の倍数</b>の点を選ぶと、y が整数になります。';
+      say(fmt(mb),false); shake(); return;
+    }
     if(stage===0){
       var hx=cur[0], hy=cur[1];
       if(hx===0&&hy===0){ say('<b>おしい！</b> 原点は、はじめから通る点です。<b>原点以外</b>の点を置きましょう。',false); shake(); return; }
       if(p.n*hx===p.d*hy){
         pt=[hx,hy]; stage=1; fb.className='place-fb'; fb.innerHTML='';
+        if(cfg.auto){ hnd=[hx,hy]; setLine(hx,hy); solve(p,true); return; }
         hnd=(p.n*(-1)===p.d*1)?[1,1]:[-1,1];
         launchConfetti(40); showQ(); draw();
         say('<b>🎉 点がうてました！</b> つぎは、原点とこの点を結ぶ直線を引きます。',true); return;
@@ -2913,21 +2959,7 @@ function lineWidget(cfg){
     if(stage===1){
       var gx=hnd[0], gy=hnd[1];
       if(gx===0&&gy===0){ say('<b>おしい！</b> 青い点が原点に重なっています。動かしましょう。',false); shake(); return; }
-      if(gx!==0 && p.n*gx===p.d*gy){
-        stage=2; draw(); pad.style.display='none';
-        lineEl.setAttribute('x1',lineEl.getAttribute('x1'));
-        lineEl.style.stroke='#d4561f'; lineEl.style.strokeWidth='3.6'; lineEl.setAttribute('stroke-dasharray','none');
-        if(labEl) labEl.remove();
-        var xl=-Math.min(R*0.6,(R-0.9)/Math.abs(p.n/p.d)); labEl=lbl(X(xl)-4,Y((p.n/p.d)*xl)+((p.n>0)?22:-10),eqY(p.n,p.d).replace(/\{(\d+)\/(\d+)\}/,'$1/$2'),'#d4561f','end',14); gLine.appendChild(labEl);
-        var last=(pi===PR.length-1);
-        launchConfetti(last?170:110);
-        say('<b>🎉 正解です！ 線の色が変わりました。</b><br>'+fmt(eqY(p.n,p.d))+' のグラフは、<b>原点と ('+p.d+', '+N(p.n)+')</b> を結んだ直線です。'+(last?'<br><b>全問クリア！ すばらしい！</b>':''),true);
-        showQ();
-        nx.style.display=''; 
-        if(last){ finished=true; pad.style.display='none'; nx.className='btn sub'; nx.textContent='もう一度やる ↺'; nx.onclick=function(){ pi=0; reset(); pad.style.display=''; }; }
-        else { nx.className='btn'; nx.textContent='次の問題 ▶'; nx.onclick=function(){ pi++; hintOpen=false; reset(); }; }
-        return;
-      }
+      if(gx!==0 && p.n*gx===p.d*gy){ solve(p,false); return; }
       var s=(gx===0)?null:gy/gx, a=p.n/p.d, m2='<b>おしい！</b> ';
       if(s===null) m2+='たて向きの線になっています。';
       else if(s*a<=0) m2+='線の向きが逆です。この直線は、<b>右へ進むと'+(a>0?'上がる':'下がる')+'</b>直線です。';
@@ -2955,7 +2987,7 @@ function lineWidget(cfg){
   }
   cBtn.onclick=function(){ if(conv) judgeConv(); };
   function reset(){
-    stage=0; cur=[0,0]; pt=null; finished=false; pad.style.display=''; conv=!!P().disp; sn.value=''; sd.value='';
+    stage=0; cur=[0,0]; pt=null; icPt=null; icPending=(P().b!==undefined); finished=false; pad.style.display=''; conv=(!!P().disp)&&(P().b===undefined); sn.value=''; sd.value='';
     gLine.innerHTML=''; lineEl=null; labEl=null; nx.style.display='none'; fb.className='place-fb'; fb.innerHTML='';
     showQ(); draw();
   }
@@ -5459,16 +5491,6 @@ var PLACE={
    probs:[{n:3,d:1},{n:2,d:1},{n:1,d:2},{n:2,d:3},{n:-2,d:1},{n:-2,d:3}]}
  ],
  '4 注意すべきグラフ':[
-  {kind:'line',title:'点をおいてみよう⑧　式を直して、直線を引く（x の前に数がない式・x が分数の式）',R:5,
-   intro:'つまずきやすい式です。<b>STEP 1</b> で式を「分数 × x」の形に直し、<b>STEP 2</b> で点をうち、<b>STEP 3</b> で直線を引きます。<br><b>ルール</b>：① x の前に数がないときは「1」がかくれている。② {x/2} は {1/2} × x。③ <b>マイナスは分子</b>につけ、<b>分母は必ずプラス</b>。',
-   probs:[
-    {n:1,d:1,disp:'y ＝ x',convHint:'x の前に何も書いていないときは、<b>「1」がかくれています</b>。y ＝ x は y ＝ 1x。分数にすると、<b>{1/1}x</b> です。'},
-    {n:1,d:2,disp:'y ＝ {x/2}',convHint:'{x/2} は「x を 2 で割る」こと、つまり <b>{1/2} × x</b> です。分母は 2、分子は 1 です。'},
-    {n:-1,d:1,disp:'y ＝ −x',convHint:'y ＝ −x は y ＝ −1x。<b>マイナスは分子</b>につけて、<b>{−1/1}x</b> です。分母は 1（プラス）。'},
-    {n:-1,d:3,disp:'y ＝ −{x/3}',convHint:'y ＝ −{x/3} は y ＝ −{1/3}x。<b>マイナスを分子に</b>うつして <b>{−1/3}x</b>。<b>分母は必ずプラス</b>の 3 です。'},
-    {n:1,d:3,disp:'y ＝ {x/3}',convHint:'{x/3} は {1/3} × x。分子 1、分母 3 です。'},
-    {n:-1,d:2,disp:'y ＝ −{x/2}',convHint:'マイナスは分子へ。y ＝ −{x/2} ＝ <b>{−1/2}x</b>。分母は必ずプラスです。'}
-   ]}
  ],
  '反比例のグラフ（面積が一定）':[
   {title:'点をおいてみよう⑥　y ＝ 6/x の点を打ってグラフをかく',R:7,live:true,
@@ -5496,6 +5518,95 @@ var PLACE={
  ]
 };
 U.forEach(function(u){ if(PLACE[u.title]) u.place=PLACE[u.title]; });
+
+/* ===== 注意すべきグラフ（点をうつと直線が出る） ===== */
+(function(){
+  var i=U.findIndex(function(u){return u.title==='4 注意すべきグラフ';});
+  if(i<0) return;
+  var nu={
+   title:'注意すべきグラフ　点をうって直線を出そう',
+   point:[
+    '<b>y ＝ x</b> は y ＝ <b>{1/1}</b>x、<b>y ＝ {x/2}</b> は y ＝ <b>{1/2}</b>x、<b>y ＝ −x</b> は y ＝ <b>{−1/1}</b>x と考えます。',
+    '分数に直したら、<b>分母 ＝ 右へ進む数</b>、<b>分子 ＝ 上（下）へ進む数</b>。その点と原点を結べば直線です。',
+    '<b>マイナスは分子</b>につけます。<b>分母は必ずプラス</b>です。'
+   ],
+   explain:[
+    'ここでは、まちがえやすい式だけを集めて、くり返し練習します。グラフの中で<b>点を1つ</b>動かすと、合っていれば<b>点の色が変わり、原点を通る直線が自動で現れます</b>。',
+    '<b>① y ＝ x のとき</b>：x の前に「1」がかくれています。y ＝ 1x ＝ {1/1}x。<b>右へ1、上へ1</b>の点 (1, 1) と原点を結びます。',
+    {g:{R:5,lines:[{a:1,l:'y=x'}],arr:[{f:[0,0],t:[1,0],l:'1'},{f:[1,0],t:[1,1],l:'1',c:'#c0392b'}],pts:[[0,0],[1,1]]},cap:'y ＝ {1/1}x：右へ1、上へ1'},
+    '<b>② y ＝ {x/2} のとき</b>：{x/2} は「x を2で割る」ことで、{1/2} × x と同じです。y ＝ {1/2}x と考えて、<b>右へ2、上へ1</b>の点 (2, 1) と原点を結びます。',
+    {g:{R:5,lines:[{a:0.5,l:'y=x/2'}],arr:[{f:[0,0],t:[2,0],l:'2'},{f:[2,0],t:[2,1],l:'1',c:'#c0392b'}],pts:[[0,0],[2,1]]},cap:'y ＝ {1/2}x：右へ2、上へ1'},
+    '<b>③ マイナスのとき</b>：y ＝ −x は {−1/1}x（右へ1、下へ1）、y ＝ −{x/3} は {−1/3}x（右へ3、下へ1）。マイナスは<b>分子</b>につけるので、<b>下へ</b>進みます。',
+    '<b>まちがえやすい</b>：{x/2} を「2x」と読まないこと。y ＝ {1/2}x は右へ<b>2</b>、上へ<b>1</b>。y ＝ 2x は右へ<b>1</b>、上へ<b>2</b>です。'
+   ],
+   ex:[],
+   prac:[
+    {q:'y ＝ {x/2} を、分数 × x の形に直すと？',o:['y ＝ {1/2}x','y ＝ 2x','y ＝ {2/1}x','y ＝ {1/1}x'],a:0,e:'{x/2} ＝ {1/2} × x です。'},
+    {q:'y ＝ {x/2} のグラフは、原点と次のどの点を通りますか。',o:['(1, 2)','(2, 1)','(1, 1)','(2, 2)'],a:1,e:'y ＝ {1/2}x。分母2が右へ、分子1が上へ。点 (2, 1) です。'},
+    {q:'y ＝ −{x/3} を、分数 × x の形に直すと？',o:['y ＝ {1/−3}x','y ＝ {−1/3}x','y ＝ {−3/1}x','y ＝ {3/1}x'],a:1,e:'マイナスは分子につけて {−1/3}x。分母は必ずプラスです。'},
+    {q:'y ＝ x のグラフは、原点と次のどの点を通りますか。',o:['(1, 1)','(1, 0)','(0, 1)','(1, −1)'],a:0,e:'y ＝ {1/1}x。右へ1、上へ1の点 (1, 1) です。'},
+    {q:'y ＝ −{x/2} のグラフは、原点と次のどの点を通りますか。',o:['(2, −1)','(2, 1)','(1, −2)','(1, 2)'],a:0,e:'y ＝ {−1/2}x。右へ2、下へ1の点 (2, −1) です。'}
+   ],
+   check:[
+    {q:'y ＝ {x/4} のグラフは、原点と次のどの点を通りますか。',o:['(4, 1)','(1, 4)','(4, 4)','(1, 1)'],a:0,e:'y ＝ {1/4}x。右へ4、上へ1の点 (4, 1) です。'},
+    {q:'y ＝ −x のグラフは、原点と次のどの点を通りますか。',o:['(2, −2)','(2, 2)','(−2, −1)','(1, 2)'],a:0,e:'y ＝ {−1/1}x。右へ1、下へ1ずつ進む点なので、(2, −2) を通ります。'},
+    {q:'y ＝ {x/3} のグラフの進み方は？',o:['右へ3、上へ1','右へ1、上へ3','右へ3、上へ3','右へ1、上へ1'],a:0,e:'y ＝ {1/3}x。分母3が右へ、分子1が上へです。'}
+   ],
+   place:[
+  {kind:'line',auto:true,title:'点をおいてみよう⑨　式を直して、点を1つうつと、直線が出てくる',R:5,
+   intro:'つまずきやすい式です。<b>STEP 1</b> で式を「分数 × x」の形に直し、<b>STEP 2</b> で点を1つうちます。合っていれば、<b>点の色が変わり、原点を通る直線が自動で現れて、花吹雪</b>が出ます。<br><b>ルール</b>：① x の前に数がないときは「1」がかくれている。② {x/2} は {1/2} × x。③ <b>マイナスは分子</b>につけ、<b>分母は必ずプラス</b>。',
+   probs:[
+    {n:1,d:1,disp:'y ＝ x',convHint:'x の前に何も書いていないときは、<b>「1」がかくれています</b>。y ＝ x は y ＝ 1x。分数にすると、<b>{1/1}x</b> です。'},
+    {n:1,d:2,disp:'y ＝ {x/2}',convHint:'{x/2} は「x を 2 で割る」こと、つまり <b>{1/2} × x</b> です。分母は 2、分子は 1 です。'},
+    {n:-1,d:1,disp:'y ＝ −x',convHint:'y ＝ −x は y ＝ −1x。<b>マイナスは分子</b>につけて、<b>{−1/1}x</b> です。分母は 1（プラス）。'},
+    {n:-1,d:3,disp:'y ＝ −{x/3}',convHint:'y ＝ −{x/3} は y ＝ −{1/3}x。<b>マイナスを分子に</b>うつして <b>{−1/3}x</b>。<b>分母は必ずプラス</b>の 3 です。'},
+    {n:1,d:3,disp:'y ＝ {x/3}',convHint:'{x/3} は {1/3} × x。分子 1、分母 3 です。'},
+    {n:-1,d:2,disp:'y ＝ −{x/2}',convHint:'マイナスは分子へ。y ＝ −{x/2} ＝ <b>{−1/2}x</b>。分母は必ずプラスです。'},
+    {n:1,d:4,disp:'y ＝ {x/4}',convHint:'{x/4} は {1/4} × x。分子 1、分母 4 です。右へ4、上へ1の点です。'}
+   ]}
+   ]
+  };
+  var sb='まちがえやすい式を、点を1つうつだけで確かめる練習';
+  U.splice(i+1,0,nu); SUBS.splice(i+1,0,sb);
+  GROUPS.forEach(function(g){ var has=g.u.indexOf(i)>=0; g.u=g.u.map(function(x){return x>i?x+1:x;}); if(has){ g.u.splice(g.u.indexOf(i)+1,0,i+1); } });
+})();
+
+/* 「グラフをかく」例題・練習を、点をうつと直線が出るしくみにする */
+(function(){
+  function fr(n,d){ return {n:n,d:d}; }
+  var M={
+   '3 y＝axのグラフ':{
+    'y ＝ 2x':[fr(2,1),[fr(3,1),fr(1,3)]],
+    'y ＝ {1/2}x':[fr(1,2),[fr(1,4),fr(3,2)]],
+    'y ＝ {2/3}x':[fr(2,3),[fr(3,4),fr(2,5)]],
+    'y ＝ −2x':[fr(-2,1),[fr(-3,1),fr(-1,2)]],
+    'y ＝ −{x/3}':[{n:-1,d:3,disp:'y ＝ −{x/3}',convHint:'y ＝ −{x/3} は y ＝ −{1/3}x。<b>マイナスを分子に</b>うつして <b>{−1/3}x</b>。<b>分母は必ずプラス</b>の 3 です。'},[{n:-1,d:2,disp:'y ＝ −{x/2}',convHint:'マイナスは分子へ。y ＝ −{x/2} ＝ <b>{−1/2}x</b>。'},{n:1,d:3,disp:'y ＝ {x/3}',convHint:'{x/3} は {1/3} × x。'}]]
+   },
+   '4 注意すべきグラフ':{
+    'y ＝ x':[{n:1,d:1,disp:'y ＝ x',convHint:'x の前に何も書いていないときは、<b>「1」がかくれています</b>。y ＝ x は y ＝ 1x ＝ <b>{1/1}x</b> です。'},[{n:1,d:3,disp:'y ＝ {x/3}',convHint:'{x/3} は {1/3} × x。'},{n:-1,d:1,disp:'y ＝ −x',convHint:'y ＝ −x は y ＝ −1x。<b>{−1/1}x</b> です。'}]],
+    'y ＝ {x/2}':[{n:1,d:2,disp:'y ＝ {x/2}',convHint:'{x/2} は「x を 2 で割る」こと、つまり <b>{1/2} × x</b> です。'},[{n:1,d:4,disp:'y ＝ {x/4}',convHint:'{x/4} は {1/4} × x。'},{n:-1,d:2,disp:'y ＝ −{x/2}',convHint:'マイナスは分子へ。<b>{−1/2}x</b>。'}]],
+    'y ＝ −x':[{n:-1,d:1,disp:'y ＝ −x',convHint:'y ＝ −x は y ＝ −1x。マイナスは分子につけて <b>{−1/1}x</b>。'},[{n:-1,d:4,disp:'y ＝ −{x/4}',convHint:'マイナスは分子へ。<b>{−1/4}x</b>。'},{n:1,d:2,disp:'y ＝ {x/2}',convHint:'{x/2} は {1/2} × x。'}]],
+    'y ＝ −{x/3}':[{n:-1,d:3,disp:'y ＝ −{x/3}',convHint:'y ＝ −{x/3} は y ＝ <b>{−1/3}x</b>。分母は必ずプラスの 3 です。'},[{n:-1,d:2,disp:'y ＝ −{x/2}',convHint:'マイナスは分子へ。<b>{−1/2}x</b>。'},{n:1,d:3,disp:'y ＝ {x/3}',convHint:'{x/3} は {1/3} × x。'}]]
+   },
+   '一次関数とは（切片はエレベーターの階）':{
+    'y ＝ 2x ＋ 1':[{n:2,d:1,b:1,disp:'y ＝ 2x ＋ 1'},[{n:1,d:1,b:2,disp:'y ＝ x ＋ 2'},{n:-1,d:1,b:3,disp:'y ＝ −x ＋ 3'}]],
+    'y ＝ −{2/3}x ＋ 2':[{n:-2,d:3,b:2,disp:'y ＝ −{2/3}x ＋ 2'},[{n:1,d:3,b:1,disp:'y ＝ {1/3}x ＋ 1'},{n:-1,d:2,b:3,disp:'y ＝ −{1/2}x ＋ 3'}]],
+    'y ＝ {1/2}x − 2':[{n:1,d:2,b:-2,disp:'y ＝ {1/2}x − 2'},[{n:1,d:3,b:-1,disp:'y ＝ {1/3}x − 1'},{n:2,d:1,b:-3,disp:'y ＝ 2x − 3'}]]
+   }
+  };
+  U.forEach(function(u){
+    var m=M[u.title]; if(!m||!u.ex) return;
+    u.ex.forEach(function(e){
+      var key=(e.q||'').replace(/ のグラフをかきなさい。.*$/,'');
+      var d=m[key]; if(!d) return;
+      var mk=function(t,probs,intro){ return {kind:'line',auto:true,title:t,R:5,intro:intro,probs:probs}; };
+      var isab=(d[0].b!==undefined);
+      var intro=isab?'<b>STEP 1</b> で出発する階（切片）に点をうち、<b>STEP 2</b> で右へ進んだ点をうちます。合っていれば、<b>点の色が変わり、直線が自動で現れて、花吹雪</b>が出ます。':'点を<b>1つ</b>うちます。合っていれば、<b>点の色が変わり、原点を通る直線が自動で現れて、花吹雪</b>が出ます。';
+      e.widget=(function(cfg){ return function(){ return lineWidget(cfg); }; })(mk('やってみよう　例題を、自分でかいてみましょう',[d[0]],intro));
+      e.pw=mk('点をおいてみよう　練習',d[1],intro);
+    });
+  });
+})();
 /* 「傾きとは」は中2の範囲なので、正比例・一次関数の流れからはずし、最後に「補足」として置く */
 (function(){
   var i=U.findIndex(function(u){return u.title==='傾きとは';});
@@ -5557,6 +5668,7 @@ function render(){
   var s2=document.createElement('h3'); s2.className='sec'; s2.textContent='例題（ステップを見ながら、解き方を身につけましょう）'; main.appendChild(s2);
   u.ex.forEach(function(e,i){
     main.appendChild(buildExample(e,i));
+    if(e.pw){ var hpw=document.createElement('h4'); hpw.className='subq'; hpw.textContent='✏️ 例題'+(i+1)+'の練習　自分でグラフをかいてみましょう'; main.appendChild(hpw); main.appendChild(lineWidget(e.pw)); }
     if(e.pr&&e.ck){
       var hp=document.createElement('h4'); hp.className='subq'; hp.textContent='✏️ 例題'+(i+1)+'の練習問題（2問）　答えを選んでください'; main.appendChild(hp);
       main.appendChild(buildQuiz(e.pr));
