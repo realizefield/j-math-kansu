@@ -2644,10 +2644,10 @@ function randTargets(n,R){
 }
 function placeWidget(cfg){
   var R=cfg.R||5, S=360, u=S/(2*R+2), c=S/2, NSV='http://www.w3.org/2000/svg';
-  var T=[], idx=0, cur=[0,0], placed=[], locked=false, dragging=false, finished=false, live=cfg.live!==false;
+  var T=[], idx=0, cur=[0,0], placed=[], locked=false, dragging=false, finished=false, live=cfg.live!==false, curveShown=false;
   function setup(){
     T=(cfg.rand?randTargets(cfg.rand,R):cfg.targets).map(function(t){ return {p:t.p,t:t.t||null,hint:!!t.hint}; });
-    idx=0; cur=[0,0]; placed=[]; locked=false; finished=false;
+    idx=0; cur=[0,0]; placed=[]; locked=false; finished=false; curveShown=false;
   }
   setup();
 
@@ -2669,7 +2669,6 @@ function placeWidget(cfg){
   function pb(txt,fn,cls){ var b=document.createElement('button'); b.type='button'; b.className='btn sub '+(cls||''); b.innerHTML=txt; b.onclick=fn; pad.appendChild(b); return b; }
   var bL=pb('◀',function(){mv(-1,0);}), bU=pb('▲',function(){mv(0,1);}), bD=pb('▼',function(){mv(0,-1);}), bR=pb('▶',function(){mv(1,0);});
   var bOK=pb('✔ この位置で答える',function(){ if(!locked&&!finished) judge(); },'ok');
-  wrap.appendChild(pad);
   var fb=document.createElement('div'); fb.className='place-fb'; wrap.appendChild(fb);
   var nx=document.createElement('button'); nx.type='button'; nx.className='btn'; nx.style.display='none'; wrap.appendChild(nx);
 
@@ -2732,9 +2731,10 @@ function placeWidget(cfg){
     var extra=T[idx].t?'':('<br>'+ptTxt(t)+' は、原点から <b>'+mvText(t[0],t[1])+'</b> の位置でしたね。');
     say('<b>🎉 正解です！</b>'+extra,true);
     launchConfetti(last?160:70);
+    if(cfg.curve && cfg.curve.a!==undefined && !curveShown){ curveShown=true; drawCurve(); say('<b>🎉 正解です！ 原点とこの点を通る直線が現れました。</b>'+extra,true); }
     if(last){
       finished=true; draw(); pad.style.display='none';
-      if(cfg.curve) drawCurve();
+      if(cfg.curve && !curveShown){ curveShown=true; drawCurve(); }
       say('<b>🎉 全問クリア！ すばらしい！</b>'+(cfg.done?'<br>'+fmt(cfg.done):''),true);
       nx.style.display=''; nx.className='btn sub'; nx.textContent='もう一度やる ↺';
       nx.onclick=function(){ restart(); };
@@ -2824,7 +2824,7 @@ function lineWidget(cfg){
   var gLine=document.createElementNS(NSV,'g'), gPt=document.createElementNS(NSV,'g'), gGuide=document.createElementNS(NSV,'g'), gCur=document.createElementNS(NSV,'g');
   [gLine,gPt,gGuide,gCur].forEach(function(g){ svg.appendChild(g); });
   var liveRow=document.createElement('div'); liveRow.className='place-live'; wrap.appendChild(liveRow);
-  var pad=document.createElement('div'); pad.className='place-pad'; wrap.appendChild(pad);
+  var pad=document.createElement('div'); pad.className='place-pad';
   function pb(txt,fn,cls){ var b=document.createElement('button'); b.type='button'; b.className='btn sub '+(cls||''); b.innerHTML=txt; b.onclick=fn; pad.appendChild(b); return b; }
   pb('◀',function(){mv(-1,0);}); pb('▲',function(){mv(0,1);}); pb('▼',function(){mv(0,-1);}); pb('▶',function(){mv(1,0);});
   pb('✔ この位置で答える',function(){ if(!conv&&stage<2&&!finished) judge(); },'ok');
